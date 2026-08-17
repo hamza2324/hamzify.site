@@ -16,6 +16,7 @@ export const metadata: Metadata = createMetadata({
   title: hub.headline,
   description: hub.description,
   path: "/latest",
+  keywords: hub.slug,
 });
 
 const CRUMBS = [

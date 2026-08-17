@@ -22,8 +22,9 @@ import { CATEGORY_LIST } from "@/lib/taxonomy";
 export const metadata: Metadata = createMetadata({
   title: "About Hamzify",
   description:
-    "Who writes Hamzify, what it covers, and the standards behind it: first-hand tool tests, build logs from real projects, and workflows that survived more than one week of use.",
+    "Who writes Hamzify, what this AI coding publication covers, and the standards behind it: first-hand AI coding tool tests, vibe coding experiments, build logs from real projects, and workflows that survived more than one week of use.",
   path: "/about",
+  keywords: "about",
 });
 
 const CRUMBS = [

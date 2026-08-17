@@ -12,10 +12,11 @@ import { breadcrumbNode, webPageNode } from "@/lib/schema";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = createMetadata({
-  title: "Contact",
+  title: "Contact Hamzify",
   description:
-    "Get in touch about a correction, a question, or a tool worth testing. Email, GitHub Discussions, or the form on this page.",
+    "Get in touch with Hamzify about a correction, an AI coding tool worth testing, or a question about a build log or workflow. Email, GitHub Discussions, or the form on this page.",
   path: "/contact",
+  keywords: "contact",
 });
 
 const CRUMBS = [

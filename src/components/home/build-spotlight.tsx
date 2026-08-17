@@ -21,9 +21,9 @@ export function BuildSpotlight({ articles }: { articles: Article[] }) {
     >
       <Container>
         <SectionHeading
-          kicker="Build logs"
+          kicker="AI agent build logs"
           title="The project archive"
-          description="Each entry is a record of something actually built: what it was for, what it was built with, and where it ended up."
+          description="Each AI build log is a record of something actually built with coding agents: what it was for, the stack, and where it ended up."
           accent="teal"
           action={{ href: "/build-logs/", label: "All build logs" }}
         />

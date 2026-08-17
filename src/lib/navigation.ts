@@ -69,6 +69,8 @@ export const footerNav: Array<{ title: string; items: NavItem[] }> = [
       { href: canonicalPath("/contact"), label: "Contact" },
       { href: siteConfig.discussions, label: "Ask a question" },
       { href: "/rss.xml", label: "RSS feed" },
+      { href: "/sitemap.xml", label: "Sitemap" },
+      { href: "/llms.txt", label: "llms.txt" },
     ],
   },
   {

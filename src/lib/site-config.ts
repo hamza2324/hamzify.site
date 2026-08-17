@@ -24,10 +24,10 @@ export const siteConfig = {
   name: "Hamzify",
   /** Used in the title template, e.g. `Cursor review | Hamzify`. */
   titleTemplate: "%s | Hamzify",
-  defaultTitle: "Hamzify — practical AI for people who build",
+  defaultTitle: "Hamzify — AI coding tools, build logs and workflows",
   tagline: "Practical AI for people who build.",
   description:
-    "Hamzify documents AI-assisted software development in the open: hands-on tool tests, build logs, coding workflows and experiments for developers who actually ship.",
+    "Hands-on reviews of AI coding tools like Cursor, GitHub Copilot and Claude Code, plus real AI agent build logs, vibe coding experiments and development workflows for people who ship software.",
   url: normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL),
   locale: "en_US",
   lang: "en",

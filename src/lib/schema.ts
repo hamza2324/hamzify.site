@@ -1,4 +1,5 @@
 import { ogImagePath, ogNames } from "@/lib/og-paths";
+import { SITE_KEYWORDS } from "@/lib/seo";
 import { absoluteUrl, siteConfig } from "@/lib/site-config";
 import { CATEGORIES } from "@/lib/taxonomy";
 import { toIsoDate } from "@/lib/utils";
@@ -28,6 +29,7 @@ export function organizationNode(): JsonLdNode {
     name: siteConfig.name,
     url: absoluteUrl("/"),
     description: siteConfig.description,
+    knowsAbout: [...SITE_KEYWORDS],
     logo: {
       "@type": "ImageObject",
       url: absoluteUrl(siteConfig.brand.logo),
@@ -48,6 +50,8 @@ export function webSiteNode(): JsonLdNode {
     url: absoluteUrl("/"),
     description: siteConfig.description,
     inLanguage: siteConfig.lang,
+    keywords: SITE_KEYWORDS.join(", "),
+    about: SITE_KEYWORDS.map((name) => ({ "@type": "Thing", name })),
     publisher: { "@id": ORGANIZATION_ID },
     // The site search really does accept `?q=` and filter the archive.
     potentialAction: {

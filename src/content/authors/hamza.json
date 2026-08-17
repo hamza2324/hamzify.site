@@ -3,7 +3,7 @@
   "name": "Hamza",
   "role": "Developer, writing Hamzify",
   "initials": "H",
-  "shortBio": "Developer documenting an AI-assisted build practice in public: which tools survive contact with real work, which workflows hold up, and what breaks along the way.",
+  "shortBio": "Developer documenting AI-assisted software development in public: which AI coding tools survive real work, which vibe coding experiments hold up, and what breaks in the build logs.",
   "bio": [
     "I build software and write about doing it with AI in the loop. Hamzify is where the notes live: tool tests on real tasks, build logs from projects I actually shipped, and the workflows that survived more than one week of use.",
     "The reason this site exists is that most writing about AI coding tools is either a launch announcement or a screenshot of something that worked once. Neither helps you decide what to open tomorrow morning. So the pieces here state what was built, how long it took, which version of which tool was used, and where the whole thing fell over.",

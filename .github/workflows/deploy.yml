@@ -46,7 +46,15 @@ jobs:
 
       # Sanity: the published root must contain index.html. That file is built
       # here, not committed to the repo — the repo is the Next.js source.
-      - run: test -f out/index.html && test -f out/.nojekyll && test -f out/CNAME
+      - run: |
+          test -f out/index.html
+          test -f out/.nojekyll
+          test -f out/CNAME
+          test -f out/sitemap.xml
+          test ! -d out/sitemap.xml
+          test -f out/robots.txt
+          test -f out/llms.txt
+          test -f out/rss.xml
 
       - uses: actions/configure-pages@v5
 

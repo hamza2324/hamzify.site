@@ -27,6 +27,7 @@ export const metadata: Metadata = createMetadata({
   title: hub.headline,
   description: hub.description,
   path: "/ai-coding-tools",
+  keywords: hub.slug,
 });
 
 const CRUMBS = [
@@ -72,7 +73,7 @@ export default function AiCodingToolsPage() {
       />
 
       <PageHeader
-        kicker="Hub"
+        kicker="AI coding tools"
         title={hub.headline}
         intro={hub.description}
         accent="amber"

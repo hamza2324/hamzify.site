@@ -21,7 +21,7 @@ export function Hero({ article }: { article: Article }) {
     <section className="border-b border-line bg-paper pt-8 pb-12 sm:pt-10 lg:pt-14 lg:pb-16">
       <Container>
         <h1 className="sr-only">
-          Hamzify — practical AI for people who build
+          Hamzify — AI coding tools, build logs and workflows
         </h1>
 
         <p className="label text-accent">{kicker}</p>

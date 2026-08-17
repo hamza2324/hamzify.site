@@ -50,6 +50,7 @@ export async function generateMetadata({
     title: definition.headline,
     description: definition.description,
     path: `/${slug}`,
+    keywords: slug,
     image: { name: ogNames.category(slug), alt: categoryCardAlt(slug) },
   });
 }

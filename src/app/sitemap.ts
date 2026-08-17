@@ -48,7 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const hubs: MetadataRoute.Sitemap = HUB_PAGES.map((hub) => ({
     url: absoluteUrl(`/${hub.slug}`),
-    lastModified: hub.slug === "tools" ? newestOverall : modifiedOf(articles),
+      lastModified: newestOverall,
     changeFrequency: "weekly",
     priority: 0.8,
   }));
@@ -82,6 +82,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     { path: "/about", priority: 0.7 },
     { path: "/contact", priority: 0.5 },
+    { path: "/rss.xml", priority: 0.4 },
+    { path: "/llms.txt", priority: 0.4 },
   ].map((page) => ({
     url: absoluteUrl(page.path),
     lastModified: newestOverall,

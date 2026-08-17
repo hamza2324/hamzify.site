@@ -23,6 +23,7 @@ import {
 } from "@/lib/content";
 import { loadArticleBody } from "@/lib/mdx";
 import { createMetadata } from "@/lib/metadata";
+import { keywordsFor } from "@/lib/seo";
 import { articleCardAlt } from "@/lib/og-cards";
 import { ogNames } from "@/lib/og-paths";
 import {
@@ -74,7 +75,7 @@ export async function generateMetadata({
     authors: [author.name],
     section: CATEGORIES[article.category].label,
     tags: article.tags,
-    keywords: article.keywords,
+    keywords: keywordsFor(article.category, article.keywords),
     image: {
       name: ogNames.article(article.slug),
       alt: articleCardAlt(article),

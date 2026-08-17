@@ -38,6 +38,12 @@ export async function generateMetadata({
     title: `${author.name} — ${author.role}`,
     description: author.shortBio,
     path: `/author/${author.slug}`,
+    keywords: [
+      author.name,
+      "AI coding tools",
+      "AI-assisted software development",
+      "build logs",
+    ],
   });
 }
 

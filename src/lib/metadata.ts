@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { ogImagePath, ogNames, OG_SIZE } from "@/lib/og-paths";
+import { keywordsFor, SITE_KEYWORDS } from "@/lib/seo";
 import { absoluteUrl, canonicalPath, siteConfig, siteVerification } from "@/lib/site-config";
 
 /**
@@ -40,7 +41,8 @@ type CreateMetadataInput = {
   authors?: string[];
   section?: string;
   tags?: string[];
-  keywords?: string[];
+  /** Extra keywords, or a category/hub slug looked up in `CATEGORY_KEYWORDS`. */
+  keywords?: string | readonly string[];
   /** Only for genuinely non-indexable pages (e.g. search results). */
   noindex?: boolean;
   /**
@@ -72,11 +74,12 @@ export function createMetadata({
     image?.name ?? ogNames.site,
     image?.alt ?? `${siteConfig.name} — ${siteConfig.tagline}`,
   );
+  const mergedKeywords = keywordsFor(SITE_KEYWORDS, keywords);
 
   return {
     title: titleIsAbsolute ? { absolute: title } : title,
     description,
-    keywords: keywords?.length ? keywords : undefined,
+    keywords: mergedKeywords.length ? mergedKeywords : undefined,
     alternates: { canonical: url },
     robots: noindex
       ? { index: false, follow: true }
@@ -129,11 +132,15 @@ export const rootMetadata: Metadata = {
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
+  keywords: [...SITE_KEYWORDS],
   alternates: {
     canonical: absoluteUrl("/"),
     types: {
       "application/rss+xml": [
         { url: absoluteUrl("/rss.xml"), title: `${siteConfig.name} — RSS` },
+      ],
+      "text/plain": [
+        { url: absoluteUrl("/llms.txt"), title: `${siteConfig.name} — llms.txt` },
       ],
     },
   },

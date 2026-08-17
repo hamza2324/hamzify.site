@@ -24,6 +24,14 @@ export const metadata: Metadata = createMetadata({
   description: siteConfig.description,
   path: "/",
   titleIsAbsolute: true,
+  keywords: [
+    "AI coding tools",
+    "vibe coding",
+    "AI agent build logs",
+    "Cursor review",
+    "GitHub Copilot",
+    "Claude Code",
+  ],
 });
 
 /**

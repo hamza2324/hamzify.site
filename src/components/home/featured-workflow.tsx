@@ -35,7 +35,7 @@ export function FeaturedWorkflow({ article }: { article: Article }) {
           <div>
             <div className="flex items-center gap-3">
               <AccentRule accent="indigo" />
-              <span className="label text-ink-3">Workflow</span>
+              <span className="label text-ink-3">AI development workflow</span>
             </div>
 
             <h2

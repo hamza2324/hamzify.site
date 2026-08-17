@@ -57,9 +57,9 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
     slug: "vibe-coding",
     label: "Vibe Coding",
     navLabel: "Vibe Coding",
-    headline: "Vibe coding, documented properly",
+    headline: "Vibe coding experiments with AI coding tools",
     description:
-      "AI-assisted building experiments: what happens when you hand real work to a coding model and watch closely.",
+      "Vibe coding documented properly: AI-assisted building experiments, prompt-to-product attempts, and what breaks when you hand real work to a coding model.",
     intro:
       "Prompt-to-product attempts, honest failure modes and the parts nobody screenshots. Every piece here is an experiment with a stated setup and a stated limitation, filed internally as AI-assisted building so the archive still makes sense when the vocabulary changes.",
     accent: "ember",
@@ -70,9 +70,9 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
     slug: "build-logs",
     label: "Build Logs",
     navLabel: "Build Logs",
-    headline: "Build logs from real projects",
+    headline: "Build logs: shipping software with AI agents",
     description:
-      "Long-form records of building and shipping software with AI in the loop: stack, decisions, mistakes, outcome.",
+      "Long-form AI build logs from real projects: stack, coding agents, decisions, mistakes, and what actually shipped.",
     intro:
       "A build log is not a tutorial. It is a record: the goal, the stack, the tools, the decisions that turned out badly, and what the thing looked like when it finally worked. Written while building, not reconstructed afterwards.",
     accent: "teal",
@@ -83,9 +83,9 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
     slug: "workflows",
     label: "Workflows",
     navLabel: "Workflows",
-    headline: "Workflows worth stealing",
+    headline: "AI development workflows worth stealing",
     description:
-      "Repeatable AI development workflows for research, planning, building, reviewing, testing and shipping.",
+      "Repeatable AI coding workflows for briefing agents, pair programming, reviewing generated code, testing and shipping.",
     intro:
       "Tools change every few months; workflows survive longer. These are the sequences worth keeping — how to brief a coding agent, how to review what it produces, and where a human has to stay in the loop.",
     accent: "indigo",
@@ -96,9 +96,9 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
     slug: "reviews",
     label: "Reviews",
     navLabel: "Reviews",
-    headline: "Hands-on tool reviews",
+    headline: "AI coding tool reviews, tested on real work",
     description:
-      "AI coding tools tested on real work, with a stated method, a clear verdict, and who should skip them.",
+      "Hands-on reviews of AI coding tools such as Cursor, Claude Code and GitHub Copilot, with a stated method, a verdict, and who should skip them.",
     intro:
       "Every review states what was built during testing, how long the tool was used, and which version. If a tool is wrong for you, that gets said as plainly as the praise.",
     accent: "amber",
@@ -109,9 +109,9 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
     slug: "compare",
     label: "Comparisons",
     navLabel: "Comparisons",
-    headline: "Comparisons by use case",
+    headline: "AI coding tool comparisons by use case",
     description:
-      "Side-by-side comparisons of AI coding tools, decided by use case rather than by a single overall winner.",
+      "Side-by-side comparisons of AI coding assistants — Cursor vs GitHub Copilot and others — decided by use case rather than a single overall winner.",
     intro:
       "There is rarely one winner. These comparisons run the same task through each tool and then pick a recommendation per use case — refactoring, greenfield work, unfamiliar codebases, budget.",
     accent: "olive",
@@ -122,9 +122,9 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
     slug: "resources",
     label: "Resources",
     navLabel: "Resources",
-    headline: "Resources that stay useful",
+    headline: "AI coding resources, checklists and guides",
     description:
-      "Evergreen guides, checklists and collections for developers building with AI.",
+      "Evergreen AI development resources: context engineering checklists, AI coding tool guides, and collections that stay useful after the next model drop.",
     intro:
       "Reference material rather than news: checklists, prompt patterns, review guides and collections that get updated in place instead of being republished.",
     accent: "ember",
@@ -213,23 +213,23 @@ export const HUB_PAGES = [
   {
     slug: "latest",
     label: "Latest",
-    headline: "Everything, newest first",
+    headline: "Latest AI coding articles",
     description:
-      "The full Hamzify archive in publication order: experiments, build logs, reviews, comparisons and workflows.",
+      "The full Hamzify archive in publication order: AI coding tool reviews, vibe coding experiments, AI agent build logs, comparisons and workflows.",
   },
   {
     slug: "ai-coding-tools",
     label: "AI Coding",
-    headline: "AI coding tools",
+    headline: "AI coding tools: reviews, comparisons and notes",
     description:
-      "Reviews, comparisons and hands-on notes on the tools developers actually keep open: editors, agents and assistants.",
+      "Reviews and comparisons of AI coding tools developers actually keep open — Cursor, GitHub Copilot, Claude Code, agents and assistants — tested on real work.",
   },
   {
     slug: "tools",
     label: "Tools",
-    headline: "The lab",
+    headline: "The lab: AI coding utilities",
     description:
-      "Small utilities built for developers working with AI. Published only when they are genuinely useful.",
+      "Small AI developer tools and coding-agent utilities built for people who ship with AI. Published only when they are genuinely useful.",
   },
 ] as const;
 

@@ -2,10 +2,10 @@
   "name": "hamzify",
   "version": "0.1.0",
   "private": true,
-  "description": "Hamzify — practical AI for people who build. An editorial platform for AI-assisted software development.",
+  "description": "Hamzify — AI coding tools, vibe coding experiments, AI agent build logs and development workflows.",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/flatten-segment-cache.mjs",
+    "build": "next build && node scripts/flatten-segment-cache.mjs && node scripts/write-seo-files.mjs",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

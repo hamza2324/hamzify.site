@@ -23,9 +23,9 @@ export function LatestExperiments({ articles }: { articles: Article[] }) {
     >
       <Container>
         <SectionHeading
-          kicker="Experiments"
-          title="Recent experiments and build logs"
-          description="What happened when real work was handed to a coding model, written up with the setup and the limitations attached."
+          kicker="Vibe coding"
+          title="Recent experiments and AI build logs"
+          description="What happened when real work was handed to an AI coding model — vibe coding experiments and agent build logs, written up with the setup and the limitations attached."
           accent="ember"
           action={{ href: "/latest/", label: "All articles" }}
         />

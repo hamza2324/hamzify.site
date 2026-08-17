@@ -5,18 +5,14 @@ import { absoluteUrl } from "@/lib/site-config";
 /**
  * robots.txt
  *
- * Open by default. Nothing that affects rendering is blocked — no CSS, no JS, no
- * font or image paths — because blocking those is one of the most common ways a
- * site accidentally hides itself from a crawler that needs to render the page.
- *
- * The only disallowed path is the internal search route, which produces
- * effectively unlimited near-duplicate URLs via `?q=`. The page itself also
- * carries `noindex`.
+ * Open to search crawlers and to the main generative-engine crawlers. The only
+ * disallowed path is `/search/`, which is also `noindex`.
  */
-/** Emitted as a file at build time, as `output: "export"` requires. */
 export const dynamic = "force-static";
 
 export default function robots(): MetadataRoute.Robots {
+  const sitemap = absoluteUrl("/sitemap.xml");
+
   return {
     rules: [
       {
@@ -24,7 +20,15 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/search/"],
       },
+      { userAgent: "Googlebot", allow: "/" },
+      { userAgent: "Bingbot", allow: "/" },
+      { userAgent: "GPTBot", allow: "/" },
+      { userAgent: "ChatGPT-User", allow: "/" },
+      { userAgent: "ClaudeBot", allow: "/" },
+      { userAgent: "PerplexityBot", allow: "/" },
+      { userAgent: "Google-Extended", allow: "/" },
     ],
-    sitemap: absoluteUrl("/sitemap.xml"),
+    sitemap,
+    host: "hamzify.site",
   };
 }
