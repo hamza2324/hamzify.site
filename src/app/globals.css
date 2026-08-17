@@ -38,6 +38,11 @@
   --accent-line: light-dark(#b7ddd8, #1e4a45);
   --on-accent: light-dark(#f4fffd, #06201d);
 
+  /* Logo lavender — used as a 5% accent on nodes, markers, and covers. */
+  --violet: light-dark(#4f46a3, #b7b0f2);
+  --violet-soft: light-dark(#eeedf8, #1c1b30);
+  --violet-line: light-dark(#c9c5e8, #35345a);
+
   /* --- Category / article-type accents ---------------------------------- */
   --ember: light-dark(#bd4711, #ff8c55);
   --ember-soft: light-dark(#fdf1e9, #2a1b13);
@@ -128,6 +133,10 @@
   --color-accent-soft: var(--accent-soft);
   --color-accent-line: var(--accent-line);
   --color-on-accent: var(--on-accent);
+
+  --color-violet: var(--violet);
+  --color-violet-soft: var(--violet-soft);
+  --color-violet-line: var(--violet-line);
 
   --color-ember: var(--ember);
   --color-ember-soft: var(--ember-soft);
@@ -336,6 +345,32 @@
    built from its accent hue and `coverPattern`. Cheap to render, no image
    weight, and it reads as build artifact rather than decoration.
    -------------------------------------------------------------------------- */
+/* Faint technical grain for mastheads and index sections — never on .prose. */
+@utility texture {
+  background-image:
+    radial-gradient(
+      circle at 1px 1px,
+      color-mix(in oklab, var(--ink) 9%, transparent) 0.6px,
+      transparent 0.7px
+    );
+  background-size: 13px 13px;
+}
+
+@utility texture-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--violet) 7%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--ink) 5%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 2.75rem 2.75rem;
+}
+
 .cover {
   position: relative;
   overflow: hidden;
@@ -453,6 +488,24 @@
 .cover > * {
   position: relative;
   z-index: 1;
+}
+
+.cover-media {
+  transform: scale(1);
+  transform-origin: center;
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .group:hover .cover-media,
+  .group:focus-within .cover-media {
+    transform: scale(1.028);
+  }
+}
+
+/* Type-specific card frames: a 2px spine, not a painted panel. */
+.card-spine {
+  box-shadow: inset 2px 0 0 var(--local-accent);
 }
 
 /* ==========================================================================

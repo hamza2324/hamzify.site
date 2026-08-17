@@ -502,3 +502,78 @@ export function Sources({ items }: { items: Source[] }) {
     </ContentBlock>
   );
 }
+
+/* -------------------------------------------------------------------------- */
+/* Pull quote                                                                 */
+/* -------------------------------------------------------------------------- */
+
+export function PullQuote({
+  children,
+  attribution,
+}: {
+  children: ReactNode;
+  attribution?: string;
+}) {
+  return (
+    <figure className="not-prose my-10 border-y border-line py-8">
+      <blockquote className="font-display text-display-s font-semibold leading-snug text-ink">
+        {children}
+      </blockquote>
+      {attribution ? (
+        <figcaption className="mt-4 label text-ink-3">{attribution}</figcaption>
+      ) : null}
+    </figure>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Key finding                                                                */
+/* -------------------------------------------------------------------------- */
+
+export function Finding({
+  label = "Finding",
+  children,
+}: {
+  label?: string;
+  children: ReactNode;
+}) {
+  return (
+    <aside
+      data-accent="teal"
+      className="not-prose my-8 rounded-md border border-line bg-surface card-spine px-4 py-4 sm:px-5"
+    >
+      <p className="label text-[var(--local-accent)]">{label}</p>
+      <p className="mt-2 text-[1.0625rem] leading-relaxed text-ink">{children}</p>
+    </aside>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Visible FAQ — only render when the questions are real                      */
+/* -------------------------------------------------------------------------- */
+
+export function FaqList({
+  items,
+}: {
+  items: Array<{ question: string; answer: string }>;
+}) {
+  if (items.length === 0) return null;
+
+  return (
+    <section className="not-prose mt-14 border-t border-line pt-10">
+      <h2 className="font-display text-display-s font-semibold text-ink">
+        Frequently asked questions
+      </h2>
+      <dl className="mt-6 flex flex-col gap-6">
+        {items.map((item) => (
+          <div key={item.question}>
+            <dt className="font-medium text-ink">{item.question}</dt>
+            <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink-2">
+              {item.answer}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+}

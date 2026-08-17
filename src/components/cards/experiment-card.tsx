@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ArticleCover } from "@/components/article/article-cover";
 import { formatRecordLabel } from "@/lib/records";
 import { cn, formatDate } from "@/lib/utils";
 import type { Article } from "@/types/content";
@@ -20,10 +21,13 @@ export function ExperimentCard({
     <article
       data-accent="ember"
       className={cn(
-        "group relative flex flex-col gap-5 rounded-md border border-line bg-surface p-5 transition-colors hover:border-line-2 sm:p-6",
+        "group relative flex flex-col overflow-hidden rounded-md border border-line bg-surface transition-colors hover:border-line-2 card-spine",
         className,
       )}
     >
+      <ArticleCover article={article} size="band" />
+
+      <div className="flex flex-1 flex-col gap-5 p-5 sm:p-6">
       <p className="label text-[var(--local-accent)]">
         {formatRecordLabel(article)}
       </p>
@@ -57,6 +61,7 @@ export function ExperimentCard({
         {" · "}
         {article.readingTime.text}
       </p>
+      </div>
     </article>
   );
 }

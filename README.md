@@ -91,7 +91,7 @@ The dev server runs at <http://localhost:3000>.
 | --- | --- |
 | `npm run dev` | Dev server |
 | `npm run build` | Production build + static export to `out/` |
-| `npm run check` | `tsc --noEmit` then ESLint |
+| `npm run check` | `tsc`, ESLint, then article validation |
 | `npm run typecheck` | Types only |
 | `npm run lint` | ESLint only |
 | `npm run serve:out` | Serve the exported `out/` directory locally |
@@ -131,6 +131,10 @@ Two rules that the architecture enforces rather than merely documents:
 ---
 
 ## 5. Content creation workflow
+
+The full editorial system — brief, structure, validation, sitemap, and
+pre-publish checklist — lives in [`docs/PUBLISHING.md`](docs/PUBLISHING.md).
+What follows is the short version.
 
 ### A new article
 
@@ -188,9 +192,9 @@ project:
 Available in any MDX file without an import (registered in
 `src/mdx-components.tsx`):
 
-`<KeyTakeaways>` `<Callout>` `<ProsCons>` `<Verdict>` `<TestMethodology>`
+`<KeyTakeaways>` `<Finding>` `<PullQuote>` `<Callout>` `<ProsCons>` `<Verdict>` `<TestMethodology>`
 `<ExperimentSetup>` `<ToolComparison>` `<BuildTimeline>` `<ProjectStack>`
-`<Sources>` `<SpecList>` / `<SpecRow>` `<ImageWithCaption>` `<AffiliateLink>`
+`<Sources>` `<SpecList>` / `<SpecRow>` `<ImageWithCaption>` `<AffiliateLink>` `<FaqList>`
 
 Code fences get Shiki highlighting and a copy button automatically. Tables are
 made scrollable automatically. Headings get anchors automatically.

@@ -12,6 +12,7 @@ import {
   AffiliateDisclosure,
   SampleNotice,
 } from "@/components/content/disclosures";
+import { FaqList } from "@/components/content/editorial-blocks";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/ui/container";
 import {
@@ -29,6 +30,7 @@ import { ogNames } from "@/lib/og-paths";
 import {
   blogPostingNode,
   breadcrumbNode,
+  faqPageNode,
   organizationNode,
   personNode,
   webPageNode,
@@ -75,7 +77,11 @@ export async function generateMetadata({
     authors: [author.name],
     section: CATEGORIES[article.category].label,
     tags: article.tags,
-    keywords: keywordsFor(article.category, article.keywords),
+    keywords: keywordsFor(
+      article.category,
+      article.keywords,
+      article.primaryTopic ? [article.primaryTopic] : undefined,
+    ),
     image: {
       name: ogNames.article(article.slug),
       alt: articleCardAlt(article),
@@ -96,6 +102,7 @@ export default async function ArticlePage({
   const Body = await loadArticleBody(article.slug);
   const related = getRelatedArticles(article, 3);
   const { previous, next } = getArticleNeighbours(article);
+  const faqJson = faqPageNode(article);
 
   const crumbs = [
     { name: "Home", path: "/" },
@@ -119,6 +126,7 @@ export default async function ArticlePage({
           blogPostingNode(article, author),
           personNode(author),
           breadcrumbNode(crumbs),
+          ...(faqJson ? [faqJson] : []),
         ]}
       />
 
@@ -158,6 +166,8 @@ export default async function ArticlePage({
               <div className="prose">
                 <Body />
               </div>
+
+              {article.faq?.length ? <FaqList items={article.faq} /> : null}
 
               <footer className="mt-14 flex flex-col gap-10">
                 <div className="flex flex-col gap-5 border-t border-line pt-6">

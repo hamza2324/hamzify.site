@@ -73,7 +73,7 @@ export function ArticleCard({
       <article
         data-accent={category.accent}
         className={cn(
-          "group relative grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:items-center lg:gap-10",
+          "group relative grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.15fr)] lg:items-center lg:gap-12",
           className,
         )}
       >
@@ -123,7 +123,10 @@ export function ArticleCard({
     return (
       <article
         data-accent={category.accent}
-        className={cn("group relative flex flex-col gap-4", className)}
+          className={cn(
+            "group relative flex flex-col gap-4",
+            className,
+          )}
       >
         <ArticleCover article={article} size="feature" priority={priority} />
 

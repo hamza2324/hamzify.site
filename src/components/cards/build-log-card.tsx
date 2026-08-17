@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
+import { ArticleCover } from "@/components/article/article-cover";
 import { formatRecordLabel } from "@/lib/records";
 import { cn, formatDate } from "@/lib/utils";
 import type { Article } from "@/types/content";
@@ -24,10 +25,13 @@ export function BuildLogCard({
     <article
       data-accent="teal"
       className={cn(
-        "group relative flex flex-col gap-4 rounded-md border border-line bg-surface p-5 transition-colors hover:border-line-2",
+        "group relative flex flex-col overflow-hidden rounded-md border border-line bg-surface transition-colors hover:border-line-2 card-spine",
         className,
       )}
     >
+      <ArticleCover article={article} size="band" />
+
+      <div className="flex flex-1 flex-col gap-4 p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
           <span className="label text-[var(--local-accent)]">
@@ -94,6 +98,7 @@ export function BuildLogCard({
           {article.readingTime.text}
         </span>
       </p>
+      </div>
     </article>
   );
 }

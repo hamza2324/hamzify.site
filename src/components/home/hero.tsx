@@ -18,7 +18,7 @@ export function Hero({ article }: { article: Article }) {
       : `Featured ${typeMeta.label.toLowerCase()}`;
 
   return (
-    <section className="border-b border-line bg-paper pt-8 pb-12 sm:pt-10 lg:pt-14 lg:pb-16">
+    <section className="texture-grid border-b border-line bg-paper pt-8 pb-12 sm:pt-10 lg:pt-12 lg:pb-16">
       <Container>
         <h1 className="sr-only">
           Hamzify — AI coding tools, build logs and workflows
@@ -26,7 +26,7 @@ export function Hero({ article }: { article: Article }) {
 
         <p className="label text-accent">{kicker}</p>
 
-        <div className="mt-6">
+        <div className="mt-5">
           <ArticleCard
             article={article}
             variant="hero"

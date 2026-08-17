@@ -39,6 +39,7 @@ function readDirSafe(dir: string, extension: string): string[] {
   return fs
     .readdirSync(dir)
     .filter((file) => file.endsWith(extension))
+    .filter((file) => !file.startsWith("_") && !file.startsWith("."))
     .sort();
 }
 
@@ -109,6 +110,25 @@ function parseArticle(fileName: string): Article {
     );
   }
 
+  if (frontmatter.articleType === "comparison" && (frontmatter.compared?.length ?? 0) < 2) {
+    throw new Error(
+      `src/content/articles/${fileName}: comparison articles need a "compared" list of at least two tools.`,
+    );
+  }
+
+  if (frontmatter.coverImage) {
+    const imagePath = path.join(
+      process.cwd(),
+      "public",
+      frontmatter.coverImage.replace(/^\//, ""),
+    );
+    if (!fs.existsSync(imagePath)) {
+      throw new Error(
+        `src/content/articles/${fileName}: coverImage "${frontmatter.coverImage}" does not exist in public/.`,
+      );
+    }
+  }
+
   return {
     ...frontmatter,
     slug,
@@ -125,12 +145,37 @@ function parseArticle(fileName: string): Article {
 function loadArticles(): Article[] {
   const articles = readDirSafe(ARTICLES_DIR, ".mdx").map(parseArticle);
 
-  const seen = new Set<string>();
+  const seenSlugs = new Set<string>();
+  const seenTitles = new Set<string>();
+  const seenDescriptions = new Set<string>();
+
   for (const article of articles) {
-    if (seen.has(article.slug)) {
+    if (seenSlugs.has(article.slug)) {
       throw new Error(`Duplicate article slug: ${article.slug}`);
     }
-    seen.add(article.slug);
+    seenSlugs.add(article.slug);
+
+    const titleKey = article.title.trim().toLowerCase();
+    if (seenTitles.has(titleKey)) {
+      throw new Error(`Duplicate article title: "${article.title}"`);
+    }
+    seenTitles.add(titleKey);
+
+    const descriptionKey = article.description.trim().toLowerCase();
+    if (seenDescriptions.has(descriptionKey)) {
+      throw new Error(`Duplicate article description on "${article.slug}"`);
+    }
+    seenDescriptions.add(descriptionKey);
+  }
+
+  for (const article of articles) {
+    for (const related of article.related) {
+      if (!articles.some((entry) => entry.slug === related)) {
+        throw new Error(
+          `Article "${article.slug}" related slug "${related}" does not exist.`,
+        );
+      }
+    }
   }
 
   // Drafts never reach a build. Delete the flag to publish.

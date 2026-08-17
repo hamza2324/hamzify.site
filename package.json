@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm run lint",
+    "check": "npm run typecheck && npm run lint && node scripts/validate-content.mjs",
+    "validate:content": "node scripts/validate-content.mjs",
     "serve:out": "npx --yes serve out"
   },
   "dependencies": {

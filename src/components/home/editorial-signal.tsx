@@ -23,7 +23,7 @@ export function EditorialSignal() {
   return (
     <section
       aria-labelledby="editorial-principles"
-      className="border-b border-line bg-surface-2"
+      className="texture border-b border-line bg-surface-2"
     >
       <Container className="py-12 sm:py-16 lg:py-20">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-end lg:gap-16">

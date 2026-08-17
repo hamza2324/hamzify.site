@@ -68,15 +68,13 @@ export function ArticleHeader({
         </p>
       </div>
 
-      {/* Only a real image earns space at the top of an article. A generated
-          plate here would be several hundred pixels of texture between the
-          reader and the first paragraph; on cards it does useful work, so
-          `ArticleCover` still runs there. */}
-      {article.coverImage ? (
-        <div className="mt-8">
-          <ArticleCover article={article} size="hero" priority />
-        </div>
-      ) : null}
+      <div className="mt-8">
+        <ArticleCover
+          article={article}
+          size={article.coverImage ? "hero" : "band"}
+          priority
+        />
+      </div>
 
       {article.project ? (
         <dl className="mt-6 grid gap-x-8 gap-y-4 rounded-md border border-line bg-surface p-5 sm:grid-cols-2 lg:grid-cols-4">

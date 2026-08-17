@@ -172,7 +172,28 @@ export function blogPostingNode(article: Article, author: Author): JsonLdNode {
     ...(article.keywords.length || article.tags.length
       ? { keywords: [...new Set([...article.keywords, ...article.tags])] }
       : {}),
+    ...(article.primaryTopic ? { about: article.primaryTopic } : {}),
     image: [absoluteUrl(ogImagePath(ogNames.article(article.slug)))],
+  };
+}
+
+/** FAQPage — only call when the same questions are visible on the page. */
+export function faqPageNode(
+  article: Article,
+): JsonLdNode | null {
+  if (!article.faq?.length) return null;
+
+  return {
+    "@type": "FAQPage",
+    "@id": `${absoluteUrl(article.path)}#faq`,
+    mainEntity: article.faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
   };
 }
 

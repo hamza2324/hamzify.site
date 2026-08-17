@@ -53,6 +53,7 @@ function loadArticles() {
   if (!existsSync(ARTICLES)) return [];
   return readdirSync(ARTICLES)
     .filter((file) => file.endsWith(".mdx"))
+    .filter((file) => !file.startsWith("_") && !file.startsWith("."))
     .map((file) => {
       const raw = readFileSync(join(ARTICLES, file), "utf8");
       const { data } = matter(raw);

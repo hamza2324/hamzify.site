@@ -79,7 +79,38 @@ export const frontmatterSchema = z.object({
   question: z.string().max(180).optional(),
   /** Experiment pages: the outcome, in a few words. */
   result: z.string().max(120).optional(),
-});
+  /** One search concept this article is actually about. */
+  primaryTopic: z.string().min(2).max(80).optional(),
+  searchIntent: z
+    .enum([
+      "informational",
+      "commercial",
+      "comparison",
+      "tutorial",
+      "problem-solving",
+    ])
+    .optional(),
+  /**
+   * Visible FAQ, rendered after the body. FAQ structured data is emitted only
+   * when this array is present and non-empty.
+   */
+  faq: z
+    .array(
+      z.object({
+        question: z.string().min(8).max(180),
+        answer: z.string().min(12).max(600),
+      }),
+    )
+    .max(6)
+    .optional(),
+})
+  .refine(
+    (value) => !value.coverImage || Boolean(value.coverImageAlt),
+    {
+      message: "coverImageAlt is required when coverImage is set",
+      path: ["coverImageAlt"],
+    },
+  );
 
 export type Frontmatter = z.infer<typeof frontmatterSchema>;
 
