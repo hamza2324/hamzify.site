@@ -31,11 +31,11 @@ export function EditorialSignal() {
             id="editorial-principles"
             className="font-display text-display-l font-semibold leading-[1.05] text-ink"
           >
-            Real tools.
+            Real <span className="text-violet">tools.</span>
             <br />
-            Real builds.
+            Real <span className="text-teal">builds.</span>
             <br />
-            Real results.
+            Real <span className="text-amber">results.</span>
           </h2>
 
           <ul className="grid gap-6 sm:grid-cols-3 lg:grid-cols-1">

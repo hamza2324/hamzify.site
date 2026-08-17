@@ -1,10 +1,10 @@
 /**
- * Third-party integration points, all driven by environment variables.
+ * Third-party integration points.
  *
- * Nothing here hardcodes an account id, and every integration degrades to a
- * sensible, honest UI when it is not configured: the newsletter form explains
- * that signups are not connected yet, the contact form falls back to email, and
- * no analytics JavaScript is emitted at all.
+ * Analytics stay optional and emit no JavaScript unless configured. Newsletter
+ * and contact post to Formspree (`FORMSPREE_ENDPOINT`) so signups work on the
+ * static GitHub Pages deploy without extra env vars. Override with
+ * `NEXT_PUBLIC_NEWSLETTER_ENDPOINT` / `NEXT_PUBLIC_CONTACT_ENDPOINT` if needed.
  */
 
 export type AnalyticsProvider = "plausible" | "umami" | "ga";
@@ -45,13 +45,13 @@ export function getAnalyticsConfig(): AnalyticsConfig | null {
   }
 }
 
-export const newsletterEndpoint = readEnv(
-  process.env.NEXT_PUBLIC_NEWSLETTER_ENDPOINT,
-);
+export const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzepjobl";
 
-export const contactEndpoint = readEnv(
-  process.env.NEXT_PUBLIC_CONTACT_ENDPOINT,
-);
+export const newsletterEndpoint =
+  readEnv(process.env.NEXT_PUBLIC_NEWSLETTER_ENDPOINT) ?? FORMSPREE_ENDPOINT;
+
+export const contactEndpoint =
+  readEnv(process.env.NEXT_PUBLIC_CONTACT_ENDPOINT) ?? FORMSPREE_ENDPOINT;
 
 /**
  * Builds an outbound affiliate/partner URL.

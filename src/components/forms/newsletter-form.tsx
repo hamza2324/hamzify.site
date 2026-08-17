@@ -63,13 +63,16 @@ export function NewsletterForm({
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({ email: parsed.data }),
+        body: JSON.stringify({
+          email: parsed.data,
+          _subject: "Hamzify newsletter signup",
+        }),
       });
 
       if (!response.ok) throw new Error(`Request failed: ${response.status}`);
 
       setStatus("done");
-      setMessage("You are on the list. Check your inbox to confirm.");
+      setMessage("You are on the list.");
       setEmail("");
     } catch {
       setStatus("error");
@@ -123,7 +126,7 @@ export function NewsletterForm({
         <button
           type="submit"
           disabled={!configured || status === "submitting"}
-          className="group inline-flex shrink-0 items-center justify-center gap-1.5 rounded-sm bg-ink px-4 py-2.5 text-[0.9375rem] font-medium text-ink-inverse transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-ink"
+          className="group inline-flex shrink-0 items-center justify-center gap-1.5 rounded-sm bg-brand px-4 py-2.5 text-[0.9375rem] font-medium text-on-accent transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-brand"
         >
           {status === "submitting" ? (
             <>

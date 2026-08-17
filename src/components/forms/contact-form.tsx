@@ -240,7 +240,7 @@ export function ContactForm({
       <button
         type="submit"
         disabled={disabled}
-        className="group mt-6 inline-flex items-center justify-center gap-1.5 rounded-sm bg-ink px-4 py-2.5 text-[0.9375rem] font-medium text-ink-inverse transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-ink"
+        className="group mt-6 inline-flex items-center justify-center gap-1.5 rounded-sm bg-brand px-4 py-2.5 text-[0.9375rem] font-medium text-on-accent transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-brand"
       >
         {status === "submitting" ? (
           <>

@@ -515,7 +515,7 @@ export function PullQuote({
   attribution?: string;
 }) {
   return (
-    <figure className="not-prose my-10 border-y border-line py-8">
+    <figure className="not-prose my-10 border-y border-violet-line py-8">
       <blockquote className="font-display text-display-s font-semibold leading-snug text-ink">
         {children}
       </blockquote>

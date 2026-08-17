@@ -14,50 +14,54 @@
   color-scheme: light dark;
 
   /* --- Surfaces ---------------------------------------------------------- */
-  --paper: light-dark(#fcfbf9, #121110);
-  --surface: light-dark(#ffffff, #1a1817);
-  --surface-2: light-dark(#f4f2ed, #221f1d);
-  --surface-3: light-dark(#eae6de, #2b2724);
-  --code-surface: light-dark(#fbfaf7, #17161a);
+  --paper: light-dark(#f7f5f0, #121118);
+  --surface: light-dark(#ffffff, #1a1820);
+  --surface-2: light-dark(#f3f1ea, #1e1c28);
+  --surface-3: light-dark(#eae6de, #2a2736);
+  --code-surface: light-dark(#fbfaf7, #16151f);
 
   /* --- Text ------------------------------------------------------------- */
-  --ink: light-dark(#14120e, #f4f1eb);
-  --ink-2: light-dark(#4f4a41, #b9b3a8);
-  --ink-3: light-dark(#756f63, #8b8579);
-  --ink-inverse: light-dark(#fcfbf9, #14120e);
+  --ink: light-dark(#171923, #f4f1eb);
+  --ink-2: light-dark(#5c5c66, #b9b3c4);
+  --ink-3: light-dark(#6b6b73, #8b8796);
+  --ink-inverse: light-dark(#ffffff, #171923);
 
   /* --- Lines ------------------------------------------------------------ */
-  --line: light-dark(#e5e0d6, #2e2a27);
-  --line-2: light-dark(#cdc5b6, #423d38);
-  --line-strong: light-dark(#14120e, #f4f1eb);
+  --line: light-dark(#e5e0d6, #322f3d);
+  --line-2: light-dark(#cdc5b6, #4a4558);
+  --line-strong: light-dark(#171923, #f4f1eb);
 
-  /* --- Brand accent (node cyan from the Hamzify mark) ------------------- */
-  --accent: light-dark(#0f6f68, #3dd6c6);
-  --accent-strong: light-dark(#0a5752, #7aeee0);
-  --accent-soft: light-dark(#e6f4f2, #102825);
-  --accent-line: light-dark(#b7ddd8, #1e4a45);
-  --on-accent: light-dark(#f4fffd, #06201d);
+  /* --- Brand: violet is the UI accent, cyan is the technical accent ----- */
+  --brand: light-dark(#635bff, #9b96ff);
+  --accent: light-dark(#4f48dc, #a8a3ff);
+  --accent-strong: light-dark(#3d36c9, #c4c0ff);
+  --accent-soft: light-dark(#f0efff, #1e1c3a);
+  --accent-line: light-dark(#c9c5ff, #3d3970);
+  --on-accent: light-dark(#ffffff, #121118);
 
-  /* Logo lavender — used as a 5% accent on nodes, markers, and covers. */
-  --violet: light-dark(#4f46a3, #b7b0f2);
-  --violet-soft: light-dark(#eeedf8, #1c1b30);
-  --violet-line: light-dark(#c9c5e8, #35345a);
+  --violet: light-dark(#4f48dc, #a8a3ff);
+  --violet-soft: light-dark(#f0efff, #1e1c3a);
+  --violet-line: light-dark(#c9c5ff, #3d3970);
+
+  --cyan: light-dark(#0e9a8c, #2dd4bf);
+  --cyan-soft: light-dark(#eaf9f7, #0f2a28);
+  --cyan-line: light-dark(#9ee0d8, #1e4a45);
 
   /* --- Category / article-type accents ---------------------------------- */
   --ember: light-dark(#bd4711, #ff8c55);
   --ember-soft: light-dark(#fdf1e9, #2a1b13);
-  --teal: light-dark(#0f6f68, #45cfc0);
-  --teal-soft: light-dark(#e6f4f2, #102825);
-  --amber: light-dark(#8a5a06, #e3b25c);
-  --amber-soft: light-dark(#fbf3e2, #2a2113);
-  --indigo: light-dark(#43449c, #a2abf5);
-  --indigo-soft: light-dark(#eeeefb, #1d1e33);
+  --teal: light-dark(#0e9a8c, #2dd4bf);
+  --teal-soft: light-dark(#eaf9f7, #0f2a28);
+  --amber: light-dark(#b8860b, #e8b84a);
+  --amber-soft: light-dark(#fff6e5, #2a2113);
+  --indigo: light-dark(#4f48dc, #a8a3ff);
+  --indigo-soft: light-dark(#f0efff, #1e1c3a);
   --olive: light-dark(#4c6b16, #a8c95f);
   --olive-soft: light-dark(#f1f5e4, #202612);
 
   /* --- Interaction ------------------------------------------------------ */
-  --focus: light-dark(#0b5cd5, #7fb2ff);
-  --selection: light-dark(#f8ddcb, #4a2c1c);
+  --focus: light-dark(#4f48dc, #a8a3ff);
+  --selection: light-dark(#e4e1ff, #2e2a5c);
 
   /* --- Radii: restrained, editorial, never pill-shaped ------------------ */
   --r-xs: 2px;
@@ -133,10 +137,15 @@
   --color-accent-soft: var(--accent-soft);
   --color-accent-line: var(--accent-line);
   --color-on-accent: var(--on-accent);
+  --color-brand: var(--brand);
 
   --color-violet: var(--violet);
   --color-violet-soft: var(--violet-soft);
   --color-violet-line: var(--violet-line);
+
+  --color-cyan: var(--cyan);
+  --color-cyan-soft: var(--cyan-soft);
+  --color-cyan-line: var(--cyan-line);
 
   --color-ember: var(--ember);
   --color-ember-soft: var(--ember-soft);
@@ -299,7 +308,15 @@
   border-top: 1px solid var(--line);
 }
 
-/** Underline that grows on hover — used for editorial headline links. */
+@utility btn-primary {
+  background-color: var(--brand);
+  color: var(--on-accent);
+  transition: background-color var(--dur) var(--ease);
+
+  &:hover {
+    background-color: var(--accent-strong);
+  }
+}
 @utility link-underline {
   text-decoration: underline;
   text-decoration-color: color-mix(in oklab, currentcolor 25%, transparent);
@@ -350,32 +367,41 @@
   background-image:
     radial-gradient(
       circle at 1px 1px,
-      color-mix(in oklab, var(--ink) 9%, transparent) 0.6px,
-      transparent 0.7px
+      color-mix(in oklab, var(--violet) 14%, transparent) 0.7px,
+      transparent 0.85px
     );
-  background-size: 13px 13px;
+  background-size: 14px 14px;
 }
 
 @utility texture-grid {
   background-image:
+    radial-gradient(
+      circle at 2.75rem 2.75rem,
+      var(--cyan) 1.1px,
+      transparent 1.3px
+    ),
     linear-gradient(
       to right,
-      color-mix(in oklab, var(--violet) 7%, transparent) 1px,
+      color-mix(in oklab, var(--violet) 14%, transparent) 1px,
       transparent 1px
     ),
     linear-gradient(
       to bottom,
-      color-mix(in oklab, var(--ink) 5%, transparent) 1px,
+      color-mix(in oklab, var(--cyan) 10%, transparent) 1px,
       transparent 1px
     );
-  background-size: 2.75rem 2.75rem;
+  background-size:
+    2.75rem 2.75rem,
+    2.75rem 2.75rem,
+    2.75rem 2.75rem;
 }
 
 .cover {
   position: relative;
   overflow: hidden;
-  background-color: var(--surface-2);
+  background-color: color-mix(in oklab, var(--local-accent-soft) 72%, var(--surface-2));
   isolation: isolate;
+  border-color: color-mix(in oklab, var(--local-accent) 28%, var(--line));
 }
 
 .cover::before {
@@ -480,8 +506,9 @@
   inset: 0;
   background: linear-gradient(
     160deg,
-    color-mix(in oklab, var(--local-accent) 8%, transparent),
-    transparent 55%
+    color-mix(in oklab, var(--local-accent) 22%, transparent),
+    color-mix(in oklab, var(--cyan) 8%, transparent) 55%,
+    transparent 78%
   );
 }
 
@@ -505,7 +532,14 @@
 
 /* Type-specific card frames: a 2px spine, not a painted panel. */
 .card-spine {
-  box-shadow: inset 2px 0 0 var(--local-accent);
+  box-shadow: inset 3px 0 0 var(--local-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .group:hover.card-spine,
+  article.group:hover {
+    border-color: color-mix(in oklab, var(--local-accent) 45%, var(--line));
+  }
 }
 
 /* ==========================================================================

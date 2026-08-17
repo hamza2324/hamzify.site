@@ -24,14 +24,14 @@ export function ToolCoverage({ articles }: { articles: Article[] }) {
   return (
     <section
       aria-labelledby="tool-coverage"
-      className="border-b border-line bg-surface-2 py-14 sm:py-16 lg:py-20"
+      className="border-b border-line bg-violet-soft/40 py-14 sm:py-16 lg:py-20"
     >
       <Container>
         <SectionHeading
           kicker="AI coding tools"
           title="Tested, compared, and explained"
           description="Reviews with a stated method, comparisons decided per use case, and guides to how the categories fit together."
-          accent="amber"
+          accent="indigo"
           action={{ href: "/ai-coding-tools/", label: "All tool coverage" }}
         />
 

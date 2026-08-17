@@ -88,7 +88,7 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
       "Repeatable AI coding workflows for briefing agents, pair programming, reviewing generated code, testing and shipping.",
     intro:
       "Tools change every few months; workflows survive longer. These are the sequences worth keeping — how to brief a coding agent, how to review what it produces, and where a human has to stay in the loop.",
-    accent: "indigo",
+    accent: "amber",
     defaultArticleType: "workflow",
     inMainNav: true,
   },
@@ -101,7 +101,7 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
       "Hands-on reviews of AI coding tools such as Cursor, Claude Code and GitHub Copilot, with a stated method, a verdict, and who should skip them.",
     intro:
       "Every review states what was built during testing, how long the tool was used, and which version. If a tool is wrong for you, that gets said as plainly as the praise.",
-    accent: "amber",
+    accent: "indigo",
     defaultArticleType: "review",
     inMainNav: false,
   },
@@ -114,7 +114,7 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
       "Side-by-side comparisons of AI coding assistants — Cursor vs GitHub Copilot and others — decided by use case rather than a single overall winner.",
     intro:
       "There is rarely one winner. These comparisons run the same task through each tool and then pick a recommendation per use case — refactoring, greenfield work, unfamiliar codebases, budget.",
-    accent: "olive",
+    accent: "indigo",
     defaultArticleType: "comparison",
     inMainNav: false,
   },
@@ -127,7 +127,7 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
       "Evergreen AI development resources: context engineering checklists, AI coding tool guides, and collections that stay useful after the next model drop.",
     intro:
       "Reference material rather than news: checklists, prompt patterns, review guides and collections that get updated in place instead of being republished.",
-    accent: "ember",
+    accent: "indigo",
     defaultArticleType: "resource",
     inMainNav: true,
   },
@@ -173,19 +173,19 @@ export const ARTICLE_TYPE_META: Record<ArticleType, ArticleTypeDefinition> = {
     type: "review",
     label: "Review",
     description: "One tool, tested on real work, with a stated method.",
-    accent: "amber",
+    accent: "indigo",
   },
   comparison: {
     type: "comparison",
     label: "Comparison",
     description: "Two or more tools on the same task, decided per use case.",
-    accent: "olive",
+    accent: "indigo",
   },
   workflow: {
     type: "workflow",
     label: "Workflow",
     description: "A repeatable sequence you can adopt step by step.",
-    accent: "indigo",
+    accent: "amber",
   },
   guide: {
     type: "guide",
@@ -197,7 +197,7 @@ export const ARTICLE_TYPE_META: Record<ArticleType, ArticleTypeDefinition> = {
     type: "resource",
     label: "Resource",
     description: "A collection or checklist to come back to.",
-    accent: "ember",
+    accent: "indigo",
   },
 };
 

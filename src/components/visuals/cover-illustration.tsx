@@ -86,22 +86,21 @@ function BrandNodes({ seed }: { seed: number }) {
   const y = 48 + ((seed >> 5) % 30);
   return (
     <g>
-      <circle cx={x} cy={y} r="4.5" fill="var(--accent)" />
+      <circle cx={x} cy={y} r="5" fill="var(--cyan)" />
       <circle
         cx={x + 22}
         cy={y + 18}
-        r="3"
+        r="3.5"
         fill="var(--violet)"
-        fillOpacity="0.85"
       />
       <line
-        x1={x + 4}
+        x1={x + 5}
         y1={y + 3}
         x2={x + 20}
         y2={y + 16}
-        stroke="var(--violet)"
-        strokeOpacity="0.45"
-        strokeWidth="1"
+        stroke="var(--cyan)"
+        strokeOpacity="0.85"
+        strokeWidth="1.5"
       />
     </g>
   );
@@ -133,10 +132,10 @@ function Architecture({
             width={layer.width}
             height="40"
             rx="4"
-            fill="var(--paper)"
-            fillOpacity="0.82"
-            stroke="var(--line-2)"
-            strokeWidth="1"
+            fill={i === 0 ? "var(--violet-soft)" : "var(--paper)"}
+            fillOpacity="0.92"
+            stroke={i === 0 ? "var(--violet)" : "var(--cyan)"}
+            strokeWidth={i === 0 ? "1.5" : "1"}
           />
           <rect
             x={(640 - layer.width) / 2}
@@ -165,8 +164,8 @@ function Architecture({
               y1={layer.y + 40}
               x2="320"
               y2={layer.y + 52}
-              stroke="var(--accent)"
-              strokeWidth="1.25"
+              stroke="var(--cyan)"
+              strokeWidth="1.75"
             />
           ) : null}
         </g>
@@ -278,8 +277,8 @@ function Flow({
                 y1="168"
                 x2={x + gap - 24}
                 y2="168"
-                stroke="var(--accent)"
-                strokeWidth="1.25"
+                stroke="var(--cyan)"
+                strokeWidth="1.75"
                 strokeDasharray="3 4"
               />
             ) : null}

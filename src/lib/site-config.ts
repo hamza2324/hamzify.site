@@ -32,7 +32,7 @@ export const siteConfig = {
   locale: "en_US",
   lang: "en",
   /** Shown in the footer and used for the contact page fallback. */
-  email: "hello@hamzify.site",
+  email: "hamzajadoon71@gmail.com",
   /** Used for `twitter:site` and `twitter:creator`. */
   twitterHandle: "@hamzify",
   social: {

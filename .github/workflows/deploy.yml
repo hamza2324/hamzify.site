@@ -39,6 +39,8 @@ jobs:
       - run: npm run build
         env:
           NEXT_PUBLIC_SITE_URL: https://hamzify.site
+          NEXT_PUBLIC_NEWSLETTER_ENDPOINT: https://formspree.io/f/xzepjobl
+          NEXT_PUBLIC_CONTACT_ENDPOINT: https://formspree.io/f/xzepjobl
 
       # GitHub Pages would otherwise hand the output to Jekyll, which skips
       # every directory starting with an underscore — including `_next`.

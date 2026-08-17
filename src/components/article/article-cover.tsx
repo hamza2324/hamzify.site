@@ -73,7 +73,7 @@ export function ArticleCover({
       data-pattern={article.coverPattern}
       aria-hidden="true"
       className={cn(
-        "cover relative rounded-md border border-line transition-colors group-hover:border-line-2",
+        "cover relative rounded-md border transition-colors group-hover:border-[var(--local-accent)]",
         RATIO[size],
         className,
       )}

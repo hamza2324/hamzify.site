@@ -27,15 +27,15 @@ export function FeaturedWorkflow({ article }: { article: Article }) {
   return (
     <section
       aria-labelledby="featured-workflow"
-      data-accent="indigo"
-      className="border-b border-line bg-surface-2 py-14 sm:py-16 lg:py-20"
+      data-accent="amber"
+      className="border-b border-line bg-amber-soft/60 py-14 sm:py-16 lg:py-20"
     >
       <Container>
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center lg:gap-14">
           <div>
             <div className="flex items-center gap-3">
-              <AccentRule accent="indigo" />
-              <span className="label text-ink-3">AI development workflow</span>
+              <AccentRule accent="amber" />
+              <span className="label text-amber">AI development workflow</span>
             </div>
 
             <h2
@@ -52,7 +52,7 @@ export function FeaturedWorkflow({ article }: { article: Article }) {
             </p>
 
             <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.75rem] text-ink-3">
-              <Badge accent="indigo" variant="soft">
+              <Badge accent="amber" variant="soft">
                 Workflow
               </Badge>
               <time dateTime={article.publishedAt}>
@@ -81,7 +81,7 @@ export function FeaturedWorkflow({ article }: { article: Article }) {
                   key={step}
                   className="flex items-baseline gap-3 bg-surface px-4 py-3.5"
                 >
-                  <span className="label shrink-0 tabular-nums text-indigo">
+                  <span className="label shrink-0 tabular-nums text-amber">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="text-[0.9375rem] font-medium text-ink">

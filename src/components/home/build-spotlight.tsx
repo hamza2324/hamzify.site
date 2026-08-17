@@ -17,7 +17,7 @@ export function BuildSpotlight({ articles }: { articles: Article[] }) {
   return (
     <section
       aria-labelledby="build-spotlight"
-      className="border-b border-line py-14 sm:py-16 lg:py-20"
+      className="border-b border-line bg-teal-soft/35 py-14 sm:py-16 lg:py-20"
     >
       <Container>
         <SectionHeading

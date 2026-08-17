@@ -78,7 +78,7 @@ export function SiteHeader() {
                       className={cn(
                         "relative inline-flex items-center rounded-sm px-2.5 py-1.5 text-[0.875rem] transition-colors",
                         active
-                          ? "font-medium text-ink"
+                          ? "font-medium text-violet"
                           : "text-ink-2 hover:text-ink",
                       )}
                     >
@@ -86,7 +86,7 @@ export function SiteHeader() {
                       {active ? (
                         <span
                           aria-hidden="true"
-                          className="absolute inset-x-2.5 -bottom-[0.3rem] h-px bg-accent"
+                          className="absolute inset-x-2.5 -bottom-[0.3rem] h-[2px] bg-violet"
                         />
                       ) : null}
                     </Link>
@@ -152,7 +152,7 @@ export function SiteHeader() {
                       <span
                         className={cn(
                           "text-base",
-                          active ? "font-medium text-accent" : "text-ink",
+                          active ? "font-medium text-violet" : "text-ink",
                         )}
                       >
                         {item.label}
@@ -183,7 +183,7 @@ export function SiteHeader() {
               </Link>
               <Link
                 href="/#newsletter"
-                className="rounded-sm border border-line-strong bg-ink px-3 py-2 text-sm font-medium text-ink-inverse"
+                className="rounded-sm bg-brand px-3 py-2 text-sm font-medium text-on-accent"
               >
                 Subscribe
               </Link>

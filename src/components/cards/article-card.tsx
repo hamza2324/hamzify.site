@@ -79,10 +79,10 @@ export function ArticleCard({
       >
         <div className="order-2 lg:order-1">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge accent={category.accent} variant="soft">
+            <Badge accent={category.accent} variant="solid">
               {typeMeta.label}
             </Badge>
-            <span className="label text-ink-3">{category.label}</span>
+            <span className="label text-[var(--local-accent)]">{category.label}</span>
           </div>
 
           <h2 className="mt-4 font-display text-display-l font-semibold text-ink">

@@ -41,7 +41,7 @@ export function ContentBlock({
       <div
         className={cn(
           "flex items-center gap-2 border-b border-line px-4 py-2.5",
-          "bg-[color-mix(in_oklab,var(--local-accent)_6%,transparent)]",
+          "bg-[color-mix(in_oklab,var(--local-accent)_14%,transparent)]",
         )}
       >
         {Icon ? (

@@ -29,6 +29,7 @@ export function SectionHeading({
 }: SectionHeadingProps) {
   return (
     <div
+      data-accent={accent}
       className={cn(
         "flex flex-col gap-4 md:flex-row md:items-end md:justify-between",
         className,
@@ -37,7 +38,7 @@ export function SectionHeading({
       <div className="max-w-2xl">
         <div className="flex items-center gap-3">
           <AccentRule accent={accent} />
-          <span className="label text-ink-3">{kicker}</span>
+          <span className="label text-[var(--local-accent)]">{kicker}</span>
         </div>
         <Tag className="mt-3 font-display text-display-s font-semibold text-ink">
           {title}
