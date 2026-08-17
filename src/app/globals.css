@@ -1,0 +1,792 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   HAMZIFY DESIGN SYSTEM
+   --------------------------------------------------------------------------
+   One token layer, two themes. Every semantic colour is declared once with
+   `light-dark()`, so the light and dark palettes are designed side by side
+   rather than one being an inversion of the other. `color-scheme` drives which
+   half is used: unset means "follow the OS", and the theme toggle writes
+   `data-theme` on <html> to override it.
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  /* --- Surfaces ---------------------------------------------------------- */
+  --paper: light-dark(#fcfbf9, #121110);
+  --surface: light-dark(#ffffff, #1a1817);
+  --surface-2: light-dark(#f4f2ed, #221f1d);
+  --surface-3: light-dark(#eae6de, #2b2724);
+  --code-surface: light-dark(#fbfaf7, #17161a);
+
+  /* --- Text ------------------------------------------------------------- */
+  --ink: light-dark(#14120e, #f4f1eb);
+  --ink-2: light-dark(#4f4a41, #b9b3a8);
+  --ink-3: light-dark(#756f63, #8b8579);
+  --ink-inverse: light-dark(#fcfbf9, #14120e);
+
+  /* --- Lines ------------------------------------------------------------ */
+  --line: light-dark(#e5e0d6, #2e2a27);
+  --line-2: light-dark(#cdc5b6, #423d38);
+  --line-strong: light-dark(#14120e, #f4f1eb);
+
+  /* --- Brand accent (node cyan from the Hamzify mark) ------------------- */
+  --accent: light-dark(#0f6f68, #3dd6c6);
+  --accent-strong: light-dark(#0a5752, #7aeee0);
+  --accent-soft: light-dark(#e6f4f2, #102825);
+  --accent-line: light-dark(#b7ddd8, #1e4a45);
+  --on-accent: light-dark(#f4fffd, #06201d);
+
+  /* --- Category / article-type accents ---------------------------------- */
+  --ember: light-dark(#bd4711, #ff8c55);
+  --ember-soft: light-dark(#fdf1e9, #2a1b13);
+  --teal: light-dark(#0f6f68, #45cfc0);
+  --teal-soft: light-dark(#e6f4f2, #102825);
+  --amber: light-dark(#8a5a06, #e3b25c);
+  --amber-soft: light-dark(#fbf3e2, #2a2113);
+  --indigo: light-dark(#43449c, #a2abf5);
+  --indigo-soft: light-dark(#eeeefb, #1d1e33);
+  --olive: light-dark(#4c6b16, #a8c95f);
+  --olive-soft: light-dark(#f1f5e4, #202612);
+
+  /* --- Interaction ------------------------------------------------------ */
+  --focus: light-dark(#0b5cd5, #7fb2ff);
+  --selection: light-dark(#f8ddcb, #4a2c1c);
+
+  /* --- Radii: restrained, editorial, never pill-shaped ------------------ */
+  --r-xs: 2px;
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 10px;
+  --r-xl: 16px;
+
+  /* --- Shadows: warm-tinted and barely there --------------------------- */
+  --shadow-xs: 0 1px 2px light-dark(rgb(20 18 14 / 0.05), rgb(0 0 0 / 0.3));
+  --shadow-sm:
+    0 1px 2px light-dark(rgb(20 18 14 / 0.04), rgb(0 0 0 / 0.25)),
+    0 2px 8px light-dark(rgb(20 18 14 / 0.04), rgb(0 0 0 / 0.2));
+  --shadow-md:
+    0 2px 4px light-dark(rgb(20 18 14 / 0.04), rgb(0 0 0 / 0.3)),
+    0 8px 24px light-dark(rgb(20 18 14 / 0.06), rgb(0 0 0 / 0.28));
+
+  /* --- Motion ----------------------------------------------------------- */
+  --dur-fast: 130ms;
+  --dur: 210ms;
+  --dur-slow: 380ms;
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* --- Layout ----------------------------------------------------------- */
+  --w-prose: 68ch;
+  --w-content: 74rem;
+  --w-wide: 88rem;
+  --header-h: 3.75rem;
+
+  /* --- Z-index layers --------------------------------------------------- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 30;
+  --z-header: 50;
+  --z-dropdown: 60;
+  --z-overlay: 70;
+  --z-modal: 80;
+  --z-skip: 100;
+}
+
+/* Explicit user choice wins over the OS setting. */
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   Tailwind theme bridge: expose the tokens above as utilities
+   (`bg-surface`, `text-ink-2`, `border-line`, `font-display`, …).
+   `inline` keeps the var reference in the output so theming stays live.
+   -------------------------------------------------------------------------- */
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-code-surface: var(--code-surface);
+
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-inverse: var(--ink-inverse);
+
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-line-strong: var(--line-strong);
+
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-line);
+  --color-on-accent: var(--on-accent);
+
+  --color-ember: var(--ember);
+  --color-ember-soft: var(--ember-soft);
+  --color-teal: var(--teal);
+  --color-teal-soft: var(--teal-soft);
+  --color-amber: var(--amber);
+  --color-amber-soft: var(--amber-soft);
+  --color-indigo: var(--indigo);
+  --color-indigo-soft: var(--indigo-soft);
+  --color-olive: var(--olive);
+  --color-olive-soft: var(--olive-soft);
+
+  --color-focus: var(--focus);
+
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans:
+    var(--font-source-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-mono:
+    var(--font-jetbrains-mono), ui-monospace, "SFMono-Regular", Menlo,
+    monospace;
+
+  --radius-xs: var(--r-xs);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+
+  --ease-brand: var(--ease);
+
+  --container-content: var(--w-content);
+  --container-wide: var(--w-wide);
+
+  /* Fluid display sizes. Body copy stays fixed for predictable reading. */
+  --text-display-xl: clamp(2.5rem, 1.6rem + 4.2vw, 4.75rem);
+  --text-display-xl--line-height: 1.02;
+  --text-display-xl--letter-spacing: -0.022em;
+  --text-display-l: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
+  --text-display-l--line-height: 1.06;
+  --text-display-l--letter-spacing: -0.02em;
+  --text-display-m: clamp(1.625rem, 1.3rem + 1.4vw, 2.25rem);
+  --text-display-m--line-height: 1.12;
+  --text-display-m--letter-spacing: -0.016em;
+  --text-display-s: clamp(1.375rem, 1.2rem + 0.7vw, 1.75rem);
+  --text-display-s--line-height: 1.2;
+  --text-display-s--letter-spacing: -0.012em;
+  --text-meta: 0.75rem;
+  --text-meta--line-height: 1.25rem;
+  --text-meta--letter-spacing: 0.06em;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-h) + 1.5rem);
+    text-underline-offset: 0.18em;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--selection);
+    color: var(--ink);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* One visible, consistent focus treatment everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: var(--r-xs);
+  }
+
+  /* Keyboard users get the ring; pointer users do not. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-mono);
+    font-feature-settings: "calt" 1;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Anchor targets should not hide under the sticky header. */
+  :target {
+    scroll-margin-top: calc(var(--header-h) + 2rem);
+  }
+}
+
+/* ==========================================================================
+   REUSABLE PATTERNS
+   ========================================================================== */
+
+/** Metadata / eyebrow text: small, uppercase, monospace, tracked out. */
+@utility label {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: 1.25rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/** Fine hairline rule used to separate editorial blocks. */
+@utility rule {
+  border-top: 1px solid var(--line);
+}
+
+/** Underline that grows on hover — used for editorial headline links. */
+@utility link-underline {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, currentcolor 25%, transparent);
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color var(--dur) var(--ease);
+
+  &:hover {
+    text-decoration-color: currentcolor;
+  }
+}
+
+/** Accent scoping: `data-accent` maps a card or section to a palette hue. */
+[data-accent="ember"] {
+  --local-accent: var(--ember);
+  --local-accent-soft: var(--ember-soft);
+}
+[data-accent="teal"] {
+  --local-accent: var(--teal);
+  --local-accent-soft: var(--teal-soft);
+}
+[data-accent="amber"] {
+  --local-accent: var(--amber);
+  --local-accent-soft: var(--amber-soft);
+}
+[data-accent="indigo"] {
+  --local-accent: var(--indigo);
+  --local-accent-soft: var(--indigo-soft);
+}
+[data-accent="olive"] {
+  --local-accent: var(--olive);
+  --local-accent-soft: var(--olive-soft);
+}
+
+/* Fallback so `local-accent` is always defined. */
+:root {
+  --local-accent: var(--accent);
+  --local-accent-soft: var(--accent-soft);
+}
+
+/* --------------------------------------------------------------------------
+   Generated article covers.
+   No stock photography: each article gets a deterministic CSS composition
+   built from its accent hue and `coverPattern`. Cheap to render, no image
+   weight, and it reads as build artifact rather than decoration.
+   -------------------------------------------------------------------------- */
+.cover {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--surface-2);
+  isolation: isolate;
+}
+
+.cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.9;
+}
+
+.cover[data-pattern="grid"]::before {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--local-accent) 16%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--local-accent) 12%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 2.25rem 2.25rem;
+}
+
+.cover[data-pattern="terminal"]::before {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--local-accent) 13%, transparent) 0 1px,
+    transparent 1px 0.75rem
+  );
+}
+
+.cover[data-pattern="diff"]::before {
+  background-image: repeating-linear-gradient(
+    115deg,
+    color-mix(in oklab, var(--local-accent) 14%, transparent) 0 2px,
+    transparent 2px 12px
+  );
+}
+
+/* A spine with nodes on it. The nodes and the row rules share the same offset
+   inside each tile so they line up instead of reading as unrelated marks. */
+.cover[data-pattern="timeline"]::before {
+  background-image:
+    radial-gradient(
+      circle at 1.5rem 1.75rem,
+      color-mix(in oklab, var(--local-accent) 55%, transparent) 3.5px,
+      transparent 4px
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 1.75rem,
+      color-mix(in oklab, var(--local-accent) 20%, transparent) 1.75rem,
+      color-mix(in oklab, var(--local-accent) 20%, transparent) calc(1.75rem + 1px),
+      transparent calc(1.75rem + 1px)
+    ),
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--local-accent) 32%, transparent) 1px,
+      transparent 1px
+    );
+  background-size:
+    100% 3.5rem,
+    100% 3.5rem,
+    100% 100%;
+  background-position:
+    0 0,
+    0 0,
+    1.5rem 0;
+  background-repeat: repeat, repeat, no-repeat;
+}
+
+.cover[data-pattern="stack"]::before {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--local-accent) 10%, transparent) 0 0.5rem,
+    transparent 0.5rem 1rem
+  );
+}
+
+.cover[data-pattern="flow"]::before {
+  background-image:
+    radial-gradient(
+      circle,
+      color-mix(in oklab, var(--local-accent) 26%, transparent) 1.5px,
+      transparent 2px
+    ),
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--local-accent) 14%, transparent) 1px,
+      transparent 1px
+    );
+  background-size:
+    1.25rem 1.25rem,
+    6rem 100%;
+}
+
+/* A soft wash keeps text legible over the pattern in both themes. */
+.cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    color-mix(in oklab, var(--local-accent) 8%, transparent),
+    transparent 55%
+  );
+}
+
+.cover > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   ARTICLE BODY
+   Long-form reading is the product. Measure, rhythm and hierarchy are set
+   here rather than sprinkled across components.
+   ========================================================================== */
+
+.prose {
+  --prose-gap: 1.5rem;
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  max-width: var(--w-prose);
+}
+
+@media (min-width: 48rem) {
+  .prose {
+    font-size: 1.125rem;
+    line-height: 1.72;
+  }
+}
+
+.prose > * + * {
+  margin-top: var(--prose-gap);
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.012em;
+}
+
+.prose h2 {
+  margin-top: 3rem;
+  font-size: 1.6em;
+  line-height: 1.18;
+}
+
+.prose h3 {
+  margin-top: 2.25rem;
+  font-size: 1.24em;
+  line-height: 1.28;
+}
+
+.prose h4 {
+  margin-top: 1.75rem;
+  font-family: var(--font-sans);
+  font-size: 1.05em;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+.prose h2 + *,
+.prose h3 + *,
+.prose h4 + * {
+  margin-top: 0.75rem;
+}
+
+.prose a:not(.no-prose-link) {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.2em;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.prose a:not(.no-prose-link):hover {
+  color: var(--accent-strong);
+}
+
+.prose strong {
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.35rem;
+}
+
+.prose ul {
+  list-style: none;
+  padding-left: 1.1rem;
+}
+
+.prose ul > li {
+  position: relative;
+  padding-left: 0.35rem;
+}
+
+.prose ul > li::before {
+  content: "";
+  position: absolute;
+  left: -0.85rem;
+  top: 0.7em;
+  width: 0.3rem;
+  height: 1px;
+  background-color: var(--accent);
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose ol > li::marker {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.prose li + li {
+  margin-top: 0.4rem;
+}
+
+.prose li > ul,
+.prose li > ol {
+  margin-top: 0.4rem;
+}
+
+.prose blockquote {
+  margin-inline: 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--accent);
+  font-family: var(--font-display);
+  font-size: 1.1em;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+.prose blockquote p + p {
+  margin-top: 0.75rem;
+}
+
+/* Inline code */
+.prose :not(pre) > code {
+  background-color: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 0.1em 0.34em;
+  font-size: 0.86em;
+  word-break: break-word;
+}
+
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
+}
+
+/* Tables: readable on desktop, scrollable on mobile. */
+.prose .table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background-color: var(--surface);
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  text-align: left;
+  min-width: 34rem;
+}
+
+.prose thead {
+  background-color: var(--surface-2);
+}
+
+.prose th {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ink-2);
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.prose td {
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  color: var(--ink-2);
+}
+
+.prose tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.prose figure {
+  margin-inline: 0;
+}
+
+.prose figcaption {
+  margin-top: 0.65rem;
+  font-size: 0.8125rem;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   CODE BLOCKS
+   rehype-pretty-code runs at build time with a light and a dark Shiki theme
+   and writes both colours onto every token. `light-dark()` then picks one,
+   which means readable syntax highlighting with zero client JavaScript.
+   ========================================================================== */
+
+figure[data-rehype-pretty-code-figure] {
+  position: relative;
+  margin: 2rem 0;
+}
+
+[data-rehype-pretty-code-title] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-2);
+  background-color: var(--surface-2);
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  padding: 0.55rem 0.85rem;
+}
+
+[data-rehype-pretty-code-title] + pre {
+  border-radius: 0 0 var(--r-md) var(--r-md);
+}
+
+.prose pre {
+  background-color: var(--code-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 1rem 0;
+  overflow-x: auto;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+@media (min-width: 48rem) {
+  .prose pre {
+    font-size: 0.875rem;
+  }
+}
+
+.prose pre code {
+  display: grid;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+  counter-reset: line;
+}
+
+.prose pre code [data-line] {
+  padding: 0 1.1rem;
+  border-left: 2px solid transparent;
+}
+
+/* Shiki dual-theme token colours. */
+.prose pre code span[style*="--shiki-light"],
+[data-rehype-pretty-code-figure] span[style*="--shiki-light"] {
+  color: light-dark(var(--shiki-light), var(--shiki-dark));
+}
+
+/* Optional line numbers, enabled per block with `showLineNumbers`. */
+code[data-line-numbers] > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1.25rem;
+  margin-right: 1.25rem;
+  text-align: right;
+  color: var(--ink-3);
+  opacity: 0.65;
+}
+
+/* Prose-like blocks — prompts, briefs, notes — wrap instead of scrolling
+   sideways. Real code keeps its line breaks and scrolls, as expected. */
+.prose pre[data-language="text"] code [data-line],
+.prose pre[data-language="txt"] code [data-line],
+.prose pre[data-language="md"] code [data-line] {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* Highlighted lines and words. */
+.prose pre code [data-highlighted-line] {
+  background-color: color-mix(in oklab, var(--accent) 9%, transparent);
+  border-left-color: var(--accent);
+}
+
+.prose pre code [data-highlighted-chars] {
+  background-color: color-mix(in oklab, var(--accent) 16%, transparent);
+  border-radius: var(--r-xs);
+  padding: 0.1em 0.2em;
+}
+
+/* ==========================================================================
+   MOTION
+   Entrance animation is a nice-to-have. It never gates content: elements are
+   visible by default and the animation only runs when it is allowed to.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.6rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .rise {
+    animation: rise var(--dur-slow) var(--ease) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "slug": "hamza",
+  "name": "Hamza",
+  "role": "Developer, writing Hamzify",
+  "initials": "H",
+  "shortBio": "Developer documenting an AI-assisted build practice in public: which tools survive contact with real work, which workflows hold up, and what breaks along the way.",
+  "bio": [
+    "I build software and write about doing it with AI in the loop. Hamzify is where the notes live: tool tests on real tasks, build logs from projects I actually shipped, and the workflows that survived more than one week of use.",
+    "The reason this site exists is that most writing about AI coding tools is either a launch announcement or a screenshot of something that worked once. Neither helps you decide what to open tomorrow morning. So the pieces here state what was built, how long it took, which version of which tool was used, and where the whole thing fell over.",
+    "If something here is wrong or out of date, I would genuinely like to know — corrections get published rather than quietly patched."
+  ],
+  "expertise": [
+    "AI-assisted software development",
+    "AI coding tools and agents",
+    "Frontend and full-stack development",
+    "Developer workflows and tooling"
+  ],
+  "links": [
+    { "label": "GitHub", "href": "https://github.com/hamzify" },
+    { "label": "X", "href": "https://x.com/hamzify" },
+    { "label": "Email", "href": "mailto:hello@hamzify.site" }
+  ]
+}

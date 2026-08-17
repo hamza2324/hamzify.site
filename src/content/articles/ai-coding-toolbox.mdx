@@ -1,0 +1,160 @@
+---
+title: "The AI Coding Toolbox: What Each Category Is Actually For"
+description: "A guide to the AI development tool landscape organised by the job each category does — editors, agents, CLI tools, review bots and model routers — and how to tell when you need one."
+dek: "Six categories, what each is genuinely good at, and the overlap that makes people buy three tools to solve one problem."
+category: resources
+articleType: guide
+subcategory: Tool landscape
+publishedAt: "2026-07-24"
+updatedAt: "2026-08-16"
+author: hamza
+sample: true
+affiliateDisclosure: true
+coverPattern: grid
+tags:
+  - resources
+  - tools
+  - guide
+  - landscape
+keywords:
+  - ai coding tools guide
+  - types of ai development tools
+  - ai coding tool categories
+related:
+  - cursor-vs-github-copilot
+  - context-engineering-checklist
+  - ai-pair-programming-workflow
+---
+
+The AI development tool market is confusing not because there are many tools, but because the
+marketing for all of them says approximately the same thing. Every product claims to
+understand your codebase and make you faster, so choosing between them requires working out
+what job each category actually does.
+
+That is what this guide is for: six categories, the job each one owns, and how to tell when
+you need one. It gets updated in place rather than republished, so the date at the top is the
+last time the categories were reviewed rather than the day the tools existed in this form.
+
+## 1. AI-native editors
+
+**The job:** replace your editor with one where model assistance is built into the editing
+surface rather than bolted on.
+
+You get inline completion, an inline edit command that rewrites a selection, a chat panel with
+codebase awareness, and usually an agent mode that edits multiple files.
+
+**Worth it when** you spend most of your day in an editor and the friction of switching
+context to a chat window is what stops you using assistance at all. The value is largely in
+proximity: assistance you have to go and find gets used far less than assistance already at
+the cursor.
+
+**Not worth it when** you are attached to a highly customised setup. Recreating years of
+configuration is a real cost, and an extension in your existing editor may capture most of the
+benefit.
+
+## 2. Agents in the terminal
+
+**The job:** run multi-step tasks autonomously — read files, edit them, run commands, iterate
+on failures — without you approving each step.
+
+**Worth it when** the task is mechanical but wide: a rename across forty files, adding a
+parameter through a call chain, migrating a test suite between frameworks. Work that is not
+hard, just long.
+
+**Not worth it when** the task requires judgement you have not written down. An agent given a
+vague goal produces a large confident diff in the wrong direction, and reviewing that costs
+more than doing the work.
+
+<Callout variant="note" title="The pattern across both categories">
+  Editors optimise for the loop where you are reading and deciding constantly. Terminal agents
+  optimise for the loop where you have already decided and want the typing done. Most people
+  who feel disappointed by one of them were using it for the other's job.
+</Callout>
+
+## 3. Completion extensions
+
+**The job:** predict the next few lines inside the editor you already use.
+
+The lowest-commitment category and still the one with the clearest daily value. It shortens
+the boring parts — the second half of a well-named function, the obvious test case, the
+boilerplate around a known API.
+
+**Worth it** for essentially everyone writing code in a mainstream language, since the
+integration cost is near zero.
+
+**Watch for** the way it nudges you towards whatever it can predict. Accepting a plausible
+completion is easier than writing the better thing you had in mind, and that pressure is
+subtle and constant.
+
+## 4. Review and PR bots
+
+**The job:** comment on pull requests before a human does.
+
+They are good at the mechanical layer: missing null checks, inconsistent error handling,
+obvious edge cases, changes that contradict a nearby pattern. They are poor at the layer that
+matters most — whether the change is the right change.
+
+**Worth it when** you work alone, or in a small team without reliable review capacity. A
+second pass that catches the mechanical class of defect has real value when the alternative is
+no review.
+
+**Watch for** comment volume. A bot producing fifteen low-value comments per PR trains
+everyone, including you, to close the tab.
+
+## 5. Model routers and gateways
+
+**The job:** one API surface across many model providers, with fallback, caching and spend
+controls.
+
+This is infrastructure, not a coding tool. It matters if you are building a product that calls
+models, and is irrelevant if you are only using AI to write code.
+
+**Worth it when** you have production traffic to models and need cost visibility, rate-limit
+handling, or the ability to switch providers without a rewrite.
+
+**Not worth it when** you have one provider and modest volume. You are adding a hop and a
+dependency to solve a problem you do not have yet.
+
+## 6. Context and documentation tools
+
+**The job:** get accurate, current information about libraries into a model's context, rather
+than relying on what it memorised at training time.
+
+The problem they solve is real: a model confidently using an API that changed eighteen months
+ago is one of the most common sources of wasted time. The category is younger and less settled
+than the others.
+
+**Worth it when** you work with fast-moving libraries where the model's training data is
+reliably stale.
+
+## Choosing without buying five things
+
+<SpecList>
+  <SpecRow term="If you write code daily and use nothing yet">
+    Start with a completion extension in your current editor. Lowest cost, quickest signal
+    about whether assistance suits how you work.
+  </SpecRow>
+  <SpecRow term="If completion is not enough">
+    An AI-native editor, or the agent mode of the one you have. This is where the biggest
+    change in workflow happens.
+  </SpecRow>
+  <SpecRow term="If your bottleneck is wide mechanical work">
+    A terminal agent. Different job from the editor; genuinely worth having both.
+  </SpecRow>
+  <SpecRow term="If your bottleneck is that nobody reviews your code">
+    A review bot, with an honest expectation of what it catches.
+  </SpecRow>
+  <SpecRow term="If you are building on models rather than with them">
+    A router, once you have traffic worth managing.
+  </SpecRow>
+</SpecList>
+
+The overlap is real and mostly harmless: an AI-native editor includes completion, and its
+agent mode overlaps a terminal agent. Paying for three tools in the same category is the
+common mistake, and it happens because the marketing does not distinguish between them.
+
+## Updating this page
+
+The specific tools in each category will change. The categories have been more stable, which
+is why this guide is organised around jobs rather than product names — a page organised around
+products would be wrong within a quarter.

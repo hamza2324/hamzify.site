@@ -1,0 +1,149 @@
+---
+title: "A Context Checklist for Briefing Coding Agents"
+description: "A reference checklist for what an AI coding agent needs to know before it starts: the seven inputs that change output quality, and the ones that only add noise."
+dek: "Most of what people call prompt engineering is really just deciding what the model is allowed to see."
+category: resources
+articleType: resource
+subcategory: Checklists
+publishedAt: "2026-08-01"
+updatedAt: "2026-08-15"
+author: hamza
+sample: true
+coverPattern: stack
+tags:
+  - resources
+  - prompting
+  - agents
+  - checklist
+keywords:
+  - context engineering checklist
+  - briefing ai coding agent
+  - ai coding context
+related:
+  - ai-pair-programming-workflow
+  - reviewing-ai-generated-code
+  - ai-coding-toolbox
+---
+
+An agent working in your repository is not short of intelligence. It is short of the specific
+knowledge that lives in your head, your team's habits and the parts of your codebase it did
+not read. Supplying that deliberately is most of the job.
+
+This is a checklist, not an essay — the point is to come back to it. Work down it before any
+task large enough to matter.
+
+## The seven inputs
+
+<SpecList>
+  <SpecRow term="1. The goal, as an outcome">
+    Not "add a hook", but "a component can read the current user's plan without prop
+    drilling". Outcomes let the model choose an approach; instructions force it to guess
+    which approach you meant.
+  </SpecRow>
+  <SpecRow term="2. Acceptance criteria">
+    Three to six checkable statements. This is the highest-value input on the list, and the
+    one most often skipped because it takes effort before the fun part.
+  </SpecRow>
+  <SpecRow term="3. The file to imitate">
+    One existing file that does something structurally similar. A concrete example beats any
+    quantity of prose about conventions.
+  </SpecRow>
+  <SpecRow term="4. What to reuse">
+    Name the helpers, hooks and utilities that already exist. Unstated, you get a second
+    implementation — the most common defect in generated code.
+  </SpecRow>
+  <SpecRow term="5. Scope limits">
+    Which files or directories may change. Prevents a small task producing a sprawling diff.
+  </SpecRow>
+  <SpecRow term="6. Hard constraints">
+    No new dependencies; keep the public API stable; do not touch the migration files. Short,
+    absolute, and worth repeating even when they are also in a rules file.
+  </SpecRow>
+  <SpecRow term="7. How it will be verified">
+    The command you will run, or the test that must pass. Telling the model how it will be
+    judged reliably improves what it produces.
+  </SpecRow>
+</SpecList>
+
+## A template
+
+```md title="brief.md"
+## Goal
+<outcome, one or two sentences>
+
+## Done when
+- [ ] <checkable statement>
+- [ ] <checkable statement>
+- [ ] <checkable statement>
+
+## Reuse
+- <module or helper that already exists>
+
+## Follow the pattern in
+- <path to an existing file>
+
+## Do not
+- Add dependencies
+- Change <path>
+- <anything else absolute>
+
+## Verified by
+`<command>` passes, plus a test covering <the ugly case>
+```
+
+Copy it into the repository. A template that lives next to the code gets used; a template in
+a bookmark does not.
+
+## What belongs in a persistent rules file
+
+Some context should never be retyped. Anything true of every task belongs in the project rules
+file your tool loads automatically — `AGENTS.md`, `.cursor/rules`, or whatever the equivalent
+is:
+
+- package manager and the exact commands for install, dev, build, test
+- test framework and where tests live
+- language conventions that a formatter cannot express
+- the dependency policy
+- directories that are generated and must never be edited by hand
+- how errors are surfaced to users
+
+Keep it short. A rules file long enough to be a document stops being read carefully — by the
+model, and by you.
+
+<Callout variant="tip" title="Write the rules file as instructions, not description">
+  "Use `pnpm`" works. "This project uses pnpm as its package manager, which is a fast,
+  disk-efficient alternative to npm" wastes the space and adds nothing actionable.
+</Callout>
+
+## What to leave out
+
+Adding context has a cost, and past a point it makes results worse rather than better. The
+things that usually hurt:
+
+**Whole files when a function would do.** Pasting a 900-line module to ask about one function
+buries the relevant part.
+
+**History that is no longer true.** Old decisions, superseded approaches and stale comments
+get treated as current instructions.
+
+**Aspirational conventions.** If the codebase does not actually follow the rule, stating it
+produces code that matches nothing else in the repository.
+
+**Politeness and preamble.** No measurable effect on output. Not harmful, just not doing
+anything.
+
+**Everything, on the theory that more is safer.** Large context dilutes the important parts.
+Relevance beats volume, consistently.
+
+## The pre-flight check
+
+Before sending anything non-trivial, three questions:
+
+1. Could someone unfamiliar with this project produce a correct answer from what I have
+   written? If not, something in the list above is missing.
+2. Have I said what not to do? Constraints are skipped far more often than instructions.
+3. Do I know how I will check the result? If not, the review will drift into taste rather than
+   correctness.
+
+Three questions, about a minute. It is a better return than any amount of rewording the
+prompt itself.

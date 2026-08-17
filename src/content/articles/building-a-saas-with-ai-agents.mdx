@@ -1,0 +1,242 @@
+---
+title: "I Gave AI Agents a Real SaaS Build. Here Is Where It Broke."
+description: "A full build log of shipping a small SaaS with coding agents doing most of the typing: what the agents handled well, the three places they stalled, and what a human still had to own."
+dek: "Agents wrote most of the code. They did not write the parts that mattered most, and the gap between those two facts is the whole story."
+category: build-logs
+articleType: build-log
+subcategory: Agentic development
+publishedAt: "2026-08-11"
+updatedAt: "2026-08-14"
+author: hamza
+featured: true
+sample: true
+coverPattern: timeline
+tags:
+  - agents
+  - saas
+  - nextjs
+  - build-log
+keywords:
+  - ai agent build log
+  - building saas with ai agents
+  - agentic coding workflow
+related:
+  - reviewing-ai-generated-code
+  - cursor-review
+  - ai-pair-programming-workflow
+project:
+  name: Ledgerly
+  objective: "Ship a usable invoicing tool for freelancers — auth, invoices, PDF export, Stripe checkout — with coding agents writing the bulk of the implementation."
+  status: Shipped, still running
+  stack:
+    - Next.js
+    - TypeScript
+    - Postgres
+    - Prisma
+    - Stripe
+  aiTools:
+    - Cursor
+    - Claude
+  timeInvested: 26 hours over 9 days
+---
+
+The interesting question about coding agents is not "can they write code". They can. It
+is whether a build survives being mostly agent-written once real users touch it.
+
+So this build had a rule: the agents do the typing, I do the deciding. Every file could
+be agent-generated, but every architectural choice, schema change and security boundary
+had to be one I made explicitly and could explain.
+
+<KeyTakeaways
+  items={[
+    "Agents were fastest on work with a clear shape: CRUD routes, forms, table components, tests that mirror an existing test.",
+    "They stalled on anything requiring a decision between two acceptable options — and stalling looked like confidently doing the wrong one.",
+    "The schema was the single highest-leverage thing to write by hand. Every hour spent on it saved several later.",
+    "Review time, not generation time, became the bottleneck at around day four.",
+    "Total build time was faster than doing it alone, but not by the multiple the demos suggest.",
+  ]}
+/>
+
+## What was being built
+
+Ledgerly is deliberately boring: freelancers create clients, issue invoices, export a PDF,
+and get paid through Stripe. Boring is the point. A tool with a well-known shape makes it
+possible to see where the agents add speed and where they add mess, without novelty
+confusing the signal.
+
+<ProjectStack
+  stack={["Next.js (App Router)", "TypeScript", "Postgres", "Prisma", "Stripe", "React Email"]}
+  aiTools={["Cursor (agent mode)", "Claude for planning"]}
+  hosting="Fly.io"
+/>
+
+## The setup
+
+Two rules shaped everything else.
+
+**One: no agent touches the schema.** Prisma models were written by hand, reviewed by hand,
+and migrations were applied by hand. A wrong column name in a UI component is a two-minute
+fix. A wrong relation in the schema propagates into fifteen files of generated code before
+you notice.
+
+**Two: every agent task gets a written brief.** Not a chat message — a short file in the
+repo describing the goal, the files it is allowed to touch, and how I would know it worked.
+
+```md title="tasks/invoice-pdf.md"
+# Task: invoice PDF export
+
+Goal
+  GET /api/invoices/:id/pdf returns a PDF of the invoice.
+
+Constraints
+  - Reuse the existing invoice serializer in lib/invoices.ts. Do not write a second one.
+  - No new dependencies beyond @react-pdf/renderer.
+  - Currency formatting must go through formatMoney(); it already handles minor units.
+
+Done when
+  - Route returns 200 with content-type application/pdf for an owned invoice.
+  - Returns 404 for an invoice belonging to another user.
+  - A test covers both cases.
+```
+
+That last section did more work than anything else in this build. An agent given
+"add PDF export" produces something. An agent given a definition of done produces
+something you can check.
+
+## Build timeline
+
+<BuildTimeline
+  entries={[
+    {
+      label: "Day 1",
+      title: "Schema and auth by hand",
+      detail:
+        "Models, relations and session handling written manually. Slowest day of the build and the one I would repeat exactly.",
+      outcome: "shipped",
+    },
+    {
+      label: "Day 2–3",
+      title: "CRUD surface, agent-driven",
+      detail:
+        "Clients and invoices: routes, forms, tables, validation. The agents were genuinely fast here — this is pattern-matching against a schema, and they are good at it.",
+      outcome: "shipped",
+    },
+    {
+      label: "Day 4",
+      title: "PDF export, second attempt",
+      detail:
+        "First attempt quietly built a parallel invoice serializer with subtly different rounding. Deleted it and re-ran with the constraint written explicitly.",
+      outcome: "reworked",
+    },
+    {
+      label: "Day 5–6",
+      title: "Stripe checkout and webhooks",
+      detail:
+        "Checkout was fine. Webhook idempotency was not: the generated handler was happy to process the same event twice. Rewritten by hand.",
+      outcome: "reworked",
+    },
+    {
+      label: "Day 7",
+      title: "Multi-tenant access review",
+      detail:
+        "Read every route looking for missing ownership checks. Found four. All four were in agent-written code that otherwise looked correct.",
+      outcome: "reworked",
+    },
+    {
+      label: "Day 8–9",
+      title: "Polish, emails, deploy",
+      detail:
+        "Empty states, error handling, transactional email, deployment. Back to fast agent work with tight briefs.",
+      outcome: "shipped",
+    },
+  ]}
+/>
+
+## The three places it broke
+
+### 1. Silent duplication
+
+The most expensive failure was not broken code — it was code that worked while quietly
+duplicating logic that already existed. A second money formatter. A second serializer.
+A second validation schema that agreed with the first one in every case except empty
+strings.
+
+Nothing failed. Tests passed. The bill arrives later, when the two copies drift.
+
+<Callout variant="warning" title="What actually helps">
+  Name the file the agent should reuse, in the brief, before it starts. "Reuse
+  `lib/invoices.ts`" prevented in one line what took an hour to unpick the first time.
+</Callout>
+
+### 2. Anything involving "exactly once"
+
+Webhook handling, retries, and background jobs share a property: the correct behaviour
+depends on what happened before, not just on the current input. Generated handlers were
+structurally reasonable and semantically wrong — process the event, update the invoice, no
+check for whether that event id had already been seen.
+
+This is the category I now write by hand without trying the agent first. Not because it
+cannot be done, but because reviewing it properly takes longer than writing it.
+
+### 3. Authorization, everywhere
+
+Four missing ownership checks in one codebase. Each one looked like this:
+
+```ts title="app/api/invoices/[id]/route.ts" showLineNumbers {4-7}
+export async function GET(request: Request, { params }: RouteContext<'/api/invoices/[id]'>) {
+  const { id } = await params
+
+  // Generated version: fetches by id and returns it.
+  // Missing: does this invoice belong to the session user?
+  const invoice = await db.invoice.findUnique({ where: { id } })
+  if (!invoice) return Response.json({ error: 'Not found' }, { status: 404 })
+
+  return Response.json(invoice)
+}
+```
+
+The fix is trivial. Finding it is not, because the code reads as complete. Multi-tenant
+authorization is invisible by omission, and omission is exactly what a diff review is bad
+at catching.
+
+## What this actually cost
+
+Twenty-six hours across nine days. My honest estimate for the same scope, built alone in
+the same style, is somewhere between thirty-five and forty-five hours — so a real saving,
+but nothing like the order-of-magnitude claims that circulate.
+
+The shape of the time also changed. Less typing, much more reading. By day four the
+bottleneck was not producing code, it was reviewing code fast enough to keep up with what
+was being produced. That is a genuinely different job, and it is more tiring than it
+sounds.
+
+## What I would keep
+
+- **Hand-written schema.** Non-negotiable now.
+- **Task briefs with a "done when" section.** The single highest-return habit of the build.
+- **A category list of work agents do not touch:** auth boundaries, migrations, anything
+  idempotent, anything touching money twice.
+- **A dedicated authorization pass** rather than trusting per-feature review.
+
+## What I would change
+
+I reviewed continuously, which felt responsible and was actually inefficient — constant
+small context switches. Next time review gets batched: let the agent finish a whole
+vertical slice, then read the entire slice as one diff with the brief next to it.
+
+<Sources
+  items={[
+    {
+      title: "Stripe docs — handling webhook events idempotently",
+      href: "https://docs.stripe.com/webhooks",
+      publisher: "Stripe",
+      checked: "Aug 2026",
+    },
+    {
+      title: "Prisma — relations and referential actions",
+      href: "https://www.prisma.io/docs/orm/prisma-schema/data-model/relations",
+      publisher: "Prisma",
+      checked: "Aug 2026",
+    },
+  ]}
+/>

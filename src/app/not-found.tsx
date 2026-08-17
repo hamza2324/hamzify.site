@@ -1,0 +1,105 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
+import { ArticleCard } from "@/components/cards/article-card";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
+import { Container } from "@/components/ui/container";
+import { getLatestArticles } from "@/lib/content";
+import { CATEGORY_LIST } from "@/lib/taxonomy";
+
+/**
+ * 404.
+ *
+ * Repeats site chrome because `not-found.tsx` sits above the `(site)` group so
+ * a static export produces a real `404.html`.
+ */
+export const metadata: Metadata = {
+  title: "Experiment not found",
+  description: "That path is not in the Hamzify notebook.",
+  robots: { index: false, follow: true },
+};
+
+export default function NotFound() {
+  const recent = getLatestArticles(3);
+
+  return (
+    <div className="flex min-h-dvh flex-col">
+      <SiteHeader />
+
+      <main id="main" className="flex-1">
+        <Container className="py-16 sm:py-24">
+          <p className="label text-accent">Error 404</p>
+          <h1 className="mt-4 max-w-2xl font-display text-display-l font-semibold text-ink">
+            Experiment not found
+          </h1>
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-2">
+            That path is not in the notebook. It may be mistyped, or it may have
+            pointed at something that was never published. Article URLs here are
+            meant to be permanent, so this is almost certainly a bad link rather
+            than a page that moved.
+          </p>
+
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link
+              href="/"
+              className="group inline-flex items-center gap-1.5 rounded-sm bg-ink px-4 py-2.5 text-[0.9375rem] font-medium text-ink-inverse transition-colors hover:bg-accent hover:text-on-accent"
+            >
+              Return home
+              <ArrowRight
+                className="size-4 transition-transform duration-200 ease-brand group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </Link>
+            <Link
+              href="/search/"
+              className="inline-flex items-center gap-1.5 rounded-sm border border-line-2 px-4 py-2.5 text-[0.9375rem] font-medium text-ink transition-colors hover:border-line-strong"
+            >
+              Search the archive
+            </Link>
+            <Link
+              href="/latest/"
+              className="inline-flex items-center gap-1.5 rounded-sm border border-line-2 px-4 py-2.5 text-[0.9375rem] font-medium text-ink transition-colors hover:border-line-strong"
+            >
+              Browse latest
+            </Link>
+          </div>
+
+          <nav aria-label="Categories" className="mt-12 border-t border-line pt-6">
+            <h2 className="label text-ink-3">Sections</h2>
+            <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+              {CATEGORY_LIST.map((category) => (
+                <li key={category.slug}>
+                  <Link
+                    href={`/${category.slug}/`}
+                    className="text-[0.9375rem] text-ink-2 underline decoration-line-2 underline-offset-2 transition-colors hover:text-ink hover:decoration-accent"
+                  >
+                    {category.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {recent.length > 0 ? (
+            <section aria-labelledby="recent" className="mt-12">
+              <h2 id="recent" className="label text-ink-3">
+                Recently filed
+              </h2>
+              <ul className="mt-4 flex flex-col gap-5">
+                {recent.map((article) => (
+                  <li key={article.slug}>
+                    <ArticleCard article={article} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+        </Container>
+      </main>
+
+      <SiteFooter />
+    </div>
+  );
+}

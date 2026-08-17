@@ -1,0 +1,206 @@
+---
+title: "Rebuilding My Portfolio With AI: A Weekend Build Log"
+description: "A build log of rebuilding a developer portfolio in a weekend with AI writing most of the code — the design decisions that had to stay human, and the performance work that got missed."
+dek: "The code took a weekend. The two decisions that made the site good took longer than the code did."
+category: build-logs
+articleType: build-log
+subcategory: Small projects
+publishedAt: "2026-07-17"
+author: hamza
+sample: true
+coverPattern: stack
+tags:
+  - build-log
+  - portfolio
+  - performance
+  - nextjs
+keywords:
+  - building portfolio with ai
+  - ai portfolio build log
+  - developer portfolio nextjs
+related:
+  - prompt-to-product-in-one-evening
+  - ai-pair-programming-workflow
+  - reviewing-ai-generated-code
+project:
+  name: Portfolio rebuild
+  objective: "Replace a four-year-old portfolio with a static, fast, accessible site — case studies, writing index, contact — using AI for implementation while keeping design and content decisions human."
+  status: Shipped
+  stack:
+    - Next.js
+    - TypeScript
+    - MDX
+    - CSS
+  aiTools:
+    - Cursor
+    - Claude
+  timeInvested: 11 hours over 2 days
+---
+
+A portfolio is a good test case for AI-assisted building precisely because it is not
+technically hard. There is no interesting state, no auth, no data layer. Which means nothing
+hides behind technical difficulty: whatever is good or bad about the result is design,
+content and craft.
+
+<ProjectStack
+  stack={["Next.js", "TypeScript", "MDX", "Hand-written CSS"]}
+  aiTools={["Cursor", "Claude"]}
+  hosting="Static export on a CDN"
+/>
+
+## The goal
+
+The old site was four years old, built on a framework I no longer used, and its main problem
+was not looking dated — it was that it did not answer the question a visitor actually has:
+what has this person built, and were they any good at it.
+
+So the requirement was written as content, not features:
+
+```md title="requirements.md"
+A visitor should be able to answer, within 30 seconds:
+  - What kind of work does this person do?
+  - What have they built that is real?
+  - Is the code any good?
+  - How do I contact them?
+
+Constraints
+  - Static. No server, no database.
+  - Under 100 KB of JavaScript on the landing page.
+  - Keyboard-operable throughout, real focus states.
+  - Case studies in MDX so writing one is not a coding task.
+```
+
+## How the weekend went
+
+<BuildTimeline
+  entries={[
+    {
+      label: "Sat AM",
+      title: "Content first, no code",
+      detail:
+        "Wrote the three case studies in plain markdown before opening an editor. This was the best decision of the build: with real text in hand, the layout questions mostly answered themselves.",
+      outcome: "shipped",
+    },
+    {
+      label: "Sat PM",
+      title: "Scaffold and type scale",
+      detail:
+        "Project set up, static export configured, CSS custom properties for the type scale and spacing. Chose the typefaces by hand — the one part I did not want generated, since it is most of the site's character.",
+      outcome: "shipped",
+    },
+    {
+      label: "Sat late",
+      title: "Case study template",
+      detail:
+        "Agent-written MDX pipeline and article layout. Clean first pass, and the frontmatter schema it proposed was better organised than the one I had sketched.",
+      outcome: "shipped",
+    },
+    {
+      label: "Sun AM",
+      title: "The landing page, three times",
+      detail:
+        "First version was a generic hero with a tagline. Second was too clever to scan. Third worked: name, one line of what I do, then the case studies immediately. The model produced all three competently; deciding which was right was not something it could do.",
+      outcome: "reworked",
+    },
+    {
+      label: "Sun PM",
+      title: "An animation library that should not have been there",
+      detail:
+        "Asked for scroll-reveal on the case study cards and got a 40 KB dependency. Replaced with a CSS transition and an IntersectionObserver in about 30 lines, which was also better because it respects prefers-reduced-motion by default.",
+      outcome: "reworked",
+    },
+    {
+      label: "Sun eve",
+      title: "Accessibility and metadata pass",
+      detail:
+        "Focus states, heading order, alt text, per-page metadata, sitemap. Almost none of this appeared without being asked for specifically.",
+      outcome: "shipped",
+    },
+  ]}
+/>
+
+## What AI did well
+
+**The MDX pipeline.** Frontmatter parsing, validation, static params, reading time. Well-trodden
+territory with a clear right answer, and it produced a clean implementation faster than I would
+have.
+
+**Boilerplate that I resent typing.** Sitemap generation, metadata helpers, the RSS feed. Tedious,
+well-specified, easy to verify. Ideal delegation.
+
+**Explaining a decision it had made.** Asking "why did you use a CSS grid here rather than
+flex" got a genuinely useful answer that changed how I structured a later section. Using it as
+a reference rather than only a generator turned out to be underrated.
+
+## What it got wrong
+
+### It reached for a dependency by default
+
+The scroll-reveal request came back with an animation library. Nothing about the requirement
+needed one, and 40 KB for a fade-in on a portfolio is indefensible.
+
+```css title="the replacement, in full"
+.reveal {
+  opacity: 0;
+  translate: 0 8px;
+  transition: opacity 400ms, translate 400ms;
+}
+.reveal[data-visible="true"] {
+  opacity: 1;
+  translate: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { transition: none; }
+}
+```
+
+Worth noting that the reduced-motion clause was not in the library version either. The
+smaller solution was also the more accessible one, which is a pattern I have now seen enough
+times to expect it.
+
+### Performance was never volunteered
+
+Nothing was slow enough to notice on a laptop, but the images were full-size PNGs, the fonts
+had no `display` strategy, and there was a layout shift on the case study cards. All standard,
+all invisible without measuring, and none of it mentioned until asked.
+
+<Callout variant="warning" title="Ask explicitly, every time">
+  Performance, accessibility and metadata are the three things that never appeared unprompted
+  across this entire build. They are also the three that separate a site that looks finished
+  from one that is. Put them in the brief rather than hoping.
+</Callout>
+
+### It could not tell me which landing page was right
+
+Three landing page versions, each competently built, and no help at all with the only question
+that mattered: which one communicates the thing in five seconds. When I asked directly, I got
+reasonable-sounding arguments for whichever one I mentioned last.
+
+This is the real boundary. Implementation is delegable. Editorial judgement about what a page
+should say is not, and asking for it produces agreeable noise.
+
+## Mistakes I made
+
+**Building the layout before writing the content.** I did this on Saturday morning for one
+section and immediately regretted it. Layout designed around placeholder text collapses when
+real text arrives.
+
+**Not stating the JavaScript budget upfront.** "Under 100 KB" was in my requirements file but
+not in the brief for the animation task, and the dependency arrived. A constraint that lives
+only in a document you did not attach is not a constraint.
+
+**Trusting "done" too early on Sunday afternoon.** The site looked finished before the
+accessibility and metadata pass. If I had stopped there — and the temptation was real — it
+would have shipped with an unusable keyboard path through the case study grid.
+
+## Result
+
+Eleven hours, three case studies, a static site with about 34 KB of JavaScript on the landing
+page and no layout shift. Faster than the same build without AI, probably by half.
+
+The honest accounting of where the time went, though, is the interesting part: roughly three
+hours of implementation, four hours of writing content, and four hours of deciding and
+correcting. AI compressed the first bucket substantially and did nothing for the other two.
+
+For a portfolio, that ratio is not a disappointment — it is a reminder that the code was never
+the hard part.

@@ -1,0 +1,152 @@
+---
+title: "Claude Code Review: A Terminal Agent on Unfamiliar Code"
+description: "Hands-on notes from using a terminal coding agent for a week on a codebase I did not write: where autonomous multi-file work paid off, and where supervision was cheaper than delegation."
+dek: "The pitch is autonomy. The value turned out to be somewhere more specific than that."
+category: reviews
+articleType: review
+subcategory: Terminal agents
+publishedAt: "2026-08-14"
+author: hamza
+sample: true
+affiliateDisclosure: true
+coverPattern: terminal
+tags:
+  - claude
+  - agents
+  - terminal
+  - review
+keywords:
+  - claude code review
+  - terminal ai agent review
+  - cli coding agent
+related:
+  - cursor-review
+  - cursor-vs-github-copilot
+  - reviewing-ai-generated-code
+---
+
+Terminal agents ask for a different kind of trust than an editor assistant. An editor suggests
+and you accept. An agent in your shell reads files, edits them, runs commands and iterates on
+what it finds, and you see the result rather than the process. That is either a large win or a
+large diff in the wrong direction, and which one depends on the task more than on the tool.
+
+<TestMethodology
+  version="Terminal agent, mid-2026 release"
+  duration="One week, roughly 14 hours of active use"
+  task="Maintenance work on an inherited TypeScript monorepo of about 60k lines: a framework migration, a dependency upgrade with breaking changes, and three bug fixes from an issue tracker."
+  environment="macOS, pnpm workspace, existing test suite with patchy coverage"
+  cost="Usage-based; roughly the price of a mid-tier subscription for the week"
+>
+  Deliberately chosen as code I did not write, because that is the case where an agent's
+  ability to read a codebase quickly should matter most. Every change went through the normal
+  review and test path before being kept.
+</TestMethodology>
+
+<KeyTakeaways
+  items={[
+    "Strongest on wide mechanical work: the framework migration across 40-plus files was the clearest win of the week.",
+    "Weakest on bugs whose cause is not visible in the code — it will produce a confident fix for the wrong thing.",
+    "Reading an unfamiliar codebase to answer 'where does X happen' was unexpectedly the feature I used most.",
+    "Needs a working test command to be trustworthy. Without one, it cannot tell whether it succeeded and neither can you.",
+    "Time saved is real but concentrated: a few hours of genuine gain on the migration, roughly break-even on everything else.",
+  ]}
+/>
+
+## Where it clearly won
+
+**The framework migration.** A deprecated router API replaced across 43 files, with per-file
+differences in how the old API was used. Not hard, just long — exactly the shape of work where
+autonomy pays. It worked through the files, ran the type checker after each batch, and fixed
+its own errors. Two hours of supervision replacing what I estimated at a full day.
+
+**Orientation in unfamiliar code.** "Where does a subscription state change get persisted?"
+answered in about forty seconds with the three relevant files and an accurate summary of the
+flow between them. I used this constantly and it is barely mentioned in how these tools are
+marketed.
+
+**The dependency upgrade.** Breaking changes across a major version. It read the changelog,
+found the affected call sites and made the mechanical changes. It missed one behavioural change
+that the changelog described in prose rather than in a code example — which is a fair failure,
+and the test suite caught it.
+
+## Where it did not
+
+**A bug caused by data, not code.** An issue about a report showing wrong totals. The agent
+produced three plausible fixes to the aggregation logic, each defensible on reading, none
+correct — the cause was a legacy row with a null currency. Nothing in the code was wrong.
+
+This is the failure mode that matters: when the cause is not in the code, an agent will find
+the most code-like explanation and fix that with complete confidence. It cost me about ninety
+minutes, most of it spent evaluating fixes to code that did not have a bug.
+
+**Anything needing product context.** A fix that required knowing which of two behaviours was
+intended stalled, correctly, and asked. Fine — but it means the ratio of supervision to
+autonomy on product work is much higher than on mechanical work.
+
+**Large refactors without a test signal.** In the package with thin coverage, it would report
+success on changes I later found broken. Not dishonesty: it verified what it could verify. The
+lesson is that an agent's reliability is bounded by your test suite, and in a codebase without
+one you are the test suite.
+
+<Callout variant="tip" title="The single highest-leverage setup step">
+  Make sure a single command runs type checking and tests, and tell the agent about it. The
+  difference in output quality between a package with a working test command and one without
+  was larger than any difference I saw between models.
+</Callout>
+
+<ProsCons
+  pros={[
+    "Wide mechanical changes across many files, with self-correction against a type checker",
+    "Fast, accurate orientation in code you did not write",
+    "Runs commands and reads their output, so it closes its own loop when a signal exists",
+    "No editor migration — it sits alongside whatever setup you already have",
+  ]}
+  cons={[
+    "Confident wrong fixes when the root cause is not in the code",
+    "Reliability drops sharply in packages without tests",
+    "Reviewing a large agent-produced diff can cost more than the work saved",
+    "Usage-based pricing makes an expensive week hard to predict in advance",
+  ]}
+/>
+
+## Pricing
+
+Usage-based rather than a flat subscription, which cuts both ways. A light week costs very
+little. The migration day cost noticeably more than a day of a flat-rate editor subscription
+would have — and was still obviously worth it against the alternative of doing it by hand.
+
+If your usage is steady and moderate, a flat-rate tool is easier to budget. If it is spiky —
+occasional large mechanical jobs — usage-based is likely cheaper overall.
+
+## Alternatives worth considering
+
+- **The agent mode in an AI-native editor.** Overlapping capability with the diff in front of
+  you as it happens. Better for supervised work, worse for long autonomous runs.
+- **Another terminal agent.** The category is converging; setup quality and your test suite
+  matter more than the specific product.
+- **Nothing, plus a completion extension.** If your work is mostly small changes in code you
+  know well, an agent solves a problem you may not have.
+
+<Verdict
+  summary="Genuinely valuable for wide mechanical work and for finding your way around unfamiliar code. Not a substitute for understanding the codebase, and actively expensive when the bug is not where the code is."
+  bestFor="Developers doing migrations, upgrades and maintenance on large codebases, with a test command that works."
+  skipIf="Your codebase has little test coverage, your work is mostly small and local, or you would not be able to review a 40-file diff critically."
+>
+  <p>
+    The framing that fits my week: it is a very fast, very literal contractor who has read your
+    whole codebase and none of your meeting notes. Give it well-specified mechanical work and it
+    is excellent. Give it a question requiring judgement and it will answer confidently anyway,
+    which is the part to watch.
+  </p>
+</Verdict>
+
+<Sources
+  items={[
+    {
+      title: "Anthropic — Claude Developer Platform documentation",
+      href: "https://docs.anthropic.com/",
+      publisher: "Anthropic",
+      checked: "Aug 2026",
+    },
+  ]}
+/>

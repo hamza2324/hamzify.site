@@ -1,0 +1,166 @@
+---
+title: "The AI Pair Programming Loop I Actually Use"
+description: "A repeatable five-step loop for working with an AI coding assistant on a real codebase: brief, constrain, generate, verify, integrate — and what belongs in each step."
+dek: "Most bad output from a coding model is a briefing problem, not a model problem. This is the loop that fixes the briefing."
+category: workflows
+articleType: workflow
+subcategory: Daily practice
+publishedAt: "2026-08-07"
+updatedAt: "2026-08-14"
+author: hamza
+sample: true
+featured: false
+coverPattern: flow
+tags:
+  - workflow
+  - pair-programming
+  - agents
+  - prompting
+keywords:
+  - ai pair programming workflow
+  - how to work with ai coding assistant
+  - ai coding workflow
+related:
+  - reviewing-ai-generated-code
+  - context-engineering-checklist
+  - cursor-review
+---
+
+The difference between people who get useful work out of a coding assistant and people who
+conclude it is a toy is rarely the tool. It is whether they have a loop. Without one, every
+interaction restarts from zero: a vague request, a plausible answer, a slow realisation that
+the answer is wrong, and a decision to just write it manually.
+
+This is the loop. Five steps, in order, and the order matters.
+
+<KeyTakeaways
+  items={[
+    "Write the acceptance criteria before the prompt. If you cannot say what 'done' looks like, the model cannot either.",
+    "Constraints matter more than instructions: what not to touch, what to reuse, what not to install.",
+    "Generate in units you are willing to read in one sitting. Anything larger gets skimmed, and skimming is where bugs enter.",
+    "Verify by running it, not by reading it. Reading catches style; running catches behaviour.",
+    "Integrate yourself. The last mile — naming, placement, matching local idiom — is the part you should not delegate.",
+  ]}
+/>
+
+## Step 1 — Brief
+
+Before writing a prompt, write down what finished looks like. Not the implementation, the
+observable outcome.
+
+```md title="task.md"
+Goal
+  Users can export a filtered table view as CSV.
+
+Done when
+  - Export button appears only when the table has at least one row
+  - Exported columns match the currently visible columns, in the same order
+  - Filenames include the active filter name and the date
+  - Values containing commas, quotes or newlines are correctly escaped
+  - No new dependency
+```
+
+This takes three minutes and does more for the outcome than any prompt-engineering trick.
+It also has a useful side effect: about one time in five, writing the criteria reveals that
+the task is underspecified, and you go and resolve the ambiguity with a human instead of
+letting a model guess.
+
+## Step 2 — Constrain
+
+Instructions tell a model what to do. Constraints tell it what not to do, and constraints are
+where the real leverage is, because the failure mode of a capable model is not incompetence
+— it is enthusiasm.
+
+The four constraints worth writing almost every time:
+
+<SpecList>
+  <SpecRow term="Reuse">
+    Name the existing helper, hook or module it must use. Left unsaid, a second
+    implementation of something you already have is the single most common output.
+  </SpecRow>
+  <SpecRow term="Scope">
+    Name the files it may change. "Only touch `src/features/export/`" prevents a two-file
+    task becoming an eleven-file diff.
+  </SpecRow>
+  <SpecRow term="Dependencies">
+    State explicitly whether new packages are allowed. Usually they are not.
+  </SpecRow>
+  <SpecRow term="Idiom">
+    Point at a file that already does something similar. One good example outperforms a
+    paragraph of style rules.
+  </SpecRow>
+</SpecList>
+
+<Callout variant="tip" title="Put the durable constraints in a file">
+  Constraints that apply to every task — the test framework, the error-handling convention,
+  the import ordering, the "no new dependencies without asking" rule — belong in a project
+  rules file that the tool loads automatically. Retyping them is how they get skipped.
+</Callout>
+
+## Step 3 — Generate
+
+Ask for work in units you are actually willing to read closely. For me that is roughly one
+coherent change: a function and its test, a component, a route handler. Around 200 lines of
+diff, my reading quality drops sharply, and a diff I skim is worse than no diff at all,
+because it arrives with the confidence of finished work.
+
+Two things worth doing here:
+
+**Ask for the plan first on anything non-trivial.** A short plan is cheap to read and cheap
+to correct. Correcting a plan takes thirty seconds; correcting an implementation built on a
+wrong plan takes an hour.
+
+**Let it finish.** Interrupting mid-generation to add a constraint you forgot usually
+produces a worse result than letting it complete and then asking for a revision, because the
+model loses the thread of what it was doing.
+
+## Step 4 — Verify
+
+Read for one thing only: does this do what the acceptance criteria said? Then stop reading
+and run it.
+
+The order matters because reading is good at catching the wrong class of problem. Reading
+catches naming, structure and obvious logic errors. It is unreliable at catching the errors
+models actually make — plausible code that handles the happy path and quietly mishandles an
+edge case. For the CSV example above, the escaping rule is the one that reading will pass and
+a single test with a comma in a cell will fail.
+
+```ts title="the test that earns its keep"
+it("escapes values containing commas and quotes", () => {
+  const csv = toCsv([{ note: 'contains, a comma and "quotes"' }], ["note"])
+  expect(csv.trim().split("\n")[1]).toBe('"contains, a comma and ""quotes"""')
+})
+```
+
+If there is one thing to take from this loop, it is that a single test on the ugliest input
+you can think of is worth more than a careful read of the whole diff.
+
+## Step 5 — Integrate
+
+Do this part yourself. Rename things to match the local vocabulary, move the file to where
+your project would have put it, delete the defensive branch that exists for a case that
+cannot happen, and remove the comments explaining what the code does.
+
+This is not busywork. Generated code that is functionally correct but idiomatically foreign
+is the mechanism by which a codebase becomes incoherent — and incoherence is expensive in a
+way that is invisible for about three months and then obvious forever.
+
+## Where the loop is not worth it
+
+Being honest about this matters more than defending the workflow:
+
+- **Trivial changes.** A one-line fix does not need a brief. Type it.
+- **Code you do not understand yet.** Generating a change to a subsystem you cannot evaluate
+  produces the illusion of progress. Read the subsystem first.
+- **Deeply novel logic.** Genuinely new algorithms, unusual domain rules, anything where the
+  correct behaviour lives in someone's head rather than in a convention. Models are strong on
+  the well-trodden and weak exactly where your product is unusual, which is often the part
+  that matters most.
+
+## The compressed version
+
+Brief it in writing. Tell it what not to touch. Ask for a plan on anything real. Read for
+intent, then run it against the ugliest input you can construct. Integrate by hand.
+
+Nothing here is clever, and that is roughly the point. The wins come from doing the unglamorous
+step — writing down what "done" means — before the interesting step.

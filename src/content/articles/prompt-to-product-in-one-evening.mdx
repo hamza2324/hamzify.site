@@ -1,0 +1,165 @@
+---
+title: "Prompt to Deployed Product in One Evening: What Held Up"
+description: "An experiment in shipping a small real product in a single evening with AI doing most of the implementation — and an honest account of which shortcuts were fine and which were debt."
+dek: "Four hours, one deployed product, and a list of the corners that were safe to cut."
+category: vibe-coding
+articleType: experiment
+subcategory: Ship-in-an-evening
+publishedAt: "2026-07-14"
+author: hamza
+sample: true
+coverPattern: flow
+question: Can you ship a real product in one evening with AI doing most of the work?
+result: Shipped, with listed debt
+tags:
+  - vibe-coding
+  - shipping
+  - nextjs
+  - experiment
+keywords:
+  - vibe coding experiment
+  - ship a product in one evening
+  - ai assisted deployment
+related:
+  - can-ai-build-a-chrome-extension
+  - building-a-portfolio-with-ai
+  - ai-pair-programming-workflow
+---
+
+The claim worth testing is not "AI can write code". It is that the gap between an idea and a
+deployed, publicly usable thing has collapsed. So: one evening, a hard stop at four hours,
+one real deployed product, and a written record of every shortcut taken.
+
+<ExperimentSetup
+  hypothesis="A small but genuinely useful web product can go from idea to public URL in one four-hour session with AI writing most of the implementation."
+  setup="Next.js on a static host, no database, no auth. Agent-assisted implementation with a written scope defined before any code."
+  method="Fixed four-hour timer. Scope written first. Every decision to cut a corner logged as it happened, then reviewed the next day."
+  measured="Whether it deployed and worked, and which shortcuts turned out to be acceptable versus which had to be fixed immediately."
+  limitations={[
+    "The product was chosen to fit the constraints: no database, no accounts, no payments.",
+    "'Useful' here means useful to a handful of people, not validated demand.",
+    "Four hours of focused solo work with no interruptions is not a typical evening.",
+    "Reviewed once, the next day. Longer-horizon maintenance costs are not captured.",
+  ]}
+/>
+
+## The scope, written before any code
+
+The single most useful thing in this experiment happened before the timer started: writing
+down what was in and, more importantly, what was out.
+
+```md title="scope.md"
+In
+  - Paste a JSON payload, get a formatted, collapsible tree view
+  - Detect and pretty-print common date and timestamp formats inline
+  - Copy any subtree as JSON or as a TypeScript interface
+  - Share button that puts the payload in the URL hash (never on a server)
+  - Works offline after first load
+
+Out
+  - Accounts, saving, history
+  - Files larger than 2 MB
+  - Anything that sends the payload anywhere
+  - Mobile-first polish (usable on mobile is enough)
+```
+
+"Out" is the part that makes a four-hour build possible. Every time the agent proposed
+something outside that list — and it did, repeatedly, helpfully — the answer was already
+written down.
+
+## How the four hours went
+
+<BuildTimeline
+  entries={[
+    {
+      label: "0:00–0:25",
+      title: "Scope and skeleton",
+      detail:
+        "Scope written by hand. Project scaffolded, deployed empty to a public URL immediately so deployment could never become the last-hour problem.",
+      outcome: "shipped",
+    },
+    {
+      label: "0:25–1:30",
+      title: "Tree view core",
+      detail:
+        "The actual product. Agent-written recursive renderer with collapse state, reviewed closely because this is the part users touch constantly.",
+      outcome: "shipped",
+    },
+    {
+      label: "1:30–2:10",
+      title: "Type generation",
+      detail:
+        "Generate a TypeScript interface from a subtree. The agent's first version was wrong on arrays of mixed shapes; second attempt with an explicit example was right.",
+      outcome: "reworked",
+    },
+    {
+      label: "2:10–2:40",
+      title: "URL-hash sharing",
+      detail:
+        "Compress into the hash so nothing touches a server. Straightforward, and the privacy property is worth the twenty minutes.",
+      outcome: "shipped",
+    },
+    {
+      label: "2:40–3:20",
+      title: "The part that was skipped",
+      detail:
+        "Large-payload performance. A 2 MB file froze the tab. Capped input size with a clear message rather than fixing rendering. Logged as a real limitation.",
+      outcome: "abandoned",
+    },
+    {
+      label: "3:20–4:00",
+      title: "Accessibility and ship",
+      detail:
+        "Keyboard navigation of the tree, focus states, an empty state, real page metadata. Deployed for real.",
+      outcome: "shipped",
+    },
+  ]}
+/>
+
+## Shortcuts that were fine
+
+**No tests.** For a client-side tool with no data persistence and no auth, where the whole
+product is visible on screen, manual testing of the four core paths was proportionate.
+
+**No error monitoring.** Nothing to monitor. There is no server.
+
+**Hardcoded design tokens.** A handful of CSS variables instead of a design system. For a
+single-screen tool this is the right amount of infrastructure.
+
+**Capping input size instead of virtualising the tree.** The honest fix would be windowed
+rendering. The four-hour fix was a limit and a clear message. A year later, that would still
+be the right call for a tool this size.
+
+## Shortcuts that were not fine
+
+**Skipping keyboard navigation until the last 40 minutes.** A tree view that cannot be
+operated with arrow keys is broken, not unpolished. Getting to it late meant it nearly did
+not happen — and if it had shipped without, the fix would have required rethinking the
+component's focus model rather than adding to it.
+
+**Accepting the first type-generation implementation.** It looked right on the test payload
+and was wrong on arrays containing objects of different shapes. It took a deliberate second
+look to catch, and if it had shipped it would have produced confidently incorrect types —
+the worst kind of bug in a developer tool.
+
+<Callout variant="warning" title="The pattern">
+  The shortcuts that were fine all had a visible failure mode: if they broke, someone would
+  see it immediately. The shortcuts that were not fine were the ones that fail silently or
+  are expensive to retrofit. That distinction is a better guide than "how long will this
+  take".
+</Callout>
+
+## Conclusion
+
+One evening to a deployed, genuinely usable tool: yes, that held up. But the parts that made
+it work were not AI-specific.
+
+Writing the scope — especially the "out" list — did more for the timeline than the code
+generation did. Deploying in the first twenty-five minutes removed the classic last-hour
+panic. And the two things that nearly went wrong went wrong because they were deferred, not
+because they were generated.
+
+The realistic version of the claim: **AI collapses implementation time, and leaves judgement
+time untouched.** A four-hour build is possible because you spend a much larger share of
+those four hours deciding rather than typing. If you do not have the judgement to spend, the
+speed does not help.

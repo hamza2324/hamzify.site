@@ -1,0 +1,174 @@
+---
+title: "Can an AI Agent Build a Chrome Extension From One Prompt?"
+description: "An experiment in single-prompt development: one paragraph of requirements, an agent, and a Chrome extension that has to actually load in a browser and work."
+dek: "The interesting result was not whether it worked. It was which 15% did not, and how long that 15% took."
+category: vibe-coding
+articleType: experiment
+subcategory: Single-prompt builds
+publishedAt: "2026-07-21"
+author: hamza
+sample: true
+coverPattern: grid
+question: Can an AI agent build a complete Chrome extension from one prompt?
+result: Partially successful
+tags:
+  - agents
+  - chrome-extension
+  - experiment
+  - vibe-coding
+keywords:
+  - ai built chrome extension
+  - vibe coding experiment
+  - single prompt app
+related:
+  - prompt-to-product-in-one-evening
+  - building-a-saas-with-ai-agents
+  - context-engineering-checklist
+---
+
+"Vibe coding" usually gets demonstrated on a to-do app, which proves nothing: the model has
+seen ten thousand of them. A browser extension is a better test. It has a manifest with
+strict rules, a permissions model, several separate execution contexts that cannot see each
+other, and a browser that simply refuses to load it if any of that is wrong.
+
+<ExperimentSetup
+  hypothesis="A capable coding agent can produce a working Manifest V3 Chrome extension from a single paragraph of requirements, with no follow-up guidance."
+  setup="Empty directory. One prompt. Agent allowed to create and edit any file but given no corrections until it declared itself finished."
+  method="Load the unpacked extension in Chrome, exercise every stated requirement, then record what failed and how long each fix took."
+  measured="Whether it loads, which requirements work, and time-to-working after the first attempt."
+  limitations={[
+    "One prompt, one agent, one run. This is an anecdote with a method, not a benchmark.",
+    "Requirements were written by someone who knows the extension APIs, which makes the prompt better than a beginner's would be.",
+    "A different model, or the same model tomorrow, may produce a different result.",
+    "Time-to-fix depends on the person fixing it knowing where to look.",
+  ]}
+/>
+
+## The prompt
+
+One paragraph, deliberately written the way a person actually writes a request — goals, not
+implementation:
+
+```text title="prompt.txt"
+Build a Chrome extension (Manifest V3) called "Reading Time" that shows the estimated
+reading time of the current page. It should add a small badge on the extension icon with
+the number of minutes, show a popup with the word count and estimated time at 240 wpm, and
+let the user change the reading speed in the popup with the setting persisted. It should
+work on any http/https page and do nothing on browser internal pages. No frameworks, no
+build step, plain JS.
+```
+
+## What it produced
+
+Six files, structurally correct, in about ninety seconds:
+
+```text
+reading-time/
+  manifest.json
+  background.js
+  content.js
+  popup.html
+  popup.js
+  popup.css
+```
+
+The manifest was valid MV3. The content script counted words with a reasonable heuristic —
+it stripped `script` and `style` elements rather than naively taking `innerText` of the
+whole document, which is better than I expected. The popup was plain and functional. The
+extension loaded in Chrome without an error on the first attempt.
+
+That is a real result, and worth saying plainly: from one paragraph, it loaded and mostly
+worked.
+
+## What did not work
+
+### The badge was empty
+
+The content script calculated the reading time and the background worker set the badge, but
+nothing connected them at the right moment. The message was sent on `DOMContentLoaded`;
+the service worker was often asleep and missed it, and nothing re-sent on tab activation.
+
+This is the characteristic failure: each piece is individually correct, and the lifecycle
+between them is not. Manifest V3 service workers are ephemeral, and code that assumes a
+long-lived background page is wrong in a way that looks completely fine.
+
+**Time to fix: about 20 minutes**, most of it working out that the bug was lifecycle rather
+than logic.
+
+### The setting saved but never applied
+
+The reading speed persisted correctly to `chrome.storage.sync`. It was read once when the
+popup opened. It was never read by the content script, which had 240 hardcoded.
+
+```js title="content.js — as generated" {3}
+function estimateMinutes(wordCount) {
+  // The user's saved speed is never consulted here.
+  return Math.max(1, Math.round(wordCount / 240))
+}
+```
+
+A one-line description of a feature — "let the user change the speed" — got implemented as
+UI plus storage, with the actual behaviour missing. The demo looks complete. The feature is
+not.
+
+**Time to fix: about 10 minutes.**
+
+### It ignored a requirement it had no reason to ignore
+
+"Do nothing on browser internal pages" was in the prompt. The generated code tried to inject
+into every tab, producing console errors on `chrome://` URLs. The fix is a two-line URL check.
+
+**Time to fix: 5 minutes.**
+
+<Callout variant="note" title="The pattern across all three">
+  Every failure was at a boundary: between execution contexts, between storage and the code
+  that should read it, between the browser's rules and the code's assumptions. Nothing
+  failed inside a function. Everything failed between functions.
+</Callout>
+
+## Result
+
+| Requirement | First attempt |
+| --- | --- |
+| Loads as unpacked MV3 extension | Yes |
+| Counts words on the page | Yes |
+| Popup shows count and estimate | Yes |
+| Badge shows minutes | No — fixed in ~20 min |
+| Reading speed setting persists | Yes |
+| Setting affects the estimate | No — fixed in ~10 min |
+| Ignores browser internal pages | No — fixed in ~5 min |
+
+Roughly 85% of the requirements worked from one prompt. Total time from prompt to a version
+that did everything asked: **about 50 minutes**, of which 90 seconds was generation.
+
+## Conclusion
+
+The single-prompt build is real, and the framing around it is misleading. The generation is
+not the work. Getting from "impressive demo" to "does what was asked" took thirty times
+longer than producing the demo, and every one of those minutes needed someone who understood
+the platform.
+
+Which suggests a more useful way to think about it: an agent will get you a structurally
+correct skeleton of an unfamiliar platform very fast, which is genuinely valuable if you do
+not know that platform's file layout. It will not get you correctness at the boundaries, and
+boundaries are where software breaks.
+
+If you cannot debug the result, a single-prompt build has not saved you time. It has moved
+the difficulty somewhere you cannot reach.
+
+<Sources
+  items={[
+    {
+      title: "Chrome Extensions — Manifest V3 service worker lifecycle",
+      href: "https://developer.chrome.com/docs/extensions/develop/concepts/service-workers/lifecycle",
+      publisher: "Chrome for Developers",
+      checked: "Jul 2026",
+    },
+    {
+      title: "chrome.storage API reference",
+      href: "https://developer.chrome.com/docs/extensions/reference/api/storage",
+      publisher: "Chrome for Developers",
+      checked: "Jul 2026",
+    },
+  ]}
+/>

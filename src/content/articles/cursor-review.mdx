@@ -1,0 +1,186 @@
+---
+title: "Cursor Review: Two Weeks Inside a Real Codebase"
+description: "A hands-on review of Cursor as a daily driver on an existing production codebase — where agent mode earns its keep, where it costs you time, and who should stay in their current editor."
+dek: "Not a demo on a blank project. Two weeks of ordinary work on a codebase with history, tests and opinions."
+category: reviews
+articleType: review
+subcategory: Cursor
+publishedAt: "2026-08-04"
+updatedAt: "2026-08-12"
+author: hamza
+affiliateDisclosure: true
+sample: true
+coverPattern: terminal
+tags:
+  - cursor
+  - editors
+  - agents
+  - review
+keywords:
+  - cursor review
+  - cursor ai editor review
+  - is cursor worth it
+related:
+  - cursor-vs-github-copilot
+  - reviewing-ai-generated-code
+  - building-a-saas-with-ai-agents
+---
+
+Most reviews of AI editors test them on a fresh project, where there is no existing
+architecture to respect and no wrong answers. That is the easy case. The hard case is a
+codebase with three years of decisions in it, half of which are load-bearing and none of
+which are documented.
+
+So this review is about ordinary maintenance work: a bug fix here, a refactor there, a
+feature that touches six files and a migration.
+
+<TestMethodology
+  version="Cursor 2.x, agent mode enabled, Claude and GPT models"
+  duration="Two weeks as the only editor, roughly 45 hours"
+  task="Maintenance and feature work on an existing Next.js + Postgres application (~40k lines)"
+  environment="macOS, existing ESLint and Prettier config, Vitest suite"
+  cost="Pro tier, roughly the price of a mid-tier SaaS subscription per month"
+>
+  No task was chosen to flatter the tool. The work was whatever was next in the backlog,
+  including the boring parts.
+</TestMethodology>
+
+<KeyTakeaways
+  items={[
+    "Cursor is strongest at multi-file edits where the pattern already exists somewhere in the repo.",
+    "Tab completion is the feature you will miss most if you leave — it is noticeably better at predicting the next edit than the next token.",
+    "Agent mode is worth using with a written brief and a small scope. Given a vague task it produces a large, plausible, hard-to-review diff.",
+    "The context system does real work but is not magic: pointing it at the right files still beats hoping it finds them.",
+    "If you already dislike VS Code's ergonomics, this will not fix that. It is VS Code underneath.",
+  ]}
+/>
+
+## What it actually is
+
+Cursor is a fork of VS Code with AI woven into the editing loop rather than bolted on as a
+sidebar. Three features matter, in this order of day-to-day usefulness:
+
+1. **Tab** — predictive multi-line, multi-location editing. Rename a field and it offers the
+   follow-up edits at the other call sites.
+2. **Inline edit** — select code, describe the change, get a diff you accept or reject.
+3. **Agent mode** — give it a task, it reads files, edits several of them, runs commands.
+
+Your extensions, keybindings and settings come across, which removes most of the switching
+cost.
+
+## Where it earned its keep
+
+### Repetitive structural edits
+
+The best result of the two weeks was unglamorous: migrating 30-odd API route handlers to a
+new validation helper. Each one was a slightly different shape, so a regex would not do it,
+and doing it by hand is exactly the kind of task where attention fades by the tenth file.
+
+Two examples edited by hand, then Tab did the rest with a keystroke per file.
+
+### Writing the test that mirrors the other test
+
+Given an existing test file and a new function with the same shape, generated tests were
+usable — not perfect, but a better starting point than an empty file. The failure mode is
+predictable: it writes tests that assert the implementation rather than the behaviour.
+
+<Callout variant="tip" title="Small habit, big difference">
+  Ask for the test *before* the implementation and describe the behaviour in the request.
+  The tests come out meaningfully better, and you get a specification you can check the
+  implementation against.
+</Callout>
+
+### Reading unfamiliar code
+
+Asking "where does the invoice total get calculated, and what calls it" is genuinely faster
+than grepping, especially in a codebase where naming is inconsistent. This is the feature
+that would be hardest to give up.
+
+## Where it cost time
+
+### Vague tasks produce large diffs
+
+"Improve error handling in the checkout flow" produced a 400-line diff across nine files.
+Some of it was good. Reviewing it properly took longer than writing a narrower version
+myself would have.
+
+The lesson is not "agent mode is bad", it is that scope has to come from you. A brief with
+a file list and a definition of done gets a diff you can actually read.
+
+### It will invent a helper rather than find yours
+
+Twice it wrote a new utility that duplicated one already in the repo under a different name.
+Naming the existing file in the request prevents it. Assuming context retrieval will find it
+does not.
+
+### Model choice is a real variable
+
+Different models produced meaningfully different results on the same task, and the fastest
+option was often not the one that finished the task correctly. Expect to develop opinions
+about which model to use for which category of work — that is unavoidable overhead.
+
+<ProsCons
+  pros={[
+    "Tab completion is best-in-class for editing existing code, not just writing new code",
+    "Multi-file edits that follow an established pattern are fast and usually right",
+    "Codebase questions beat grep for orientation in unfamiliar areas",
+    "VS Code compatibility means extensions and keybindings transfer",
+    "Diffs are presented for review rather than applied silently",
+  ]}
+  cons={[
+    "Vague prompts produce large diffs that cost more to review than to write",
+    "Will duplicate existing helpers unless told which file to reuse",
+    "Model selection is another thing to manage, with real quality differences",
+    "Subscription cost is hard to justify for occasional use",
+    "Still VS Code underneath, with VS Code's memory footprint",
+  ]}
+/>
+
+## Who it is for
+
+**Worth it if** you work in an existing codebase most days, do a lot of refactoring and
+pattern-following work, and are willing to review diffs properly. That combination is where
+the time actually comes back.
+
+**Skip it if** you mostly write greenfield code in a language you know well, you are happy
+with your current setup and a completion plugin, or you are not going to review generated
+diffs carefully. In that last case the tool will make you faster at creating problems.
+
+**Students and hobbyists**: the free tier is enough to form your own view. Do that before
+paying, and pay attention to whether you are learning or outsourcing.
+
+<Verdict
+  summary="The best current option for AI-assisted work in an existing codebase — provided you treat it as a very fast junior that needs a written brief."
+  bestFor="Developers doing daily maintenance and refactoring work in a large repo, who will read every diff."
+  skipIf="You write mostly greenfield code, work in a niche language, or will not review generated changes line by line."
+>
+  The pattern that emerged over two weeks: value scales with the precision of the request.
+  A one-line task description gets you something impressive-looking and expensive to verify.
+  A five-line brief with a file list and a done condition gets you a diff you can accept in
+  thirty seconds.
+</Verdict>
+
+## Alternatives worth considering
+
+- **GitHub Copilot** — cheaper, deeply integrated with GitHub, weaker at multi-file agentic
+  edits. See the [full comparison](/compare/cursor-vs-github-copilot/).
+- **Claude Code** — terminal-first rather than editor-first. Better if you live in a shell
+  and worse if you want inline diffs.
+- **Zed** — much lighter and faster as an editor, with a less mature agent story.
+
+<Sources
+  items={[
+    {
+      title: "Cursor — documentation",
+      href: "https://docs.cursor.com",
+      publisher: "Cursor",
+      checked: "Aug 2026",
+    },
+    {
+      title: "Cursor — pricing",
+      href: "https://cursor.com/pricing",
+      publisher: "Cursor",
+      checked: "Aug 2026",
+    },
+  ]}
+/>

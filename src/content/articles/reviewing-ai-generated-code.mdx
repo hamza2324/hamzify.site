@@ -1,0 +1,175 @@
+---
+title: "How to Review AI-Generated Code Without Reading Every Line"
+description: "A review workflow tuned to the specific mistakes coding models make: a triage order, the six failure patterns worth hunting for, and where to spend your attention."
+dek: "Model-written code fails differently from human-written code. Reviewing it the same way misses the interesting bugs."
+category: workflows
+articleType: workflow
+subcategory: Code review
+publishedAt: "2026-07-31"
+author: hamza
+sample: true
+coverPattern: diff
+tags:
+  - workflow
+  - code-review
+  - quality
+  - agents
+keywords:
+  - reviewing ai generated code
+  - ai code review checklist
+  - ai code quality
+related:
+  - ai-pair-programming-workflow
+  - building-a-saas-with-ai-agents
+  - context-engineering-checklist
+---
+
+Reviewing a colleague's pull request, you look for misunderstandings of the requirement, edge
+cases they may not have considered, and design decisions worth discussing. You give the
+mechanics — syntax, structure, obvious correctness — a light pass, because a competent person
+rarely gets those wrong.
+
+Model-written code inverts this. The mechanics are almost always fine. The syntax is clean,
+the structure is conventional, the naming is reasonable. What is wrong sits somewhere else
+entirely, and a human-tuned review misses it because it is looking in the wrong place.
+
+<KeyTakeaways
+  items={[
+    "Model-written code is strong on syntax and structure and weak on integration, so review integration points first and read the internals last.",
+    "The highest-value question is 'does this duplicate something we already have?' — that is the most common defect and the easiest to miss.",
+    "Confidently wrong beats obviously wrong: watch for code that handles the happy path fluently and mishandles one edge case silently.",
+    "Delete the defensive branches for impossible cases. They are not safety, they are noise that hides real branches.",
+    "If the diff is too large to review properly, the correct response is to reject the size, not to skim it.",
+  ]}
+/>
+
+## Review in this order
+
+Reading a diff top to bottom is the wrong strategy, because file order has nothing to do with
+risk. This order is roughly by defect probability:
+
+<SpecList>
+  <SpecRow term="1. The boundaries">
+    Every place the new code touches existing code. Function calls into your modules, data
+    passed across a context boundary, anything reading configuration or storage. This is
+    where nearly all real bugs live.
+  </SpecRow>
+  <SpecRow term="2. Duplication">
+    Search the codebase for the thing it just wrote. Not the name it chose — the behaviour.
+  </SpecRow>
+  <SpecRow term="3. Error paths">
+    What happens on failure. Happy paths are handled fluently; failure paths are frequently
+    swallowed, logged and ignored, or handled at the wrong level.
+  </SpecRow>
+  <SpecRow term="4. Dependencies and imports">
+    Anything newly installed or newly imported, including a second date library you already
+    had an answer for.
+  </SpecRow>
+  <SpecRow term="5. The internals">
+    Last. Loop bodies and pure functions are the part models get right most reliably.
+  </SpecRow>
+</SpecList>
+
+## Six patterns worth hunting for
+
+### 1. The parallel implementation
+
+The most common defect by a wide margin. You have `formatCurrency` in `lib/money.ts`; the
+diff contains a new `toCurrencyString` that does 90% of the same thing and disagrees with the
+original about negative values.
+
+It passes review easily because in isolation it is good code. The only way to catch it is to
+search for the behaviour before reading the implementation.
+
+### 2. Confidently wrong on one branch
+
+```ts title="looks right, is wrong" {5}
+function daysBetween(a: Date, b: Date) {
+  const ms = b.getTime() - a.getTime()
+  // Correct for most of the year, and off by one across a
+  // daylight-saving boundary, which is exactly when someone notices.
+  return Math.round(ms / 86_400_000)
+}
+```
+
+This is the signature failure mode: fluent, plausible, and wrong in a narrow band that
+testing on today's date will never surface. Ask of every calculation, "which input makes this
+wrong?" — and if you cannot construct one within thirty seconds, that is a reason to write a
+test, not a reason to relax.
+
+### 3. Defensive code for impossible states
+
+Null checks on values that cannot be null, try/catch around code that cannot throw,
+fallbacks for enum cases that do not exist. Harmless individually; corrosive in aggregate,
+because when every value is treated as possibly-absent, the genuinely optional ones stop
+standing out.
+
+Delete them. If the type says it is there, trust the type.
+
+### 4. Tests that assert the implementation
+
+```ts title="a test that cannot fail"
+it("calls the formatter", () => {
+  const spy = vi.spyOn(mod, "format")
+  render(<Price value={1200} />)
+  expect(spy).toHaveBeenCalled()
+})
+```
+
+This passes whether or not the price is displayed correctly. Generated tests skew heavily
+towards asserting that code ran rather than that behaviour is right, and they are worse than
+no tests because they produce a green suite and a false sense of coverage.
+
+Ask of each test: what user-visible breakage would make this fail? If the answer is "none",
+delete it.
+
+### 5. Comments narrating the code
+
+Comments explaining what the next line does, or why the change is correct. The second kind is
+the worse one: it is addressed to the reviewer rather than to the next reader, and it becomes
+misleading the moment the code around it changes.
+
+### 6. Silent scope creep
+
+The task was to add a button. The diff also reformats a file, renames a prop, and "improves"
+an unrelated function. Each change may be defensible; together they make the diff
+unreviewable, and unreviewable diffs are how regressions ship.
+
+<Callout variant="warning" title="On large diffs">
+  If a diff is too big to review properly, do not skim it. Reject the size. Regenerate the
+  work in smaller pieces, or throw it away and redo it with a tighter scope. Skimming a large
+  generated diff is the single most reliable way to introduce a bug you will spend a day
+  finding later.
+</Callout>
+
+## What to stop checking
+
+Attention is finite, so it is worth naming what you can safely give less of:
+
+- **Formatting.** Your formatter handles it. If it does not, install one.
+- **Obvious syntax and type errors.** The compiler is better at this than you are.
+- **Naming conventions in the small.** Fix them during integration rather than debating them
+  in review.
+- **Whether it could be more elegant.** Sometimes worth raising, rarely the best use of the
+  review.
+
+## The two-question version
+
+For a small change, most of this collapses into two questions:
+
+1. **Do we already have this?**
+2. **Which input makes it wrong?**
+
+Those two catch the majority of real defects in generated code. Everything above is the
+longer form for when the change is large enough to deserve it.
+
+<Sources
+  items={[
+    {
+      title: "Modern code review: a case study at Google",
+      href: "https://research.google/pubs/modern-code-review-a-case-study-at-google/",
+      publisher: "Google Research",
+      checked: "Jul 2026",
+    },
+  ]}
+/>
