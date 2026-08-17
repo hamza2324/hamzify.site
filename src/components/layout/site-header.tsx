@@ -63,7 +63,7 @@ export function SiteHeader() {
       )}
     >
       <Container width="wide">
-        <div className="flex h-[var(--header-h)] items-center justify-between gap-4">
+        <div className="flex h-[var(--header-h)] items-center justify-between gap-2 sm:gap-4">
           <Logo />
 
           <nav aria-label="Main" className="hidden lg:block">
@@ -100,7 +100,7 @@ export function SiteHeader() {
             <button
               type="button"
               onClick={() => openSearch()}
-              className="inline-flex h-9 items-center gap-2 rounded-sm border border-line px-2.5 text-ink-2 transition-colors hover:border-line-2 hover:text-ink"
+              className="inline-flex size-9 items-center justify-center rounded-sm border border-line px-0 text-ink-2 transition-colors hover:border-line-2 hover:text-ink sm:h-9 sm:w-auto sm:gap-2 sm:px-2.5"
             >
               <Search className="size-4" aria-hidden="true" />
               <span className="sr-only">Search Hamzify</span>

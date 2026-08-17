@@ -198,6 +198,7 @@
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: calc(var(--header-h) + 1.5rem);
     text-underline-offset: 0.18em;
+    overflow-x: clip;
   }
 
   body {
@@ -209,6 +210,8 @@
     font-synthesis-weight: none;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    overflow-x: clip;
+    min-width: 0;
   }
 
   ::selection {

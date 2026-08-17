@@ -82,7 +82,7 @@ export function SearchCommand({ documents }: { documents: SearchDocument[] }) {
 
   return (
     <div
-      className="fixed inset-0 z-[var(--z-modal)] flex items-start justify-center bg-ink/40 px-4 pt-[12vh] backdrop-blur-[2px]"
+      className="fixed inset-0 z-[var(--z-modal)] flex items-start justify-center bg-ink/40 px-3 pt-[8vh] sm:px-4 sm:pt-[12vh] backdrop-blur-[2px]"
       onClick={close}
     >
       <div

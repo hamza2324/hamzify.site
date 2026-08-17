@@ -31,11 +31,11 @@ export function ComparisonCard({
 
       {sides ? (
         <p className="font-display text-display-s font-semibold leading-tight text-ink">
-          <span>{sides[0]}</span>
-          <span className="mx-2.5 font-sans text-[0.75rem] font-medium tracking-[0.14em] text-ink-3 uppercase">
+          <span className="inline-block">{sides[0]}</span>
+          <span className="mx-2 font-sans text-[0.6875rem] font-medium tracking-[0.14em] text-ink-3 uppercase sm:mx-2.5 sm:text-[0.75rem]">
             vs
           </span>
-          <span>{sides[1]}</span>
+          <span className="inline-block">{sides[1]}</span>
         </p>
       ) : null}
 

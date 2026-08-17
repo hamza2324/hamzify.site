@@ -1,4 +1,4 @@
-import { readdirSync, renameSync, rmSync, statSync } from "node:fs";
+import { readdirSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 
 /**
@@ -66,4 +66,5 @@ try {
 }
 
 flatten(OUT);
+writeFileSync(join(OUT, ".nojekyll"), "");
 console.log(`flatten-segment-cache: flattened ${moved} segment payload(s).`);

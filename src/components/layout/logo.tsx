@@ -49,7 +49,7 @@ export function Logo({
     >
       <LogoMark />
       {showWordmark ? (
-        <span className="font-display text-[1.3rem] font-semibold tracking-[-0.02em]">
+        <span className="hidden font-display text-[1.3rem] font-semibold tracking-[-0.02em] min-[360px]:inline">
           Hamzify
         </span>
       ) : null}

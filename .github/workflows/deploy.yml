@@ -28,9 +28,12 @@ jobs:
           node-version: 22
           cache: npm
 
-      - run: npm ci
+      # `npm ci` requires a lockfile that lists optional native packages for
+      # Linux. A lockfile generated on Windows can omit those (e.g. @emnapi/*),
+      # which is what failed the first deploy. `npm install` still uses the
+      # lockfile, but can fill the platform gaps so the Next.js build can run.
+      - run: npm install --no-audit --no-fund
 
-      # Type and lint errors fail the deploy rather than shipping quietly.
       - run: npm run check
 
       - run: npm run build
@@ -40,6 +43,10 @@ jobs:
       # GitHub Pages would otherwise hand the output to Jekyll, which skips
       # every directory starting with an underscore — including `_next`.
       - run: touch out/.nojekyll
+
+      # Sanity: the published root must contain index.html. That file is built
+      # here, not committed to the repo — the repo is the Next.js source.
+      - run: test -f out/index.html && test -f out/.nojekyll && test -f out/CNAME
 
       - uses: actions/configure-pages@v5
 
