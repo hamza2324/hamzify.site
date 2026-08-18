@@ -18,14 +18,15 @@ export function LatestExperiments({ articles }: { articles: Article[] }) {
 
   return (
     <section
+      id="recent"
       aria-labelledby="latest-experiments"
       className="border-b border-line py-14 sm:py-16 lg:py-20"
     >
       <Container>
         <SectionHeading
-          kicker="Vibe coding"
+          kicker="Recent"
           title="Recent experiments and AI build logs"
-          description="What happened when real work was handed to an AI coding model — vibe coding experiments and agent build logs, written up with the setup and the limitations attached."
+          description="What happened when real work was handed to an AI coding model. Experiments and agent build logs, written with the setup and the limitations attached."
           accent="ember"
           action={{ href: "/latest/", label: "All articles" }}
         />

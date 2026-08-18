@@ -1,4 +1,4 @@
-import { getAllArticles } from "@/lib/content";
+import { getAllArticles, mentionedTools } from "@/lib/content";
 import { ARTICLE_TYPE_META, CATEGORIES } from "@/lib/taxonomy";
 import type { SearchDocument } from "@/types/content";
 
@@ -19,6 +19,10 @@ export function buildSearchIndex(): SearchDocument[] {
     articleType: article.articleType,
     articleTypeLabel: ARTICLE_TYPE_META[article.articleType].label,
     tags: article.tags,
+    keywords: article.keywords,
+    tools: mentionedTools(article),
+    dek: article.dek,
+    primaryTopic: article.primaryTopic,
     publishedAt: article.publishedAt,
     readingTime: article.readingTime.text,
     sample: article.sample,

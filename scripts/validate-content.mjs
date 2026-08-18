@@ -119,6 +119,11 @@ for (const article of parsed) {
 
 for (const article of parsed) {
   for (const related of article.data.related ?? []) {
+    if (related === article.slug) {
+      errors.push(
+        `${article.file}: related slug "${related}" points at itself`,
+      );
+    }
     if (!slugs.has(related)) {
       errors.push(
         `${article.file}: related slug "${related}" does not exist`,

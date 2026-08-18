@@ -7,6 +7,8 @@ import { Hero } from "@/components/home/hero";
 import { LabPreview } from "@/components/home/lab-preview";
 import { LatestExperiments } from "@/components/home/latest-experiments";
 import { NewsletterSection } from "@/components/home/newsletter-section";
+import { ResourcesPreview } from "@/components/home/resources-preview";
+import { StartHere } from "@/components/home/start-here";
 import { ToolCoverage } from "@/components/home/tool-coverage";
 import { JsonLd } from "@/components/seo/json-ld";
 import {
@@ -58,6 +60,12 @@ export default function HomePage() {
 
   const buildLogs = getArticlesByCategory("build-logs").slice(0, 2);
   const workflow = getArticlesByCategory("workflows")[0];
+  const resources = getArticlesByCategory("resources")
+    .filter(
+      (article) =>
+        !toolCoverage.some((shown) => shown?.slug === article.slug),
+    )
+    .slice(0, 3);
 
   return (
     <>
@@ -81,10 +89,12 @@ export default function HomePage() {
 
       {featured ? <Hero article={featured} /> : null}
       <EditorialSignal />
+      <StartHere />
       <LatestExperiments articles={experiments} />
       <ToolCoverage articles={toolCoverage} />
       <BuildSpotlight articles={buildLogs} />
       {workflow ? <FeaturedWorkflow article={workflow} /> : null}
+      <ResourcesPreview articles={resources} />
       <LabPreview />
       <NewsletterSection />
     </>

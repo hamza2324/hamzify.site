@@ -56,7 +56,7 @@ export function TableOfContents({ headings }: { headings: Heading[] }) {
     return () => observer.disconnect();
   }, [headings]);
 
-  if (headings.length < 2) return null;
+  if (headings.length < 3) return null;
 
   return (
     <nav aria-labelledby="toc-heading" className="text-[0.8125rem]">

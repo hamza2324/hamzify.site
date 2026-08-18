@@ -268,19 +268,75 @@ export function requireAuthor(slug: string): Author {
   return author;
 }
 
+const TOOL_STOPWORDS = new Set([
+  "the",
+  "and",
+  "for",
+  "with",
+  "ai",
+  "code",
+  "tool",
+  "tools",
+  "coding",
+]);
+
+/**
+ * Tools this article is actually about: explicit `tools`, comparison names,
+ * and build-log `project.aiTools`.
+ */
+export function mentionedTools(article: Article): string[] {
+  const names = [
+    ...(article.tools ?? []),
+    ...(article.compared ?? []),
+    ...(article.project?.aiTools ?? []),
+  ];
+  const seen = new Set<string>();
+  const unique: string[] = [];
+  for (const name of names) {
+    const key = name.trim().toLowerCase();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    unique.push(name.trim());
+  }
+  return unique;
+}
+
+function toolTokens(article: Article): Set<string> {
+  const tokens = new Set<string>();
+  for (const name of mentionedTools(article)) {
+    const lower = name.toLowerCase();
+    tokens.add(lower);
+    for (const part of lower.split(/[\s/_-]+/)) {
+      if (part.length > 2 && !TOOL_STOPWORDS.has(part)) tokens.add(part);
+    }
+  }
+  return tokens;
+}
+
+const COMPLEMENTARY_TYPES: Record<ArticleType, ArticleType[]> = {
+  review: ["comparison", "workflow", "guide", "resource", "build-log"],
+  comparison: ["review", "workflow", "guide"],
+  "build-log": ["experiment", "workflow", "review", "resource"],
+  experiment: ["build-log", "workflow", "resource"],
+  workflow: ["resource", "review", "experiment", "build-log", "guide"],
+  guide: ["review", "comparison", "resource", "workflow"],
+  resource: ["workflow", "guide", "review", "experiment"],
+};
+
 /**
  * Related content, chosen deliberately instead of at random.
  *
  * Explicit `related` slugs come first and always win. Remaining slots are
- * scored on shared tags, then same category, then same article type, so a
- * review links to comparisons about the same tool rather than to whatever
- * happens to be recent.
+ * scored on shared topic, category, tags, tools, then complementary formats,
+ * so a review links to comparisons of the same tool rather than to whatever
+ * happens to be recent. The current article is never included.
  */
 export function getRelatedArticles(article: Article, limit = 3): Article[] {
   const picked: Article[] = [];
   const taken = new Set<string>([article.slug]);
 
   for (const slug of article.related) {
+    if (slug === article.slug) continue;
     const candidate = getArticleBySlug(slug);
     if (candidate && !taken.has(candidate.slug)) {
       picked.push(candidate);
@@ -291,18 +347,55 @@ export function getRelatedArticles(article: Article, limit = 3): Article[] {
   if (picked.length >= limit) return picked.slice(0, limit);
 
   const tags = new Set(article.tags.map((tag) => tag.toLowerCase()));
+  const keywords = new Set(
+    article.keywords.map((keyword) => keyword.toLowerCase()),
+  );
+  const tools = toolTokens(article);
+  const topic = article.primaryTopic?.trim().toLowerCase();
+  const complementary = new Set(COMPLEMENTARY_TYPES[article.articleType] ?? []);
+
   const scored = articles
     .filter((candidate) => !taken.has(candidate.slug))
     .map((candidate) => {
-      const sharedTags = candidate.tags.filter((tag) =>
-        tags.has(tag.toLowerCase()),
-      ).length;
+      let score = 0;
 
-      let score = sharedTags * 3;
-      if (candidate.category === article.category) score += 2;
+      if (topic) {
+        const haystack = [
+          candidate.primaryTopic ?? "",
+          candidate.title,
+          candidate.subcategory ?? "",
+          ...candidate.tags,
+        ]
+          .join(" ")
+          .toLowerCase();
+        if (haystack.includes(topic)) score += 6;
+      }
+
+      if (candidate.category === article.category) score += 4;
+      if (
+        candidate.subcategory &&
+        candidate.subcategory === article.subcategory
+      ) {
+        score += 4;
+      }
+
+      score +=
+        candidate.tags.filter((tag) => tags.has(tag.toLowerCase())).length * 3;
+
+      const candidateTools = toolTokens(candidate);
+      let sharedTools = 0;
+      for (const token of candidateTools) {
+        if (tools.has(token)) sharedTools += 1;
+      }
+      score += sharedTools * 5;
+
+      score +=
+        candidate.keywords.filter((keyword) =>
+          keywords.has(keyword.toLowerCase()),
+        ).length * 2;
+
+      if (complementary.has(candidate.articleType)) score += 2;
       if (candidate.articleType === article.articleType) score += 1;
-      if (candidate.subcategory && candidate.subcategory === article.subcategory)
-        score += 2;
 
       return { candidate, score };
     })
@@ -310,7 +403,8 @@ export function getRelatedArticles(article: Article, limit = 3): Article[] {
     .sort(
       (a, b) =>
         b.score - a.score ||
-        Date.parse(b.candidate.publishedAt) - Date.parse(a.candidate.publishedAt),
+        Date.parse(b.candidate.publishedAt) -
+          Date.parse(a.candidate.publishedAt),
     );
 
   for (const entry of scored) {

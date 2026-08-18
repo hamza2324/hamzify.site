@@ -15,8 +15,11 @@ import type { SearchDocument } from "@/types/content";
 /** Field weights. Title matches should clearly beat a tag match. */
 const WEIGHTS = {
   title: 12,
-  description: 4,
+  tool: 8,
   tag: 5,
+  keyword: 5,
+  description: 4,
+  topic: 6,
   category: 3,
   type: 3,
 } as const;
@@ -28,7 +31,11 @@ function normalize(value: string): string {
 function scoreDocument(document: SearchDocument, terms: string[]): number {
   const title = normalize(document.title);
   const description = normalize(document.description);
+  const dek = normalize(document.dek ?? "");
+  const topic = normalize(document.primaryTopic ?? "");
   const tags = document.tags.map(normalize);
+  const keywords = document.keywords.map(normalize);
+  const tools = document.tools.map(normalize);
   const category = normalize(document.categoryLabel);
   const type = normalize(document.articleTypeLabel);
 
@@ -42,12 +49,24 @@ function scoreDocument(document: SearchDocument, terms: string[]): number {
       score += title.startsWith(term) ? WEIGHTS.title * 1.5 : WEIGHTS.title;
       matched = true;
     }
-    if (description.includes(term)) {
+    if (tools.some((tool) => tool.includes(term))) {
+      score += WEIGHTS.tool;
+      matched = true;
+    }
+    if (topic.includes(term)) {
+      score += WEIGHTS.topic;
+      matched = true;
+    }
+    if (description.includes(term) || dek.includes(term)) {
       score += WEIGHTS.description;
       matched = true;
     }
     if (tags.some((tag) => tag.includes(term))) {
       score += WEIGHTS.tag;
+      matched = true;
+    }
+    if (keywords.some((keyword) => keyword.includes(term))) {
+      score += WEIGHTS.keyword;
       matched = true;
     }
     if (category.includes(term)) {

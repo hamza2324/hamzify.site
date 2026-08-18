@@ -1,6 +1,6 @@
 ---
-title: "Working title — specific value, audience, or outcome"
-description: "Unique meta description, 40–300 characters. Summarise the actual value. This is also the search snippet, so write it for someone who has not seen the page."
+title: "Working title: specific value, audience, or outcome"
+description: "Unique meta description, 40-300 characters. Summarise the actual value. This is also the search snippet, so write it for someone who has not seen the page."
 dek: "One-line subtitle under the headline. What the reader gets."
 category: reviews
 articleType: review
@@ -14,6 +14,8 @@ tags:
   - example
 keywords:
   - example keyword
+tools:
+  - Tool name
 coverPattern: terminal
 # coverImage: /images/articles/example.png
 # coverImageAlt: What the screenshot actually shows
@@ -39,45 +41,21 @@ related: []
 #     answer: A concise answer that matches the article
 ---
 
-The introduction should establish the problem, why it matters, and what this
-piece specifically covers. Put a direct takeaway near the top when the intent
-is informational or commercial.
+Copy a type-specific template instead of starting from a blank page:
 
-<KeyTakeaways
-  items={[
-    "A claim the reader can act on.",
-    "A limitation or condition.",
-    "Who this is not for.",
-  ]}
-/>
+- `_template-review.mdx`
+- `_template-comparison.mdx`
+- `_template-build-log.mdx`
+- `_template-experiment.mdx`
+- `_template-workflow.mdx`
 
-## The first real question the reader has
+Files that start with `_` are ignored by the content layer.
 
-Write in short paragraphs. Prefer evidence over atmosphere.
+Write the brief first (see `docs/EDITORIAL.md` and `docs/PUBLISHING.md`). The
+introduction should establish what was tested or built, and what this piece
+specifically covers. Put a direct takeaway near the top.
 
-<Finding>
-The single observation that would be dishonest to bury in paragraph twelve.
-</Finding>
+Do not use a markdown `#` heading. The page template owns the H1.
 
-## How this was tested
-
-State the version, the task, and the time spent. If you did not test it, do
-not write as if you did.
-
-<TestMethodology
-  version="Tool, version, date"
-  duration="How long it was used"
-  task="What was actually built or compared"
-/>
-
-## What worked
-
-## What did not
-
-## Verdict
-
-<Verdict
-  summary="A prose verdict, not a score."
-  bestFor="Who should use this."
-  skipIf="Who should not."
-/>
+Do not add an FAQ unless the questions are real, unanswered in the body, and
+useful to a reader.

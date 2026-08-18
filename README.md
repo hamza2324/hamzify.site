@@ -132,8 +132,9 @@ Two rules that the architecture enforces rather than merely documents:
 
 ## 5. Content creation workflow
 
-The full editorial system — brief, structure, validation, sitemap, and
-pre-publish checklist — lives in [`docs/PUBLISHING.md`](docs/PUBLISHING.md).
+The full editorial system, brief, structure, validation, sitemap, and
+pre-publish checklist live in [`docs/PUBLISHING.md`](docs/PUBLISHING.md).
+Voice and evidence rules live in [`docs/EDITORIAL.md`](docs/EDITORIAL.md).
 What follows is the short version.
 
 ### A new article

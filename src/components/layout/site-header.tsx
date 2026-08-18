@@ -9,7 +9,7 @@ import { Container } from "@/components/ui/container";
 import { Logo } from "@/components/layout/logo";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { openSearch } from "@/components/search/search-command";
-import { isActivePath, mainNav } from "@/lib/navigation";
+import { aiCodingAliases, isActivePath, mainNav, moreNav } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
@@ -69,14 +69,16 @@ export function SiteHeader() {
           <nav aria-label="Main" className="hidden lg:block">
             <ul className="flex items-center gap-0.5">
               {mainNav.map((item) => {
-                const active = isActivePath(pathname, item.href);
+                const aliases =
+                  item.label === "AI Coding" ? aiCodingAliases : [];
+                const active = isActivePath(pathname, item.href, aliases);
                 return (
                   <li key={item.href}>
                     <Link
                       href={item.href}
                       aria-current={active ? "page" : undefined}
                       className={cn(
-                        "relative inline-flex items-center rounded-sm px-2.5 py-1.5 text-[0.875rem] transition-colors",
+                        "relative inline-flex min-h-9 items-center rounded-sm px-2.5 py-1.5 text-[0.875rem] transition-colors",
                         active
                           ? "font-medium text-violet"
                           : "text-ink-2 hover:text-ink",
@@ -100,7 +102,7 @@ export function SiteHeader() {
             <button
               type="button"
               onClick={() => openSearch()}
-              className="inline-flex size-9 items-center justify-center rounded-sm border border-line px-0 text-ink-2 transition-colors hover:border-line-2 hover:text-ink sm:h-9 sm:w-auto sm:gap-2 sm:px-2.5"
+              className="inline-flex size-11 items-center justify-center rounded-sm border border-line px-0 text-ink-2 transition-colors hover:border-line-2 hover:text-ink sm:h-11 sm:w-auto sm:gap-2 sm:px-3"
             >
               <Search className="size-4" aria-hidden="true" />
               <span className="sr-only">Search Hamzify</span>
@@ -109,7 +111,7 @@ export function SiteHeader() {
               </kbd>
             </button>
 
-            <ThemeToggle />
+            <ThemeToggle className="size-11" />
 
             <button
               ref={toggleRef}
@@ -117,7 +119,7 @@ export function SiteHeader() {
               onClick={() => setMenuOpen((open) => !open)}
               aria-expanded={menuOpen}
               aria-controls="mobile-nav"
-              className="inline-flex size-9 items-center justify-center rounded-sm border border-line text-ink-2 transition-colors hover:text-ink lg:hidden"
+              className="inline-flex size-11 items-center justify-center rounded-sm border border-line text-ink-2 transition-colors hover:text-ink lg:hidden"
             >
               {menuOpen ? (
                 <X className="size-4" aria-hidden="true" />
@@ -138,27 +140,30 @@ export function SiteHeader() {
         className="border-t border-line bg-paper lg:hidden"
       >
         <Container width="wide">
-          <nav aria-label="Site" className="py-4">
-            <ul className="flex flex-col">
+          <nav aria-label="Site" className="max-h-[min(32rem,calc(100dvh-var(--header-h)))] overflow-y-auto overflow-x-hidden py-5">
+            <p className="label text-ink-3">Browse</p>
+            <ul className="mt-1 flex flex-col">
               {mainNav.map((item) => {
-                const active = isActivePath(pathname, item.href);
+                const aliases =
+                  item.label === "AI Coding" ? aiCodingAliases : [];
+                const active = isActivePath(pathname, item.href, aliases);
                 return (
                   <li key={item.href} className="border-b border-line/70">
                     <Link
                       href={item.href}
                       aria-current={active ? "page" : undefined}
-                      className="flex flex-col gap-0.5 py-3"
+                      className="flex min-h-11 flex-col justify-center gap-0.5 py-3"
                     >
                       <span
                         className={cn(
-                          "text-base",
+                          "text-[1.0625rem]",
                           active ? "font-medium text-violet" : "text-ink",
                         )}
                       >
                         {item.label}
                       </span>
                       {item.hint ? (
-                        <span className="text-[0.8125rem] text-ink-3">
+                        <span className="text-[0.8125rem] leading-snug text-ink-3">
                           {item.hint}
                         </span>
                       ) : null}
@@ -168,26 +173,31 @@ export function SiteHeader() {
               })}
             </ul>
 
-            <div className="mt-5 flex flex-wrap gap-2">
-              <Link
-                href="/about/"
-                className="rounded-sm border border-line px-3 py-2 text-sm text-ink-2"
-              >
-                About
-              </Link>
-              <Link
-                href="/tools/"
-                className="rounded-sm border border-line px-3 py-2 text-sm text-ink-2"
-              >
-                The lab
-              </Link>
-              <Link
-                href="/#newsletter"
-                className="rounded-sm bg-brand px-3 py-2 text-sm font-medium text-on-accent"
-              >
-                Subscribe
-              </Link>
-            </div>
+            <p className="label mt-6 text-ink-3">More</p>
+            <ul className="mt-2 grid grid-cols-2 gap-2">
+              {moreNav.map((item) => {
+                const isSubscribe = item.href.startsWith("/#");
+                const active = isActivePath(pathname, item.href);
+                return (
+                  <li key={item.href} className="min-w-0">
+                    <Link
+                      href={item.href}
+                      aria-current={active ? "page" : undefined}
+                      className={cn(
+                        "flex min-h-11 items-center rounded-sm border px-3 py-2.5 text-[0.9375rem]",
+                        isSubscribe
+                          ? "border-brand bg-brand font-medium text-on-accent"
+                          : active
+                            ? "border-violet-line bg-violet-soft font-medium text-violet"
+                            : "border-line text-ink-2",
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           </nav>
         </Container>
       </div>

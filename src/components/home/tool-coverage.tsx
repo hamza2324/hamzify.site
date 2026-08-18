@@ -23,6 +23,7 @@ export function ToolCoverage({ articles }: { articles: Article[] }) {
 
   return (
     <section
+      id="tool-coverage"
       aria-labelledby="tool-coverage"
       className="border-b border-line bg-violet-soft/40 py-14 sm:py-16 lg:py-20"
     >

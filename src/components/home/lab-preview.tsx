@@ -19,6 +19,7 @@ export function LabPreview() {
 
   return (
     <section
+      id="lab"
       aria-labelledby="lab-preview"
       className="border-b border-line py-14 sm:py-16 lg:py-20"
     >

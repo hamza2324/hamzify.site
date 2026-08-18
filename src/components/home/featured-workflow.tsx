@@ -26,6 +26,7 @@ export function FeaturedWorkflow({ article }: { article: Article }) {
 
   return (
     <section
+      id="workflows"
       aria-labelledby="featured-workflow"
       data-accent="amber"
       className="border-b border-line bg-amber-soft/60 py-14 sm:py-16 lg:py-20"

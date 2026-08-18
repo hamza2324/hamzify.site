@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArticleHeader } from "@/components/article/article-header";
 import { ArticleNav } from "@/components/article/article-nav";
 import { AuthorBox } from "@/components/article/author-box";
+import { ContinueExploring } from "@/components/article/continue-exploring";
 import { ReadingProgress } from "@/components/article/reading-progress";
 import { RelatedPosts } from "@/components/article/related-posts";
 import { ShareControls } from "@/components/article/share-controls";
@@ -136,14 +137,20 @@ export default async function ArticlePage({
         </Container>
 
         <Container className="mt-12">
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_14rem] lg:gap-16">
+          <div
+            className={
+              article.headings.length >= 3
+                ? "grid gap-12 lg:grid-cols-[minmax(0,1fr)_14rem] lg:gap-16"
+                : "grid gap-12"
+            }
+          >
             <div className="min-w-0">
               {article.sample ? <SampleNotice /> : null}
               {article.affiliateDisclosure ? <AffiliateDisclosure /> : null}
 
               {/* Mobile table of contents: collapsed by default so it never
-                  pushes the first paragraph off the screen. */}
-              {article.headings.length > 1 ? (
+                  pushes the first paragraph off the screen. Short pieces skip it. */}
+              {article.headings.length >= 3 ? (
                 <details className="mb-8 rounded-md border border-line bg-surface px-4 py-3 lg:hidden">
                   <summary className="label cursor-pointer text-ink-2">
                     Contents ({article.headings.length} sections)
@@ -225,22 +232,25 @@ export default async function ArticlePage({
               </footer>
             </div>
 
-            <aside className="hidden lg:block">
-              <div className="sticky top-[calc(var(--header-h)+2rem)]">
-                <TableOfContents headings={article.headings} />
-              </div>
-            </aside>
+            {article.headings.length >= 3 ? (
+              <aside className="hidden lg:block">
+                <div className="sticky top-[calc(var(--header-h)+2rem)]">
+                  <TableOfContents headings={article.headings} />
+                </div>
+              </aside>
+            ) : null}
           </div>
         </Container>
 
-        {related.length > 0 ? (
-          <Container className="mt-20">
+        <Container className="mt-20">
+          {related.length > 0 ? (
             <RelatedPosts
               articles={related}
-              description={`Chosen by shared tags and explicit links from this article, not by recency.`}
+              description="Other Hamzify pieces that share this topic, the tools involved, or the next format worth reading."
             />
-          </Container>
-        ) : null}
+          ) : null}
+          <ContinueExploring article={article} />
+        </Container>
       </article>
     </>
   );

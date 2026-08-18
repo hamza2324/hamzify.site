@@ -87,7 +87,7 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
     description:
       "Repeatable AI coding workflows for briefing agents, pair programming, reviewing generated code, testing and shipping.",
     intro:
-      "Tools change every few months; workflows survive longer. These are the sequences worth keeping — how to brief a coding agent, how to review what it produces, and where a human has to stay in the loop.",
+      "Tools change every few months; workflows survive longer. These are the sequences worth keeping: how to brief a coding agent, how to review what it produces, and where a human has to stay in the loop.",
     accent: "amber",
     defaultArticleType: "workflow",
     inMainNav: true,
@@ -113,7 +113,7 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
     description:
       "Side-by-side comparisons of AI coding assistants — Cursor vs GitHub Copilot and others — decided by use case rather than a single overall winner.",
     intro:
-      "There is rarely one winner. These comparisons run the same task through each tool and then pick a recommendation per use case — refactoring, greenfield work, unfamiliar codebases, budget.",
+      "There is rarely one winner. These comparisons run the same task through each tool and then pick a recommendation per use case: refactoring, greenfield work, unfamiliar codebases, budget.",
     accent: "indigo",
     defaultArticleType: "comparison",
     inMainNav: false,
@@ -234,3 +234,20 @@ export const HUB_PAGES = [
 ] as const;
 
 export type HubSlug = (typeof HUB_PAGES)[number]["slug"];
+
+/**
+ * Neighbouring shelves, used on category indexes and article footers.
+ * Kept short so a reader gets one useful next click, not a sitemap.
+ */
+export const RELATED_CATEGORIES: Record<CategorySlug, CategorySlug[]> = {
+  "vibe-coding": ["build-logs", "workflows", "resources"],
+  "build-logs": ["vibe-coding", "workflows", "reviews"],
+  workflows: ["resources", "reviews", "build-logs"],
+  reviews: ["compare", "workflows", "resources"],
+  compare: ["reviews", "workflows", "resources"],
+  resources: ["workflows", "reviews", "compare"],
+};
+
+export function relatedCategoriesFor(slug: CategorySlug): CategoryDefinition[] {
+  return RELATED_CATEGORIES[slug].map((entry) => CATEGORIES[entry]);
+}

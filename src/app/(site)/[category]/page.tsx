@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ArticleCard } from "@/components/cards/article-card";
 import { ArticleList, EmptyState } from "@/components/cards/article-list";
 import { PageHeader } from "@/components/layout/page-header";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -15,6 +17,7 @@ import {
   CATEGORY_SLUGS,
   type CategorySlug,
   isCategorySlug,
+  relatedCategoriesFor,
 } from "@/lib/taxonomy";
 
 /**
@@ -66,6 +69,19 @@ export default async function CategoryPage({
 
   const definition = CATEGORIES[slug];
   const articles = getArticlesByCategory(slug);
+  const featured =
+    articles.find((article) => article.featured) ?? articles[0];
+  const latest = featured
+    ? articles.filter((article) => article.slug !== featured.slug)
+    : articles;
+  const subtopics = [
+    ...new Set(
+      articles
+        .map((article) => article.subcategory?.trim())
+        .filter((value): value is string => Boolean(value)),
+    ),
+  ];
+  const related = relatedCategoriesFor(slug);
 
   const crumbs = [
     { name: "Home", path: "/" },
@@ -97,15 +113,76 @@ export default async function CategoryPage({
             {articles.length} {articles.length === 1 ? "article" : "articles"}
           </span>
         }
-      />
+      >
+        {subtopics.length >= 2 ? (
+          <ul className="flex flex-wrap gap-2">
+            {subtopics.map((topic) => (
+              <li
+                key={topic}
+                className="rounded-xs border border-line bg-paper px-2.5 py-1 font-mono text-[0.75rem] text-ink-3"
+              >
+                {topic}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </PageHeader>
 
       <Container className="py-10 sm:py-14">
         {articles.length > 0 ? (
-          <ArticleList articles={articles} />
+          <div className="flex flex-col gap-12">
+            {featured ? (
+              <section aria-labelledby="category-featured">
+                <h2 id="category-featured" className="label text-ink-3">
+                  Start with this
+                </h2>
+                <div className="mt-4">
+                  <ArticleCard
+                    article={featured}
+                    variant="feature"
+                    showAuthor
+                    priority
+                  />
+                </div>
+              </section>
+            ) : null}
+
+            {latest.length > 0 ? (
+              <section aria-labelledby="category-latest">
+                <h2 id="category-latest" className="label text-ink-3">
+                  Latest
+                </h2>
+                <ArticleList articles={latest} className="mt-4" />
+              </section>
+            ) : null}
+
+            {related.length > 0 ? (
+              <nav aria-labelledby="related-shelves">
+                <h2 id="related-shelves" className="label text-ink-3">
+                  Related shelves
+                </h2>
+                <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+                  {related.map((item) => (
+                    <li key={item.slug}>
+                      <Link
+                        href={`/${item.slug}/`}
+                        className="flex min-h-11 flex-col rounded-sm border border-line bg-surface px-4 py-3 transition-colors hover:border-line-2"
+                      >
+                        <span className="font-medium text-ink">{item.label}</span>
+                        <span className="mt-1 text-[0.8125rem] leading-snug text-ink-3">
+                          {item.description}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ) : null}
+          </div>
         ) : (
           <EmptyState
             title={`The ${definition.label} shelf is empty`}
-            body={`Nothing has been filed under ${definition.label} yet. The rest of the notebook is on the archive page — or search for a tool, a stack, or a format.`}
+            body={`Nothing has been filed under ${definition.label} yet. Browse the archive, or search for a tool, a stack, or a format.`}
           />
         )}
       </Container>

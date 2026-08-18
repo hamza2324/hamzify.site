@@ -167,9 +167,49 @@ export function SearchCommand({ documents }: { documents: SearchDocument[] }) {
               ))}
             </ul>
           ) : (
-            <p className="px-4 py-6 text-[0.875rem] text-ink-3">
-              Type at least two characters. ⌘K / Ctrl+K toggles this overlay.
-            </p>
+            <div className="px-4 py-5">
+              <p className="text-[0.875rem] text-ink-3">
+                Type at least two characters. ⌘K / Ctrl+K toggles this overlay.
+              </p>
+              <ul className="mt-3 grid grid-cols-2 gap-2">
+                <li>
+                  <Link
+                    href="/latest/"
+                    onClick={close}
+                    className="flex min-h-11 items-center rounded-sm border border-line px-3 text-sm text-ink-2 hover:text-ink"
+                  >
+                    Latest
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/ai-coding-tools/"
+                    onClick={close}
+                    className="flex min-h-11 items-center rounded-sm border border-line px-3 text-sm text-ink-2 hover:text-ink"
+                  >
+                    AI Coding
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/build-logs/"
+                    onClick={close}
+                    className="flex min-h-11 items-center rounded-sm border border-line px-3 text-sm text-ink-2 hover:text-ink"
+                  >
+                    Build logs
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/search/"
+                    onClick={close}
+                    className="flex min-h-11 items-center rounded-sm border border-line px-3 text-sm text-ink-2 hover:text-ink"
+                  >
+                    Full search
+                  </Link>
+                </li>
+              </ul>
+            </div>
           )}
         </div>
 

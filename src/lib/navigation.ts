@@ -41,6 +41,50 @@ export const mainNav: NavItem[] = [
   },
 ];
 
+/**
+ * Secondary destinations. Desktop keeps these out of the header so the
+ * masthead stays five items. Mobile groups them under "More" instead of
+ * dumping them into one crowded list.
+ */
+export const moreNav: NavItem[] = [
+  {
+    href: canonicalPath("/reviews"),
+    label: "Reviews",
+    hint: "One tool at a time, tested on real work",
+  },
+  {
+    href: canonicalPath("/compare"),
+    label: "Comparisons",
+    hint: "The same task, more than one tool",
+  },
+  {
+    href: canonicalPath("/resources"),
+    label: "Resources",
+    hint: "Checklists and reference you can reuse",
+  },
+  {
+    href: canonicalPath("/about"),
+    label: "About",
+    hint: "What Hamzify is, and how it is written",
+  },
+  {
+    href: canonicalPath("/tools"),
+    label: "The Lab",
+    hint: "Small utilities, published only when useful",
+  },
+  {
+    href: "/#newsletter",
+    label: "Subscribe",
+    hint: "New pieces when they are worth sending",
+  },
+];
+
+/** Paths that should keep "AI Coding" marked current (the hub, not a dropdown). */
+export const aiCodingAliases = [
+  canonicalPath("/reviews"),
+  canonicalPath("/compare"),
+];
+
 export const footerNav: Array<{ title: string; items: NavItem[] }> = [
   {
     title: "Editorial",
@@ -94,8 +138,17 @@ export const footerNav: Array<{ title: string; items: NavItem[] }> = [
 export const hubPaths = HUB_PAGES.map((hub) => canonicalPath(`/${hub.slug}`));
 
 /** Marks a nav item active for the current pathname, including nested routes. */
-export function isActivePath(pathname: string, href: string): boolean {
+export function isActivePath(
+  pathname: string,
+  href: string,
+  aliases: string[] = [],
+): boolean {
   const current = canonicalPath(pathname);
-  if (href === "/") return current === "/";
-  return current === href || current.startsWith(href);
+  if (href === "/" || href.startsWith("/#")) return current === "/";
+
+  const matches = (target: string) =>
+    current === target || current.startsWith(target);
+
+  if (matches(href)) return true;
+  return aliases.some((alias) => matches(alias));
 }

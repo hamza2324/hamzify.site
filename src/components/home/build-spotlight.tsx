@@ -16,6 +16,7 @@ export function BuildSpotlight({ articles }: { articles: Article[] }) {
 
   return (
     <section
+      id="build-logs"
       aria-labelledby="build-spotlight"
       className="border-b border-line bg-teal-soft/35 py-14 sm:py-16 lg:py-20"
     >

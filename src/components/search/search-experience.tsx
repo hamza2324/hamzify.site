@@ -122,19 +122,33 @@ export function SearchExperience({
 
       <div className="mt-8" aria-live="polite">
         {!hasQuery ? (
-          <p className="text-[0.9375rem] leading-relaxed text-ink-2">
-            Type at least two characters. Search covers every article title,
-            description, tag, category and format across the archive — it runs
-            entirely in your browser, so nothing you type is sent anywhere.
-          </p>
+          <div>
+            <p className="text-[0.9375rem] leading-relaxed text-ink-2">
+              Type at least two characters. Search covers titles, descriptions,
+              tools, tags, categories and formats. It runs in your browser, so
+              nothing you type is sent anywhere.
+            </p>
+            <ul className="mt-5 flex flex-wrap gap-2">
+              {categories.map((option) => (
+                <li key={option.slug}>
+                  <Link
+                    href={`/${option.slug}/`}
+                    className="inline-flex min-h-11 items-center rounded-sm border border-line px-3 py-2 text-sm text-ink-2 hover:border-line-2 hover:text-ink"
+                  >
+                    {option.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         ) : results.length === 0 ? (
           <div className="rounded-md border border-dashed border-line px-6 py-12 text-center">
             <p className="font-display text-[1.125rem] font-semibold text-ink">
               Nothing in the notebook matched “{deferredQuery.trim()}”
             </p>
             <p className="mx-auto mt-2 max-w-md text-[0.9375rem] leading-relaxed text-ink-2">
-              Try a tool name (Cursor, Copilot), a format like “review” or “build
-              log”, or browse{" "}
+              Try a tool name (Cursor, Copilot, Claude), a format like “review”
+              or “build log”, or browse{" "}
               <Link
                 href="/latest/"
                 className="underline decoration-line-2 underline-offset-2 hover:decoration-accent"
@@ -143,6 +157,18 @@ export function SearchExperience({
               </Link>
               .
             </p>
+            <ul className="mt-5 flex flex-wrap justify-center gap-2">
+              {categories.map((option) => (
+                <li key={option.slug}>
+                  <Link
+                    href={`/${option.slug}/`}
+                    className="inline-flex min-h-11 items-center rounded-sm border border-line px-3 py-2 text-sm text-ink-2 hover:border-line-2 hover:text-ink"
+                  >
+                    {option.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         ) : (
           <>

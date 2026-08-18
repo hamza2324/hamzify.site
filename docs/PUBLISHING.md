@@ -1,27 +1,40 @@
 # Publishing a Hamzify article
 
 Hamzify is a developer publication. A new article earns its place by being
-useful to a real reader — not by repeating a keyword. This file is the
-operational checklist. The visual system, routes, sitemap and metadata already
-exist; you do not need to edit them to publish.
+useful to a real reader, not by repeating a keyword. This file is the
+operational checklist. Voice, evidence, and internal-linking rules live in
+[`EDITORIAL.md`](./EDITORIAL.md). The visual system, routes, sitemap and
+metadata already exist; you do not need to edit them to publish.
 
 ## 1. Write the brief first
 
 Before opening the template, write down:
 
-1. **Primary topic** — one subject.
-2. **Primary search concept** — one, not a cluster of unrelated phrases.
-3. **Search intent** — informational, commercial, comparison, tutorial, or
+1. **Primary topic.** One subject.
+2. **Primary search concept.** One, not a cluster of unrelated phrases.
+3. **Search intent.** Informational, commercial, comparison, tutorial, or
    problem-solving.
-4. **Reader** — who this is for.
-5. **Unique value** — what this piece has that a generic summary does not:
-   a test, a build, a method, a limitation, a decision framework.
+4. **The question** the article answers.
+5. **Reader.** Who this is for.
+6. **Unique value.** A test, a build, a method, a limitation, or a decision
+   framework.
+7. **Existing Hamzify articles** that should be linked.
 
 If you cannot name the unique value, do not publish yet.
 
 ## 2. Create the file
 
-Copy the template:
+Copy the matching template:
+
+```text
+src/content/articles/_template-review.mdx
+src/content/articles/_template-comparison.mdx
+src/content/articles/_template-build-log.mdx
+src/content/articles/_template-experiment.mdx
+src/content/articles/_template-workflow.mdx
+```
+
+or the generic starter:
 
 ```text
 src/content/articles/_template.mdx
@@ -71,6 +84,7 @@ Strongly recommended:
 | `tags` / `keywords` | Related language, not stuffed repeats of the title. |
 | `coverPattern` | `grid` `terminal` `diff` `timeline` `stack` `flow` |
 | `related` | Slugs of other articles a reader should open next. |
+| `tools` | Product names this piece actually discusses. Improves related reading and search. |
 | `updatedAt` | Only when the article is materially revised. |
 
 Type-specific:
@@ -95,13 +109,14 @@ Do not use a markdown `#` heading. The template owns the H1.
 ## 4. Write the body
 
 Voice: clear, specific, practical, technically literate. Prefer limitations
-and trade-offs over hype.
+and trade-offs over hype. Full rules: [`EDITORIAL.md`](./EDITORIAL.md).
 
 Do not use:
 
+- em dashes as a writing habit
 - "In today's rapidly evolving world"
-- "Let's dive in"
-- "Game changer"
+- "Let's dive in" / "Delve into" / "Leverage" / "Unlock"
+- "Game changer" / "Revolutionary"
 - fabricated tests, fake statistics, invented first-hand results
 
 Editorial blocks available in every MDX file (no import):
@@ -144,6 +159,8 @@ Human checklist before you merge:
 - [ ] `draft: true` removed
 - [ ] `sample: false` if this is real work
 - [ ] Internal links that a reader would actually follow
+- [ ] `tools` lists the products discussed
+- [ ] No FAQ unless the questions are real and unanswered in the body
 - [ ] External links to primary sources for facts that need them
 
 ## 6. How the sitemap updates

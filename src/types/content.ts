@@ -72,6 +72,11 @@ export const frontmatterSchema = z.object({
   sample: z.boolean().default(false),
   /** Explicit relationships, by slug. Beats guessing at "related posts". */
   related: z.array(z.string().min(1)).default([]),
+  /**
+   * Tools this article actually discusses. Used for related reading and search.
+   * Comparisons also inherit `compared`; build logs also inherit `project.aiTools`.
+   */
+  tools: z.array(z.string().min(1)).default([]),
   project: projectMetaSchema.optional(),
   /** Comparison pages: the tools being weighed, in display order. */
   compared: z.array(z.string().min(1)).min(2).max(4).optional(),
@@ -167,6 +172,10 @@ export type SearchDocument = {
   articleType: string;
   articleTypeLabel: string;
   tags: string[];
+  keywords: string[];
+  tools: string[];
+  dek?: string;
+  primaryTopic?: string;
   publishedAt: string;
   readingTime: string;
   sample: boolean;
