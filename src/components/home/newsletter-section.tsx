@@ -5,6 +5,7 @@ import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { AccentRule } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
 import { newsletterEndpoint } from "@/lib/integrations";
+import { siteConfig } from "@/lib/site-config";
 
 /**
  * Newsletter block. Server component: it reads the endpoint from the
@@ -29,13 +30,13 @@ export function NewsletterSection() {
               id="newsletter"
               className="mt-3 font-display text-display-s font-semibold text-ink"
             >
-              One useful AI building workflow at a time
+              {siteConfig.newsletterPromise}
             </h2>
 
             <p className="mt-3 max-w-lg text-[0.9375rem] leading-relaxed text-ink-2">
-              New experiments, build logs and workflows when they are worth
-              sending, not on a schedule. If email is not your thing, the feed
-              carries everything the newsletter does.
+              New experiments, tool notes and workflows when they are worth
+              sending. There is no fixed schedule. If email is not your thing,
+              the feed carries everything the newsletter does.
             </p>
 
             <div className="mt-5 flex flex-wrap items-center gap-4 text-[0.8125rem]">

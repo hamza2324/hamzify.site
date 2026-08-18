@@ -21,7 +21,7 @@ export function RelatedPosts({
   return (
     <section aria-labelledby="related-heading">
       <SectionHeading
-        kicker="Keep going"
+        kicker="More from Hamzify"
         title={title}
         description={description}
         className="[&_h2]:text-[1.375rem]"

@@ -27,6 +27,8 @@ export function organizationNode(): JsonLdNode {
     "@type": "Organization",
     "@id": ORGANIZATION_ID,
     name: siteConfig.name,
+    alternateName: siteConfig.tagline,
+    slogan: siteConfig.tagline,
     url: absoluteUrl("/"),
     description: siteConfig.description,
     knowsAbout: [...SITE_KEYWORDS],

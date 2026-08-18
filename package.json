@@ -2,7 +2,7 @@
   "name": "hamzify",
   "version": "0.1.0",
   "private": true,
-  "description": "Hamzify — AI coding tools, vibe coding experiments, AI agent build logs and development workflows.",
+  "description": "Hamzify — The Practical AI Coding Publication. Hands-on AI coding tools, real builds, experiments and developer workflows.",
   "scripts": {
     "dev": "next dev",
     "build": "next build && node scripts/flatten-segment-cache.mjs && node scripts/write-seo-files.mjs",

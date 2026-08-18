@@ -335,9 +335,9 @@ function buildLlms(articles) {
   const lines = [
     "# Hamzify",
     "",
-    "> Practical AI for people who build. Hands-on reviews of AI coding tools, real AI agent build logs, vibe coding experiments, and development workflows.",
+    "> The Practical AI Coding Publication. Hands-on reviews of AI coding tools, real AI agent build logs, vibe coding experiments, and development workflows.",
     "",
-    "Hamzify is an independent editorial publication about AI-assisted software development. Articles are written from first-hand tests: stated tool versions, stated tasks, and failures included.",
+    "Hamzify is an independent publication about practical AI-assisted software development. Articles distinguish firsthand tests from research: stated tool versions, stated tasks, and failures included.",
     "",
     `Site: ${ORIGIN}/`,
     `Sitemap: ${ORIGIN}/sitemap.xml`,

@@ -16,6 +16,13 @@ export const BASIS_LABEL = {
   mixed: "Mix of firsthand testing and research",
 } as const;
 
+export const EXPERIMENT_STATUS_LABEL = {
+  completed: "Completed",
+  "in-progress": "In progress",
+  repeated: "Repeated",
+  "needs-further-testing": "Needs further testing",
+} as const;
+
 /**
  * The article masthead.
  *
@@ -64,6 +71,11 @@ export function ArticleHeader({
             {hub.entity.name}
           </Link>
         ))}
+        {article.experimentStatus ? (
+          <Badge variant="outline">
+            {EXPERIMENT_STATUS_LABEL[article.experimentStatus]}
+          </Badge>
+        ) : null}
       </div>
 
       <h1 className="mt-4 max-w-4xl font-display text-display-l font-semibold text-ink">
@@ -114,6 +126,15 @@ export function ArticleHeader({
             value={article.project.aiTools.join(" · ")}
           />
           <ProjectFact term="Time invested" value={article.project.timeInvested} />
+          {article.project.humanIntervention ? (
+            <ProjectFact
+              term="Human intervention"
+              value={article.project.humanIntervention}
+            />
+          ) : null}
+          {article.project.outcome ? (
+            <ProjectFact term="Outcome" value={article.project.outcome} />
+          ) : null}
         </dl>
       ) : null}
       {article.project?.repo ? (

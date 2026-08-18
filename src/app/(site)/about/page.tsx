@@ -22,7 +22,7 @@ import { CATEGORY_LIST } from "@/lib/taxonomy";
 export const metadata: Metadata = createMetadata({
   title: "About Hamzify",
   description:
-    "Who writes Hamzify, what this AI coding publication covers, and the standards behind it: first-hand AI coding tool tests, vibe coding experiments, build logs from real projects, and workflows that survived more than one week of use.",
+    "Hamzify is the practical AI coding publication: why it exists, how tools are tested versus researched, and how corrections are handled.",
   path: "/about",
   keywords: "about",
 });
@@ -64,8 +64,7 @@ export default function AboutPage() {
         nodes={[
           webPageNode({
             title: "About Hamzify",
-            description:
-              "Who writes Hamzify, what it covers, and the editorial standards behind it.",
+            description: `${siteConfig.tagline}. Who writes it, what it covers, and how testing is distinguished from research.`,
             path: "/about",
           }),
           organizationNode(),
@@ -76,8 +75,8 @@ export default function AboutPage() {
 
       <PageHeader
         kicker="About"
-        title="Practical AI for people who build"
-        intro="Hamzify documents AI-assisted software development from the inside: tools tested on work that mattered, projects built in public, and the workflows that were still in use a month later."
+        title={siteConfig.tagline}
+        intro="Hamzify exists because AI coding tools change quickly, while marketing and generic round-ups rarely explain how those tools behave during real development work."
         crumbs={CRUMBS}
       />
 
@@ -91,11 +90,45 @@ export default function AboutPage() {
             className="size-20 rounded-sm border border-line"
           />
           <p className="max-w-md font-display text-[1.25rem] leading-snug text-ink">
-            A working notebook for AI-assisted software development.
+            {siteConfig.name}. {siteConfig.tagline}.
           </p>
         </div>
 
         <div className="flex flex-col gap-16 sm:gap-20">
+          <section aria-labelledby="why">
+            <div className="flex items-center gap-3">
+              <AccentRule />
+              <span className="label text-ink-3">Why this exists</span>
+            </div>
+            <h2
+              id="why"
+              className="mt-4 font-display text-display-s font-semibold text-ink"
+            >
+              Practical means the work actually happened
+            </h2>
+            <div className="mt-4 flex max-w-2xl flex-col gap-4 text-[1rem] leading-relaxed text-ink-2">
+              <p>
+                Hamzify tests tools, documents builds, examines workflows, and
+                shares both successful and unsuccessful results. It does not
+                exist to claim that every AI product is worth adopting.
+              </p>
+              <p>
+                The questions that belong here are specific: can this tool
+                handle this task, where does it fail, how much human involvement
+                is required, what workflow makes sense, and who should actually
+                use it.
+              </p>
+              <p>
+                Testing means the tool or project was used on real work, with
+                the version, task and limits stated. Research means a claim
+                comes from a primary source, not from a session that never
+                happened. Analysis is judgement on top of those two. Sample
+                articles shipped with the site are labelled as such and are not
+                firsthand results.
+              </p>
+            </div>
+          </section>
+
           {/* Who ------------------------------------------------------------ */}
           <section aria-labelledby="who">
             <div className="flex items-center gap-3">

@@ -54,8 +54,8 @@ export function SiteFooter() {
               </span>
             </div>
             <p className="mt-4 max-w-sm text-[0.9375rem] leading-relaxed text-ink-2">
-              {siteConfig.tagline} Hands-on reviews of AI coding tools, vibe
-              coding experiments, AI agent build logs and development workflows.
+              {siteConfig.tagline} Real AI coding tools, real builds, real
+              experiments, and practical developer workflows.
             </p>
 
             <ul className="mt-6 flex items-center gap-2">

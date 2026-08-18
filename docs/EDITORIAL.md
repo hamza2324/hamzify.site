@@ -5,8 +5,9 @@ coding tools. It should sound like a developer who used the thing being
 discussed, not like a summary of a product page.
 
 This file is the voice and quality contract. Operational publishing steps live
-in [`PUBLISHING.md`](./PUBLISHING.md). Article skeletons live in
-`src/content/articles/_template-*.mdx`.
+in [`PUBLISHING.md`](./PUBLISHING.md). Brand positioning, color, logo and
+signature components live in [`brand-guide.md`](./brand-guide.md). Article
+skeletons live in `src/content/articles/_template-*.mdx`.
 
 ## Before you write
 
@@ -106,6 +107,7 @@ Optional flags, all manual:
 - `lastReviewedAt` / `reviewIntervalDays` (never auto-changed)
 - `basis` (`firsthand` `research` `analysis` `mixed`). Do not set `firsthand`
   on sample placeholders.
+- `experimentStatus` on experiments only, when it is true.
 
 ## FAQ
 

@@ -40,7 +40,7 @@ export default function SearchPage() {
       <PageHeader
         kicker="Search"
         title="Search the archive"
-        intro="Every published article is indexed at build time and searched in your browser. Nothing you type is sent to a server."
+        intro="Every published Hamzify article is indexed at build time and searched in your browser. Nothing you type is sent to a server."
         crumbs={CRUMBS}
       />
 

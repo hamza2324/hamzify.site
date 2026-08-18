@@ -183,7 +183,10 @@
   --container-content: var(--w-content);
   --container-wide: var(--w-wide);
 
-  /* Fluid display sizes. Body copy stays fixed for predictable reading. */
+  /* Fluid display sizes. Body copy stays fixed for predictable reading.
+     Roles: Display = font-display + text-display-*; article headings = prose
+     h2/h3; body = font-sans; metadata/labels = .label + font-mono; code =
+     font-mono. Do not add another family. */
   --text-display-xl: clamp(2.5rem, 1.6rem + 4.2vw, 4.75rem);
   --text-display-xl--line-height: 1.02;
   --text-display-xl--letter-spacing: -0.022em;

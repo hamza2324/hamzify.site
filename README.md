@@ -1,11 +1,11 @@
 # Hamzify
 
-**Practical AI for people who build.**
+**The Practical AI Coding Publication.**
 
-An editorial publication about AI-assisted software development: hands-on tool
-tests, real build logs, coding workflows and experiments. Built as a fully static
-Next.js site, so it deploys to GitHub Pages with no server, no database and no
-runtime cost.
+An independent editorial site about practical AI-assisted software development:
+hands-on tool tests, real build logs, coding workflows and experiments. Built as
+a fully static Next.js site, so it deploys to GitHub Pages with no server, no
+database and no runtime cost.
 
 Production domain: <https://hamzify.site>
 
@@ -135,6 +135,7 @@ Two rules that the architecture enforces rather than merely documents:
 The full editorial system, brief, structure, validation, sitemap, and
 pre-publish checklist live in [`docs/PUBLISHING.md`](docs/PUBLISHING.md).
 Voice and evidence rules live in [`docs/EDITORIAL.md`](docs/EDITORIAL.md).
+Brand positioning lives in [`docs/brand-guide.md`](docs/brand-guide.md).
 The content map is [`docs/content-map.md`](docs/content-map.md). Naming for
 tools and formats is [`docs/NAMING.md`](docs/NAMING.md). Run
 `npm run review:due` to list published pieces that may need a freshness

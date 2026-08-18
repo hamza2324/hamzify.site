@@ -39,7 +39,7 @@ export default function NotFound() {
 
       <main id="main" className="flex-1">
         <Container className="py-16 sm:py-24">
-          <p className="label text-accent">Error 404</p>
+          <p className="label text-accent">Hamzify</p>
           <h1 className="mt-4 max-w-2xl font-display text-display-l font-semibold text-ink">
             Page not found
           </h1>

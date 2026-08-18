@@ -109,15 +109,21 @@ export function Verdict({
   summary,
   bestFor,
   skipIf,
+  surprise,
+  bottomLine,
   children,
 }: {
   summary: string;
   bestFor?: string;
   skipIf?: string;
+  surprise?: string;
+  bottomLine?: string;
   children?: ReactNode;
 }) {
+  const hasFacts = Boolean(bestFor || skipIf || surprise || bottomLine);
+
   return (
-    <ContentBlock label="Verdict" icon={Gavel} accent="amber">
+    <ContentBlock label="Practical verdict" icon={Gavel} accent="indigo">
       <p className="not-prose font-display text-lg leading-snug text-ink">
         {summary}
       </p>
@@ -126,10 +132,14 @@ export function Verdict({
           {children}
         </div>
       ) : null}
-      {bestFor || skipIf ? (
+      {hasFacts ? (
         <SpecList>
           {bestFor ? <SpecRow term="Best for">{bestFor}</SpecRow> : null}
-          {skipIf ? <SpecRow term="Skip it if">{skipIf}</SpecRow> : null}
+          {skipIf ? <SpecRow term="Not ideal for">{skipIf}</SpecRow> : null}
+          {surprise ? (
+            <SpecRow term="What surprised me">{surprise}</SpecRow>
+          ) : null}
+          {bottomLine ? <SpecRow term="Bottom line">{bottomLine}</SpecRow> : null}
         </SpecList>
       ) : null}
     </ContentBlock>
@@ -304,6 +314,78 @@ export function BuildDetails({
   );
 }
 
+export function BuildEvidence({
+  stack,
+  tools,
+  time,
+  humanIntervention,
+  outcome,
+}: {
+  stack?: string;
+  tools?: string;
+  time?: string;
+  humanIntervention?: string;
+  outcome?: string;
+}) {
+  const rows = [
+    ["Stack", stack],
+    ["Tools", tools],
+    ["Time", time],
+    ["Human intervention", humanIntervention],
+    ["Outcome", outcome],
+  ].filter((entry): entry is [string, string] => Boolean(entry[1]));
+
+  if (rows.length === 0) return null;
+
+  return (
+    <ContentBlock label="Build evidence" icon={GitBranch} accent="teal">
+      <SpecList>
+        {rows.map(([term, value]) => (
+          <SpecRow key={term} term={term}>
+            {value}
+          </SpecRow>
+        ))}
+      </SpecList>
+    </ContentBlock>
+  );
+}
+
+export function HamzifyMethod({
+  question,
+  method,
+  test,
+  result,
+  takeaway,
+}: {
+  question?: string;
+  method?: string;
+  test?: string;
+  result?: string;
+  takeaway?: string;
+}) {
+  const rows = [
+    ["Question", question],
+    ["Method", method],
+    ["Test", test],
+    ["Result", result],
+    ["Takeaway", takeaway],
+  ].filter((entry): entry is [string, string] => Boolean(entry[1]));
+
+  if (rows.length === 0) return null;
+
+  return (
+    <ContentBlock label="The Hamzify method" icon={Layers} accent="indigo">
+      <SpecList>
+        {rows.map(([term, value]) => (
+          <SpecRow key={term} term={term}>
+            {value}
+          </SpecRow>
+        ))}
+      </SpecList>
+    </ContentBlock>
+  );
+}
+
 export function QuickAnswer({ children }: { children: ReactNode }) {
   return (
     <aside className="not-prose my-8 rounded-md border border-line bg-surface px-4 py-4 sm:px-5">
@@ -331,7 +413,7 @@ export function ExperimentSetup({
   limitations: string[];
 }) {
   return (
-    <ContentBlock label="Experiment" icon={FlaskConical} accent="ember">
+    <ContentBlock label="Experiment" icon={FlaskConical} accent="teal">
       <SpecList>
         <SpecRow term="Hypothesis">{hypothesis}</SpecRow>
         <SpecRow term="Setup">{setup}</SpecRow>

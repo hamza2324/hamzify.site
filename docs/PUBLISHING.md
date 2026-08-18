@@ -127,13 +127,15 @@ Do not use:
 Editorial blocks available in every MDX file (no import):
 
 `KeyTakeaways` `Finding` `PullQuote` `Callout` `ProsCons` `Verdict`
-`QuickVerdict` `QuickAnswer` `TestMethodology` `HowThisWasTested`
-`BuildDetails` `ExperimentSetup` `ToolComparison` `BuildTimeline`
+`QuickVerdict` `QuickAnswer` `HamzifyMethod` `TestMethodology` `HowThisWasTested`
+`BuildDetails` `BuildEvidence` `ExperimentSetup` `ToolComparison` `BuildTimeline`
 `ProjectStack` `Sources` `FaqList` `ImageWithCaption` `AffiliateLink`
 
-`HowThisWasTested` and `BuildDetails` only render fields you fill in. Do not
-invent versions, times, or results. `QuickAnswer` is optional: use it on
-reviews, comparisons and decision guides, not on narrative build logs.
+`HowThisWasTested`, `BuildDetails`, `BuildEvidence` and `HamzifyMethod` only
+render fields you fill in. Do not invent versions, times, or results.
+`QuickAnswer` is optional: use it on reviews, comparisons and decision guides,
+not on narrative build logs. `Verdict` is the practical conclusion: best for,
+not ideal for, optional surprise and bottom line.
 
 Use a block when it carries meaning. Do not decorate an empty article.
 

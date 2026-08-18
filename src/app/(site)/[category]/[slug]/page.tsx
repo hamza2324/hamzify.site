@@ -201,7 +201,7 @@ export default async function ArticlePage({
                   <ShareControls title={article.title} path={article.path} />
 
                   <p className="text-[0.8125rem] leading-relaxed text-ink-3">
-                    New pieces go out on the{" "}
+                    {siteConfig.footerIdentity} New pieces go out on the{" "}
                     <Link
                       href="/#newsletter"
                       className="underline decoration-line-2 underline-offset-2 hover:decoration-accent"
@@ -298,7 +298,7 @@ export default async function ArticlePage({
           {related.length > 0 ? (
             <RelatedPosts
               articles={related}
-              description="Other Hamzify pieces that share this topic, the tools involved, or the next format worth reading."
+              description="Other Hamzify pieces on this topic, the same tools, or the next format worth reading."
             />
           ) : null}
           <ContinueExploring article={article} />

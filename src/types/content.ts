@@ -38,6 +38,8 @@ export const projectMetaSchema = z.object({
   timeInvested: z.string().min(1),
   repo: z.string().url().optional(),
   demo: z.string().url().optional(),
+  humanIntervention: z.string().min(1).optional(),
+  outcome: z.string().min(1).optional(),
 });
 
 export type ProjectMeta = z.infer<typeof projectMetaSchema>;
@@ -106,6 +108,10 @@ export const frontmatterSchema = z.object({
    * Do not set `firsthand` on sample placeholders.
    */
   basis: z.enum(["firsthand", "research", "analysis", "mixed"]).optional(),
+  /** Experiment articles only. Omit rather than guess. */
+  experimentStatus: z
+    .enum(["completed", "in-progress", "repeated", "needs-further-testing"])
+    .optional(),
   audience: z.string().min(4).max(160).optional(),
   evidence: z
     .object({

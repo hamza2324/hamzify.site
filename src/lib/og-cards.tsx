@@ -379,7 +379,7 @@ export function categoryCard(
 /* -------------------------------------------------------------------------- */
 
 export function siteCard(): OgCard {
-  const accent = OG_ACCENT.ember;
+  const accent = OG_ACCENT.indigo;
 
   const element = (
     <div
@@ -432,7 +432,7 @@ export function siteCard(): OgCard {
         <span
           style={{
             fontFamily: "Fraunces",
-            fontSize: 44,
+            fontSize: 36,
             lineHeight: 1.15,
             letterSpacing: -1,
             color: accent,

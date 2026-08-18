@@ -19,7 +19,7 @@ export function ExperimentCard({
 }) {
   return (
     <article
-      data-accent="ember"
+      data-accent="teal"
       className={cn(
         "group relative flex flex-col overflow-hidden rounded-md border border-line bg-surface transition-colors hover:border-line-2 card-spine",
         className,

@@ -62,7 +62,7 @@ export const CATEGORIES: Record<CategorySlug, CategoryDefinition> = {
       "Vibe coding documented properly: AI-assisted building experiments, prompt-to-product attempts, and what breaks when you hand real work to a coding model.",
     intro:
       "Prompt-to-product attempts, honest failure modes and the parts nobody screenshots. Every piece here is an experiment with a stated setup and a stated limitation, filed internally as AI-assisted building so the archive still makes sense when the vocabulary changes.",
-    accent: "ember",
+    accent: "teal",
     defaultArticleType: "experiment",
     inMainNav: true,
   },
@@ -160,7 +160,7 @@ export const ARTICLE_TYPE_META: Record<ArticleType, ArticleTypeDefinition> = {
     label: "Experiment",
     description:
       "A question, a setup, a result and its limitations. Written so you can repeat it.",
-    accent: "ember",
+    accent: "teal",
   },
   "build-log": {
     type: "build-log",

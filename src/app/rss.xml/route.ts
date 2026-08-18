@@ -60,7 +60,7 @@ export async function GET() {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">',
     "  <channel>",
-    `    <title>${escapeXml(siteConfig.name)}</title>`,
+    `    <title>${escapeXml(`${siteConfig.name} — ${siteConfig.tagline}`)}</title>`,
     `    <link>${escapeXml(absoluteUrl("/"))}</link>`,
     `    <description>${escapeXml(siteConfig.description)}</description>`,
     `    <language>en-us</language>`,

@@ -78,7 +78,7 @@ export default function AiCodingToolsPage() {
         kicker="AI coding tools"
         title={hub.headline}
         intro={hub.description}
-        accent="amber"
+        accent="indigo"
         crumbs={CRUMBS}
         meta={
           <span className="font-mono uppercase tracking-[0.06em]">

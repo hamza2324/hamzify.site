@@ -28,7 +28,7 @@ const VARIANTS: Record<
 > = {
   note: { icon: Info, accent: "indigo", defaultTitle: "Note" },
   important: { icon: OctagonAlert, accent: "ember", defaultTitle: "Important" },
-  experiment: { icon: FlaskConical, accent: "ember", defaultTitle: "Experiment" },
+  experiment: { icon: FlaskConical, accent: "teal", defaultTitle: "Experiment" },
   warning: { icon: AlertTriangle, accent: "amber", defaultTitle: "Warning" },
   caution: { icon: OctagonAlert, accent: "ember", defaultTitle: "Careful" },
   tip: { icon: Lightbulb, accent: "teal", defaultTitle: "Tip" },

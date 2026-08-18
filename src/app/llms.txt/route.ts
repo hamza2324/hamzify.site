@@ -19,7 +19,7 @@ export async function GET() {
     "",
     `> ${siteConfig.description}`,
     "",
-    "Hamzify is an independent editorial publication about AI-assisted software development. Articles are written from first-hand tests: stated tool versions, stated tasks, and failures included.",
+    "Hamzify is an independent publication about practical AI-assisted software development. Articles distinguish firsthand tests from research: stated tool versions, stated tasks, and failures included.",
     "",
     `Site: ${absoluteUrl("/")}`,
     `Sitemap: ${absoluteUrl("/sitemap.xml")}`,

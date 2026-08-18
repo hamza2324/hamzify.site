@@ -1,14 +1,16 @@
 import { ArticleCard } from "@/components/cards/article-card";
 import { Container } from "@/components/ui/container";
 import { formatRecordLabel } from "@/lib/records";
+import { siteConfig } from "@/lib/site-config";
 import { ARTICLE_TYPE_META } from "@/lib/taxonomy";
 import type { Article } from "@/types/content";
 
 /**
  * The homepage masthead.
  *
- * Identity comes from a real piece of work, not a slogan. The page heading is
- * visually quiet so the featured story can carry the weight.
+ * Identity is established in a compact lockup so a first visit knows what
+ * Hamzify is, then a real piece of work carries the visual weight. The
+ * heading stays modest so the featured story is not pushed below the fold.
  */
 export function Hero({ article }: { article: Article }) {
   const typeMeta = ARTICLE_TYPE_META[article.articleType];
@@ -20,13 +22,17 @@ export function Hero({ article }: { article: Article }) {
   return (
     <section className="texture-grid border-b border-line bg-paper pt-8 pb-12 sm:pt-10 lg:pt-12 lg:pb-16">
       <Container>
-        <h1 className="sr-only">
-          Hamzify — AI coding tools, build logs and workflows
+        <p className="label text-violet">{siteConfig.tagline}</p>
+        <h1 className="mt-2 font-display text-display-s font-semibold tracking-[-0.02em] text-ink sm:text-display-m">
+          {siteConfig.name}
         </h1>
+        <p className="mt-2 max-w-xl text-[0.9875rem] leading-relaxed text-ink-2">
+          {siteConfig.supportingLine}
+        </p>
 
-        <p className="label text-accent">{kicker}</p>
+        <p className="mt-8 label text-accent sm:mt-10">{kicker}</p>
 
-        <div className="mt-5">
+        <div className="mt-4">
           <ArticleCard
             article={article}
             variant="hero"

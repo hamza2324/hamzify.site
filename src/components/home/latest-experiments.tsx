@@ -27,7 +27,7 @@ export function LatestExperiments({ articles }: { articles: Article[] }) {
           kicker="Recent"
           title="Recent experiments and AI build logs"
           description="What happened when real work was handed to an AI coding model. Experiments and agent build logs, written with the setup and the limitations attached."
-          accent="ember"
+          accent="teal"
           action={{ href: "/latest/", label: "All articles" }}
         />
 

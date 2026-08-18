@@ -24,10 +24,15 @@ export const siteConfig = {
   name: "Hamzify",
   /** Used in the title template, e.g. `Cursor review | Hamzify`. */
   titleTemplate: "%s | Hamzify",
-  defaultTitle: "Hamzify — AI coding tools, build logs and workflows",
-  tagline: "Practical AI for people who build.",
+  defaultTitle: "Hamzify — The Practical AI Coding Publication",
+  /** Primary positioning. Use this everywhere identity is needed. */
+  tagline: "The Practical AI Coding Publication",
+  /** Homepage hero only. Do not repeat on every page. */
+  supportingLine: "Real tools. Real projects. Real results.",
   description:
-    "Hands-on reviews of AI coding tools like Cursor, GitHub Copilot and Claude Code, plus real AI agent build logs, vibe coding experiments and development workflows for people who ship software.",
+    "The practical AI coding publication: hands-on reviews of AI coding tools like Cursor, GitHub Copilot and Claude Code, plus real AI agent build logs, vibe coding experiments and development workflows.",
+  newsletterPromise: "One useful AI development workflow at a time.",
+  footerIdentity: "More practical AI coding experiments from Hamzify.",
   url: normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL),
   locale: "en_US",
   lang: "en",
