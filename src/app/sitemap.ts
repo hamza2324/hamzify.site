@@ -6,11 +6,13 @@ import {
   getArticlesByAuthor,
   getArticlesByCategory,
   getLastContentUpdate,
+  getPopulatedCategories,
 } from "@/lib/content";
+import { getPublishedToolHubs } from "@/lib/coverage";
 import { ogImagePath, ogNames } from "@/lib/og-paths";
 import { POLICY_PAGES, POLICY_SLUGS } from "@/lib/pages";
 import { absoluteUrl, siteConfig } from "@/lib/site-config";
-import { CATEGORY_SLUGS, HUB_PAGES } from "@/lib/taxonomy";
+import { HUB_PAGES } from "@/lib/taxonomy";
 
 /**
  * Canonical sitemap for every indexable URL.
@@ -30,7 +32,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ? new Date(
           Math.max(
             ...list.map((article) =>
-              Date.parse(article.updatedAt ?? article.publishedAt),
+              Date.parse(
+              article.lastReviewedAt ??
+                article.updatedAt ??
+                article.publishedAt,
+            ),
             ),
           ),
         )
@@ -53,19 +59,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const categories: MetadataRoute.Sitemap = CATEGORY_SLUGS.map((slug) => ({
-    url: absoluteUrl(`/${slug}`),
-    lastModified: modifiedOf(getArticlesByCategory(slug)),
-    changeFrequency: "weekly",
-    priority: 0.8,
-    images: [absoluteUrl(ogImagePath(ogNames.category(slug)))],
+  const categories: MetadataRoute.Sitemap = getPopulatedCategories().map(
+    (slug) => ({
+      url: absoluteUrl(`/${slug}`),
+      lastModified: modifiedOf(getArticlesByCategory(slug)),
+      changeFrequency: "weekly",
+      priority: 0.8,
+      images: [absoluteUrl(ogImagePath(ogNames.category(slug)))],
+    }),
+  );
+
+  const toolHubs: MetadataRoute.Sitemap = getPublishedToolHubs().map((hub) => ({
+    url: absoluteUrl(hub.path),
+    lastModified: modifiedOf(hub.articles),
+    changeFrequency: "weekly" as const,
+    priority: 0.75,
   }));
 
   const posts: MetadataRoute.Sitemap = articles.map((article) => ({
     url: absoluteUrl(article.path),
-    lastModified: new Date(article.updatedAt ?? article.publishedAt),
+    lastModified: new Date(
+      article.lastReviewedAt ?? article.updatedAt ?? article.publishedAt,
+    ),
     changeFrequency: "monthly",
-    priority: article.featured ? 0.9 : 0.7,
+    priority: article.featured || article.evergreen ? 0.9 : 0.7,
     images: [absoluteUrl(ogImagePath(ogNames.article(article.slug)))],
   }));
 
@@ -103,6 +120,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...home,
     ...hubs,
     ...categories,
+    ...toolHubs,
     ...posts,
     ...authors,
     ...staticPages,

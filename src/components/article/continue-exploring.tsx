@@ -1,10 +1,13 @@
 import Link from "next/link";
 
+import { hubsForArticle, sameProjectArticles } from "@/lib/coverage";
 import { relatedCategoriesFor } from "@/lib/taxonomy";
 import type { Article } from "@/types/content";
 
 /**
- * One useful next click after an article: a related shelf, not a sitemap.
+ * One next step after an article. Never stacks every possible widget.
+ *
+ * Preference: same tool hub, then same build, then a format-based next shelf.
  */
 
 type NextStep = {
@@ -14,7 +17,7 @@ type NextStep = {
   link: string;
 };
 
-function nextStepFor(article: Article): NextStep {
+function typeStep(article: Article): NextStep {
   switch (article.articleType) {
     case "review":
       return {
@@ -62,17 +65,45 @@ function nextStepFor(article: Article): NextStep {
 }
 
 export function ContinueExploring({ article }: { article: Article }) {
-  const next = nextStepFor(article);
-  const related = relatedCategoriesFor(article.category).filter(
-    (category) => category.slug !== article.category,
-  );
+  const hubs = hubsForArticle(article);
+  const sameBuild = sameProjectArticles(article, 2);
+  const relatedShelves = relatedCategoriesFor(article.category);
+
+  const toolHub = hubs[0];
+  const next = toolHub
+    ? {
+        href: toolHub.path,
+        title: `More Hamzify coverage of ${toolHub.entity.name}`,
+        body: `Reviews, comparisons, builds and workflows that mention ${toolHub.entity.name}, collected in one place.`,
+        link: `Open the ${toolHub.entity.name} coverage`,
+      }
+    : sameBuild[0]
+      ? {
+          href: sameBuild[0].path,
+          title: "From the same build",
+          body: `Another Hamzify piece from ${article.project?.name}.`,
+          link: sameBuild[0].title,
+        }
+      : typeStep(article);
+
+  const chips = toolHub
+    ? hubs.slice(1, 3).map((hub) => ({
+        href: hub.path,
+        label: hub.entity.name,
+      }))
+    : relatedShelves.slice(0, 3).map((category) => ({
+        href: `/${category.slug}/`,
+        label: category.label,
+      }));
 
   return (
     <section
       aria-labelledby="continue-exploring"
-      className={related.length > 0 ? "mt-14 border-t border-line pt-10" : "border-t border-line pt-10"}
+      className="mt-14 border-t border-line pt-10"
     >
-      <p className="label text-ink-3">Continue exploring</p>
+      <p className="label text-ink-3">
+        {toolHub ? "From the same tool" : sameBuild[0] ? "From the same build" : "Continue exploring"}
+      </p>
       <h2
         id="continue-exploring"
         className="mt-2 font-display text-[1.25rem] font-semibold text-ink"
@@ -90,15 +121,15 @@ export function ContinueExploring({ article }: { article: Article }) {
         .
       </p>
 
-      {related.length > 0 ? (
+      {chips.length > 0 ? (
         <ul className="mt-6 flex flex-wrap gap-2">
-          {related.map((category) => (
-            <li key={category.slug}>
+          {chips.map((chip) => (
+            <li key={chip.href}>
               <Link
-                href={`/${category.slug}/`}
+                href={chip.href}
                 className="inline-flex min-h-11 items-center rounded-sm border border-line px-3 py-2 text-sm text-ink-2 transition-colors hover:border-line-2 hover:text-ink"
               >
-                {category.label}
+                {chip.label}
               </Link>
             </li>
           ))}

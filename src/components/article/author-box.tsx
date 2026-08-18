@@ -49,6 +49,24 @@ export function AuthorBox({
             {author.shortBio}
           </p>
 
+          <p className="mt-3 text-[0.8125rem] leading-relaxed text-ink-3">
+            Corrections are published, not quietly patched. See the{" "}
+            <Link
+              href="/editorial-policy/"
+              className="underline decoration-line-2 underline-offset-2 hover:decoration-accent"
+            >
+              editorial policy
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="/corrections-policy/"
+              className="underline decoration-line-2 underline-offset-2 hover:decoration-accent"
+            >
+              corrections policy
+            </Link>
+            .
+          </p>
+
           <ul className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[0.8125rem]">
             {author.links.map((link) => (
               <li key={link.href}>

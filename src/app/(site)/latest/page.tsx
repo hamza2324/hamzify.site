@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 
+import { EditorialPicks } from "@/components/article/editorial-picks";
 import { ArticleList, EmptyState } from "@/components/cards/article-list";
 import { PageHeader } from "@/components/layout/page-header";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/ui/container";
-import { getAllArticles, getLastContentUpdate } from "@/lib/content";
+import { getAllArticles, getEditorialPicks, getLastContentUpdate } from "@/lib/content";
 import { createMetadata } from "@/lib/metadata";
 import { breadcrumbNode, collectionPageNode } from "@/lib/schema";
 import { HUB_PAGES } from "@/lib/taxonomy";
@@ -65,7 +66,13 @@ export default function LatestPage() {
 
       <Container className="py-10 sm:py-14">
         {articles.length > 0 ? (
-          <ArticleList articles={articles} numbered />
+          <div className="flex flex-col gap-12">
+            <EditorialPicks
+              articles={getEditorialPicks(4)}
+              title="A short list, chosen by hand"
+            />
+            <ArticleList articles={articles} numbered />
+          </div>
         ) : (
           <EmptyState
             title="No articles yet"

@@ -61,6 +61,12 @@ export const frontmatterSchema = z.object({
   coverImageAlt: z.string().optional(),
   coverPattern: z.enum(COVER_PATTERNS).default("grid"),
   featured: z.boolean().default(false),
+  /** Manual editorial collection: shown as a pick, never as "most popular". */
+  editorialPick: z.boolean().default(false),
+  /** Manual starting-point flag for archive and start-here collections. */
+  startHere: z.boolean().default(false),
+  /** Editorially maintained reference. Never inferred automatically. */
+  evergreen: z.boolean().default(false),
   /** Renders the affiliate disclosure block above the article body. */
   affiliateDisclosure: z.boolean().default(false),
   draft: z.boolean().default(false),
@@ -77,6 +83,53 @@ export const frontmatterSchema = z.object({
    * Comparisons also inherit `compared`; build logs also inherit `project.aiTools`.
    */
   tools: z.array(z.string().min(1)).default([]),
+  /**
+   * Editorial cluster slug (e.g. `cursor`, `agent-workflows`). Optional.
+   * Tool hubs are derived from `tools` even when this is omitted.
+   */
+  cluster: z.string().min(2).max(60).optional(),
+  /**
+   * When the article was last checked against the current product. Displayed
+   * as "Last reviewed" only when it differs from `publishedAt`. Does not
+   * change automatically.
+   */
+  lastReviewedAt: isoDate.optional(),
+  /** Editorial reminder interval in days. Never shown to readers. */
+  reviewIntervalDays: z.number().int().min(30).max(730).optional(),
+  /**
+   * Direct answer for reviews, comparisons and decision guides. Omit on
+   * narrative build logs and experiments unless the piece is question-led.
+   */
+  quickAnswer: z.string().min(24).max(400).optional(),
+  /**
+   * How the piece was produced. Shown as a trust line, not a credential.
+   * Do not set `firsthand` on sample placeholders.
+   */
+  basis: z.enum(["firsthand", "research", "analysis", "mixed"]).optional(),
+  audience: z.string().min(4).max(160).optional(),
+  evidence: z
+    .object({
+      project: z.string().min(1).optional(),
+      environment: z.string().min(1).optional(),
+      toolVersion: z.string().min(1).optional(),
+      model: z.string().min(1).optional(),
+      task: z.string().min(1).optional(),
+      period: z.string().min(1).optional(),
+      humanIntervention: z.string().min(1).optional(),
+      limitations: z.string().min(1).optional(),
+    })
+    .optional(),
+  sources: z
+    .array(
+      z.object({
+        title: z.string().min(3).max(180),
+        href: z.string().url(),
+        publisher: z.string().min(1).max(80).optional(),
+        checked: isoDate.optional(),
+      }),
+    )
+    .max(12)
+    .optional(),
   project: projectMetaSchema.optional(),
   /** Comparison pages: the tools being weighed, in display order. */
   compared: z.array(z.string().min(1)).min(2).max(4).optional(),

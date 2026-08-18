@@ -1,4 +1,5 @@
 import { getAllArticles } from "@/lib/content";
+import { getPublishedToolHubs } from "@/lib/coverage";
 import { absoluteUrl, siteConfig } from "@/lib/site-config";
 import { CATEGORIES, HUB_PAGES } from "@/lib/taxonomy";
 
@@ -44,6 +45,10 @@ export async function GET() {
     ...HUB_PAGES.map(
       (hub) =>
         `- [${hub.label}](${absoluteUrl(`/${hub.slug}`)}): ${hub.description}`,
+    ),
+    ...getPublishedToolHubs().map(
+      (hub) =>
+        `- [${hub.entity.name} coverage](${absoluteUrl(hub.path)}): ${hub.articles.length} published Hamzify articles`,
     ),
     ...Object.values(CATEGORIES).map(
       (category) =>

@@ -371,6 +371,7 @@ export function getRelatedArticles(article: Article, limit = 3): Article[] {
         if (haystack.includes(topic)) score += 6;
       }
 
+      if (article.cluster && candidate.cluster === article.cluster) score += 5;
       if (candidate.category === article.category) score += 4;
       if (
         candidate.subcategory &&
@@ -451,10 +452,35 @@ export function getTagCounts(): Array<{ tag: string; count: number }> {
     .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
 }
 
-/** Most recent `updatedAt`/`publishedAt` across the archive, for the sitemap. */
+/** Most recent `lastReviewedAt` / `updatedAt` / `publishedAt` across the archive. */
 export function getLastContentUpdate(): Date {
   const timestamps = articles.map((article) =>
-    Date.parse(article.updatedAt ?? article.publishedAt),
+    Date.parse(
+      article.lastReviewedAt ?? article.updatedAt ?? article.publishedAt,
+    ),
   );
   return new Date(timestamps.length ? Math.max(...timestamps) : Date.now());
+}
+
+export function getEditorialPicks(limit = 4): Article[] {
+  return articles.filter((article) => article.editorialPick).slice(0, limit);
+}
+
+export function getStartHereArticles(limit = 4): Article[] {
+  return articles.filter((article) => article.startHere).slice(0, limit);
+}
+
+export function getEvergreenArticles(limit = 6): Article[] {
+  return articles.filter((article) => article.evergreen).slice(0, limit);
+}
+
+/** Date shown as "Last reviewed". Never invented; omitted when it equals published. */
+export function lastReviewedDate(article: Article): string | undefined {
+  const candidate = article.lastReviewedAt ?? article.updatedAt;
+  if (!candidate || candidate === article.publishedAt) return undefined;
+  return candidate;
+}
+
+export function getArticlesByCluster(cluster: string): Article[] {
+  return articles.filter((article) => article.cluster === cluster);
 }

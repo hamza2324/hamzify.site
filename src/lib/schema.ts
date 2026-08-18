@@ -164,7 +164,9 @@ export function blogPostingNode(article: Article, author: Author): JsonLdNode {
     description: article.description,
     inLanguage: siteConfig.lang,
     datePublished: toIsoDate(article.publishedAt),
-    dateModified: toIsoDate(article.updatedAt ?? article.publishedAt),
+    dateModified: toIsoDate(
+      article.lastReviewedAt ?? article.updatedAt ?? article.publishedAt,
+    ),
     author: { "@id": `${absoluteUrl(`/author/${author.slug}`)}#person` },
     publisher: { "@id": ORGANIZATION_ID },
     articleSection: CATEGORIES[article.category].label,

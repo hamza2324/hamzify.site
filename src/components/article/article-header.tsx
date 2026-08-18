@@ -1,9 +1,20 @@
+import Link from "next/link";
+
 import { ArticleCover } from "@/components/article/article-cover";
 import { Breadcrumbs, type Crumb } from "@/components/article/breadcrumbs";
 import { Byline } from "@/components/article/byline";
 import { Badge } from "@/components/ui/badge";
+import { hubsForArticle } from "@/lib/coverage";
+import { lastReviewedDate } from "@/lib/content";
 import { ARTICLE_TYPE_META, CATEGORIES } from "@/lib/taxonomy";
 import type { Article, Author } from "@/types/content";
+
+export const BASIS_LABEL = {
+  firsthand: "Based on firsthand testing",
+  research: "Based on research of primary sources",
+  analysis: "Analysis and editorial judgement",
+  mixed: "Mix of firsthand testing and research",
+} as const;
 
 /**
  * The article masthead.
@@ -24,6 +35,8 @@ export function ArticleHeader({
 }) {
   const category = CATEGORIES[article.category];
   const typeMeta = ARTICLE_TYPE_META[article.articleType];
+  const hubs = hubsForArticle(article);
+  const reviewed = lastReviewedDate(article);
 
   return (
     <header>
@@ -42,6 +55,15 @@ export function ArticleHeader({
             <span className="label text-ink-3">{article.subcategory}</span>
           </>
         ) : null}
+        {hubs.map((hub) => (
+          <Link
+            key={hub.entity.slug}
+            href={hub.path}
+            className="label text-ink-3 underline decoration-line-2 underline-offset-2 hover:decoration-accent"
+          >
+            {hub.entity.name}
+          </Link>
+        ))}
       </div>
 
       <h1 className="mt-4 max-w-4xl font-display text-display-l font-semibold text-ink">
@@ -59,12 +81,19 @@ export function ArticleHeader({
           author={author}
           publishedAt={article.publishedAt}
           updatedAt={article.updatedAt}
+          lastReviewedAt={reviewed}
           readingTime={article.readingTime.text}
         />
 
         <p className="text-[0.8125rem] leading-relaxed text-ink-3">
           <span className="font-medium text-ink-2">{typeMeta.label}:</span>{" "}
           {typeMeta.description}
+          {article.basis ? (
+            <>
+              {" "}
+              {BASIS_LABEL[article.basis]}.
+            </>
+          ) : null}
         </p>
       </div>
 
@@ -86,6 +115,18 @@ export function ArticleHeader({
           />
           <ProjectFact term="Time invested" value={article.project.timeInvested} />
         </dl>
+      ) : null}
+      {article.project?.repo ? (
+        <p className="mt-3 text-[0.875rem]">
+          <a
+            href={article.project.repo}
+            target="_blank"
+            rel="noopener"
+            className="font-medium text-ink underline decoration-line-2 underline-offset-2 hover:decoration-accent"
+          >
+            Project repository
+          </a>
+        </p>
       ) : null}
     </header>
   );

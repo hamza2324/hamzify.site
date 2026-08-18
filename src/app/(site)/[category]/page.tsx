@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { EditorialPicks } from "@/components/article/editorial-picks";
 import { ArticleCard } from "@/components/cards/article-card";
 import { ArticleList, EmptyState } from "@/components/cards/article-list";
 import { PageHeader } from "@/components/layout/page-header";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/ui/container";
-import { getArticlesByCategory } from "@/lib/content";
+import { getArticlesByCategory, getEditorialPicks } from "@/lib/content";
 import { createMetadata } from "@/lib/metadata";
 import { categoryCardAlt } from "@/lib/og-cards";
 import { ogNames } from "@/lib/og-paths";
@@ -48,12 +49,14 @@ export async function generateMetadata({
   if (!slug) return {};
 
   const definition = CATEGORIES[slug];
+  const empty = getArticlesByCategory(slug).length === 0;
 
   return createMetadata({
     title: definition.headline,
     description: definition.description,
     path: `/${slug}`,
     keywords: slug,
+    noindex: empty,
     image: { name: ogNames.category(slug), alt: categoryCardAlt(slug) },
   });
 }
@@ -70,7 +73,13 @@ export default async function CategoryPage({
   const definition = CATEGORIES[slug];
   const articles = getArticlesByCategory(slug);
   const featured =
-    articles.find((article) => article.featured) ?? articles[0];
+    articles.find((article) => article.featured) ??
+    articles.find((article) => article.startHere) ??
+    articles[0];
+  const picks = getEditorialPicks(3).filter(
+    (article) =>
+      article.category === slug && article.slug !== featured?.slug,
+  );
   const latest = featured
     ? articles.filter((article) => article.slug !== featured.slug)
     : articles;
@@ -147,6 +156,14 @@ export default async function CategoryPage({
               </section>
             ) : null}
 
+            {picks.length > 0 ? (
+              <EditorialPicks
+                articles={picks}
+                kicker="Picked for this shelf"
+                title="Worth opening first"
+              />
+            ) : null}
+
             {latest.length > 0 ? (
               <section aria-labelledby="category-latest">
                 <h2 id="category-latest" className="label text-ink-3">
@@ -182,7 +199,7 @@ export default async function CategoryPage({
         ) : (
           <EmptyState
             title={`The ${definition.label} shelf is empty`}
-            body={`Nothing has been filed under ${definition.label} yet. Browse the archive, or search for a tool, a stack, or a format.`}
+            body={`Nothing has been filed under ${definition.label} yet.`}
           />
         )}
       </Container>

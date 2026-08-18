@@ -1,3 +1,6 @@
+import type { ReactNode } from "react";
+import Link from "next/link";
+
 import { ArticleCard } from "@/components/cards/article-card";
 import { cn } from "@/lib/utils";
 import type { Article } from "@/types/content";
@@ -39,9 +42,11 @@ export function ArticleList({
 export function EmptyState({
   title,
   body,
+  children,
 }: {
   title: string;
   body: string;
+  children?: ReactNode;
 }) {
   return (
     <div className="rounded-md border border-dashed border-line px-6 py-12 text-center">
@@ -51,6 +56,23 @@ export function EmptyState({
       <p className="mx-auto mt-2 max-w-md text-[0.9375rem] leading-relaxed text-ink-2">
         {body}
       </p>
+      {children ? <div className="mt-5">{children}</div> : (
+        <p className="mt-5 text-[0.875rem] text-ink-3">
+          <Link
+            href="/latest/"
+            className="underline decoration-line-2 underline-offset-2 hover:decoration-accent"
+          >
+            Browse the archive
+          </Link>
+          {" · "}
+          <Link
+            href="/search/"
+            className="underline decoration-line-2 underline-offset-2 hover:decoration-accent"
+          >
+            Search
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

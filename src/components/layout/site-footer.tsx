@@ -4,6 +4,7 @@ import { Github, Rss } from "lucide-react";
 import { LogoMark } from "@/components/layout/logo";
 import { Container } from "@/components/ui/container";
 import { footerNav } from "@/lib/navigation";
+import { getPublishedToolHubs } from "@/lib/coverage";
 import { siteConfig } from "@/lib/site-config";
 
 function XIcon({ className }: { className?: string }) {
@@ -25,6 +26,21 @@ const socials = [
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
+  const toolHubs = getPublishedToolHubs();
+  const groups = footerNav.map((group) =>
+    group.title === "Tools" && toolHubs.length > 0
+      ? {
+          ...group,
+          items: [
+            ...group.items,
+            ...toolHubs.map((hub) => ({
+              href: hub.path,
+              label: hub.entity.name,
+            })),
+          ],
+        }
+      : group,
+  );
 
   return (
     <footer className="mt-24 border-t border-line bg-surface">
@@ -61,7 +77,7 @@ export function SiteFooter() {
           </div>
 
           <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-4">
-            {footerNav.map((group) => (
+            {groups.map((group) => (
               <div key={group.title}>
                 <h2 className="label text-ink-3">{group.title}</h2>
                 <ul className="mt-3 flex flex-col gap-2">

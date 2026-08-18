@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { AccentRule } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
 import { getArticlesByType } from "@/lib/content";
+import { getPublishedToolHubs } from "@/lib/coverage";
 import { createMetadata } from "@/lib/metadata";
 import { breadcrumbNode, collectionPageNode } from "@/lib/schema";
 import { ARTICLE_TYPE_META, HUB_PAGES } from "@/lib/taxonomy";
@@ -55,6 +56,7 @@ export default function AiCodingToolsPage() {
   const comparisons = getArticlesByType("comparison");
   const guides = getArticlesByType("guide");
   const all = [...reviews, ...comparisons, ...guides];
+  const toolHubs = getPublishedToolHubs();
 
   const grouped = { review: reviews, comparison: comparisons };
 
@@ -129,6 +131,36 @@ export default function AiCodingToolsPage() {
                 </section>
               );
             })}
+
+            {toolHubs.length > 0 ? (
+              <section>
+                <div className="flex items-center gap-3">
+                  <AccentRule accent="indigo" />
+                  <h2 className="label text-ink-3">Coverage by tool</h2>
+                </div>
+                <p className="mt-3 max-w-xl text-[0.9375rem] leading-relaxed text-ink-2">
+                  A hub appears here only when Hamzify has enough published
+                  pieces about that tool. These are indexes, not extra reviews.
+                </p>
+                <ul className="mt-6 grid gap-3 sm:grid-cols-3">
+                  {toolHubs.map((item) => (
+                    <li key={item.entity.slug}>
+                      <Link
+                        href={item.path}
+                        className="flex min-h-11 flex-col rounded-sm border border-line bg-surface px-4 py-3 transition-colors hover:border-line-2"
+                      >
+                        <span className="font-medium text-ink">
+                          {item.entity.name}
+                        </span>
+                        <span className="mt-1 text-[0.8125rem] text-ink-3">
+                          {item.articles.length} articles
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
 
             {guides.length > 0 ? (
               <section data-accent="indigo">

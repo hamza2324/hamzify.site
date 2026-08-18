@@ -135,6 +135,10 @@ Two rules that the architecture enforces rather than merely documents:
 The full editorial system, brief, structure, validation, sitemap, and
 pre-publish checklist live in [`docs/PUBLISHING.md`](docs/PUBLISHING.md).
 Voice and evidence rules live in [`docs/EDITORIAL.md`](docs/EDITORIAL.md).
+The content map is [`docs/content-map.md`](docs/content-map.md). Naming for
+tools and formats is [`docs/NAMING.md`](docs/NAMING.md). Run
+`npm run review:due` to list published pieces that may need a freshness
+pass; it never changes dates.
 What follows is the short version.
 
 ### A new article

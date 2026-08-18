@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ArticleHeader } from "@/components/article/article-header";
@@ -13,7 +14,12 @@ import {
   AffiliateDisclosure,
   SampleNotice,
 } from "@/components/content/disclosures";
-import { FaqList } from "@/components/content/editorial-blocks";
+import {
+  FaqList,
+  HowThisWasTested,
+  QuickAnswer,
+  Sources,
+} from "@/components/content/editorial-blocks";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/ui/container";
 import {
@@ -74,7 +80,9 @@ export async function generateMetadata({
     path: article.path,
     type: "article",
     publishedTime: toIsoDate(article.publishedAt),
-    modifiedTime: toIsoDate(article.updatedAt ?? article.publishedAt),
+    modifiedTime: toIsoDate(
+      article.lastReviewedAt ?? article.updatedAt ?? article.publishedAt,
+    ),
     authors: [author.name],
     section: CATEGORIES[article.category].label,
     tags: article.tags,
@@ -148,6 +156,14 @@ export default async function ArticlePage({
               {article.sample ? <SampleNotice /> : null}
               {article.affiliateDisclosure ? <AffiliateDisclosure /> : null}
 
+              {article.quickAnswer ? (
+                <QuickAnswer>{article.quickAnswer}</QuickAnswer>
+              ) : null}
+
+              {article.evidence ? (
+                <HowThisWasTested {...article.evidence} />
+              ) : null}
+
               {/* Mobile table of contents: collapsed by default so it never
                   pushes the first paragraph off the screen. Short pieces skip it. */}
               {article.headings.length >= 3 ? (
@@ -174,12 +190,40 @@ export default async function ArticlePage({
                 <Body />
               </div>
 
+              {article.sources?.length ? (
+                <Sources items={article.sources} />
+              ) : null}
+
               {article.faq?.length ? <FaqList items={article.faq} /> : null}
 
               <footer className="mt-14 flex flex-col gap-10">
                 <div className="flex flex-col gap-5 border-t border-line pt-6">
                   <ShareControls title={article.title} path={article.path} />
 
+                  <p className="text-[0.8125rem] leading-relaxed text-ink-3">
+                    New pieces go out on the{" "}
+                    <Link
+                      href="/#newsletter"
+                      className="underline decoration-line-2 underline-offset-2 hover:decoration-accent"
+                    >
+                      newsletter
+                    </Link>{" "}
+                    and the{" "}
+                    <a
+                      href="/rss.xml"
+                      className="underline decoration-line-2 underline-offset-2 hover:decoration-accent"
+                    >
+                      RSS feed
+                    </a>
+                    . How the work is checked is in the{" "}
+                    <Link
+                      href="/editorial-policy/"
+                      className="underline decoration-line-2 underline-offset-2 hover:decoration-accent"
+                    >
+                      editorial policy
+                    </Link>
+                    .
+                  </p>
                   <p className="text-[0.8125rem] leading-relaxed text-ink-3">
                     Published{" "}
                     <time dateTime={article.publishedAt}>
@@ -188,9 +232,17 @@ export default async function ArticlePage({
                     {article.updatedAt &&
                     article.updatedAt !== article.publishedAt ? (
                       <>
-                        {" and last reviewed "}
+                        {" · Updated "}
                         <time dateTime={article.updatedAt}>
                           {formatDateLong(article.updatedAt)}
+                        </time>
+                      </>
+                    ) : article.lastReviewedAt &&
+                      article.lastReviewedAt !== article.publishedAt ? (
+                      <>
+                        {" · Last reviewed "}
+                        <time dateTime={article.lastReviewedAt}>
+                          {formatDateLong(article.lastReviewedAt)}
                         </time>
                       </>
                     ) : null}

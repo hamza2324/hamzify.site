@@ -151,6 +151,10 @@ export function TestMethodology({
   task,
   environment,
   cost,
+  project,
+  model,
+  humanIntervention,
+  limitations,
   children,
 }: {
   version: string;
@@ -158,6 +162,10 @@ export function TestMethodology({
   task: string;
   environment?: string;
   cost?: string;
+  project?: string;
+  model?: string;
+  humanIntervention?: string;
+  limitations?: string;
   children?: ReactNode;
 }) {
   return (
@@ -167,13 +175,21 @@ export function TestMethodology({
       accent="teal"
     >
       <SpecList>
+        {project ? <SpecRow term="Project">{project}</SpecRow> : null}
         <SpecRow term="Version tested">{version}</SpecRow>
+        {model ? <SpecRow term="Model or configuration">{model}</SpecRow> : null}
         <SpecRow term="Time spent">{duration}</SpecRow>
         <SpecRow term="Task">{task}</SpecRow>
         {environment ? (
           <SpecRow term="Environment">{environment}</SpecRow>
         ) : null}
+        {humanIntervention ? (
+          <SpecRow term="Human intervention">{humanIntervention}</SpecRow>
+        ) : null}
         {cost ? <SpecRow term="Cost">{cost}</SpecRow> : null}
+        {limitations ? (
+          <SpecRow term="Known limitations">{limitations}</SpecRow>
+        ) : null}
       </SpecList>
       {children ? (
         <div className="mt-3 space-y-2 text-[0.9375rem] leading-relaxed text-ink-2">
@@ -181,6 +197,119 @@ export function TestMethodology({
         </div>
       ) : null}
     </ContentBlock>
+  );
+}
+
+/**
+ * Optional fields only. Empty values are omitted so this never invents a test.
+ */
+export function HowThisWasTested({
+  project,
+  environment,
+  toolVersion,
+  model,
+  task,
+  period,
+  humanIntervention,
+  limitations,
+}: {
+  project?: string;
+  environment?: string;
+  toolVersion?: string;
+  model?: string;
+  task?: string;
+  period?: string;
+  humanIntervention?: string;
+  limitations?: string;
+}) {
+  const rows = [
+    ["Project", project],
+    ["Environment", environment],
+    ["Tool version", toolVersion],
+    ["Model or configuration", model],
+    ["Task", task],
+    ["Testing period", period],
+    ["Human intervention", humanIntervention],
+    ["Known limitations", limitations],
+  ].filter((entry): entry is [string, string] => Boolean(entry[1]));
+
+  if (rows.length === 0) return null;
+
+  return (
+    <ContentBlock
+      label="How this was tested"
+      icon={TestTubeDiagonal}
+      accent="teal"
+    >
+      <SpecList>
+        {rows.map(([term, value]) => (
+          <SpecRow key={term} term={term}>
+            {value}
+          </SpecRow>
+        ))}
+      </SpecList>
+    </ContentBlock>
+  );
+}
+
+export function BuildDetails({
+  goal,
+  stack,
+  aiTools,
+  timeSpent,
+  whatWorked,
+  whatFailed,
+  repo,
+}: {
+  goal?: string;
+  stack?: string[];
+  aiTools?: string[];
+  timeSpent?: string;
+  whatWorked?: string;
+  whatFailed?: string;
+  repo?: string;
+}) {
+  const hasLists = (stack && stack.length > 0) || (aiTools && aiTools.length > 0);
+  if (!goal && !hasLists && !timeSpent && !whatWorked && !whatFailed && !repo) {
+    return null;
+  }
+
+  return (
+    <ContentBlock label="Build details" icon={GitBranch} accent="teal">
+      <SpecList>
+        {goal ? <SpecRow term="Goal">{goal}</SpecRow> : null}
+        {stack?.length ? (
+          <SpecRow term="Stack">{stack.join(", ")}</SpecRow>
+        ) : null}
+        {aiTools?.length ? (
+          <SpecRow term="AI tools">{aiTools.join(", ")}</SpecRow>
+        ) : null}
+        {timeSpent ? <SpecRow term="Time spent">{timeSpent}</SpecRow> : null}
+        {whatWorked ? <SpecRow term="What worked">{whatWorked}</SpecRow> : null}
+        {whatFailed ? <SpecRow term="What failed">{whatFailed}</SpecRow> : null}
+      </SpecList>
+      {repo ? (
+        <p className="mt-3 text-[0.875rem]">
+          <a
+            href={repo}
+            target="_blank"
+            rel="noopener"
+            className="no-prose-link font-medium text-ink underline decoration-line-2 underline-offset-2 hover:decoration-accent"
+          >
+            Project repository
+          </a>
+        </p>
+      ) : null}
+    </ContentBlock>
+  );
+}
+
+export function QuickAnswer({ children }: { children: ReactNode }) {
+  return (
+    <aside className="not-prose my-8 rounded-md border border-line bg-surface px-4 py-4 sm:px-5">
+      <p className="label text-ink-3">Quick answer</p>
+      <p className="mt-2 text-[1.0625rem] leading-relaxed text-ink">{children}</p>
+    </aside>
   );
 }
 
@@ -475,8 +604,14 @@ export type Source = {
 };
 
 export function Sources({ items }: { items: Source[] }) {
+  if (items.length === 0) return null;
+
   return (
     <ContentBlock label="Sources" icon={BookOpenCheck} accent="indigo">
+      <p className="not-prose mb-3 text-[0.8125rem] leading-relaxed text-ink-3">
+        Primary sources for facts that are not Hamzify testing. Opinions and
+        results from our own work are marked as such in the article.
+      </p>
       <ol className="not-prose flex flex-col gap-2.5">
         {items.map((source) => (
           <li key={source.href} className="text-[0.9375rem] leading-relaxed">
@@ -489,7 +624,7 @@ export function Sources({ items }: { items: Source[] }) {
               {source.title}
             </a>
             {source.publisher ? (
-              <span className="text-ink-3"> — {source.publisher}</span>
+              <span className="text-ink-3"> ({source.publisher})</span>
             ) : null}
             {source.checked ? (
               <span className="ml-1.5 font-mono text-[0.75rem] text-ink-3">

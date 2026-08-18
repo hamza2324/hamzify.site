@@ -84,7 +84,12 @@ Strongly recommended:
 | `tags` / `keywords` | Related language, not stuffed repeats of the title. |
 | `coverPattern` | `grid` `terminal` `diff` `timeline` `stack` `flow` |
 | `related` | Slugs of other articles a reader should open next. |
-| `tools` | Product names this piece actually discusses. Improves related reading and search. |
+| `tools` | Product names this piece actually discusses. Prefer names in `docs/NAMING.md`. |
+| `cluster` | Optional grouping such as `cursor` or `workflows`. |
+| `quickAnswer` | Direct answer for reviews, comparisons and decision guides. |
+| `editorialPick` / `startHere` / `evergreen` | Manual collections. Never inferred. |
+| `lastReviewedAt` | Check date. Shown only when it differs from `publishedAt`. |
+| `reviewIntervalDays` | Editorial reminder. Not shown to readers. Run `npm run review:due`. |
 | `updatedAt` | Only when the article is materially revised. |
 
 Type-specific:
@@ -122,9 +127,13 @@ Do not use:
 Editorial blocks available in every MDX file (no import):
 
 `KeyTakeaways` `Finding` `PullQuote` `Callout` `ProsCons` `Verdict`
-`QuickVerdict` `TestMethodology` `ExperimentSetup` `ToolComparison`
-`BuildTimeline` `ProjectStack` `Sources` `FaqList` `ImageWithCaption`
-`AffiliateLink`
+`QuickVerdict` `QuickAnswer` `TestMethodology` `HowThisWasTested`
+`BuildDetails` `ExperimentSetup` `ToolComparison` `BuildTimeline`
+`ProjectStack` `Sources` `FaqList` `ImageWithCaption` `AffiliateLink`
+
+`HowThisWasTested` and `BuildDetails` only render fields you fill in. Do not
+invent versions, times, or results. `QuickAnswer` is optional: use it on
+reviews, comparisons and decision guides, not on narrative build logs.
 
 Use a block when it carries meaning. Do not decorate an empty article.
 
@@ -152,16 +161,31 @@ refuses to ship a malformed article.
 
 Human checklist before you merge:
 
-- [ ] The article helps a real reader and matches the search intent
+- [ ] Does it answer a real user question or need?
+- [ ] Does it have a clear primary purpose? (one row in `docs/content-map.md`)
+- [ ] Does it add something beyond a generic summary?
+- [ ] Is firsthand testing clearly identified where applicable?
+- [ ] Are claims accurate?
+- [ ] Are external facts sourced where appropriate? (`Sources` or `sources:`)
+- [ ] Does the title accurately describe the article?
+- [ ] Is the introduction useful rather than filler?
+- [ ] Are headings descriptive?
+- [ ] Is keyword usage natural?
+- [ ] Are relevant existing Hamzify articles linked (`related` plus in-prose)?
+- [ ] Is there a relevant next step for the reader?
 - [ ] Unique title and unique description
-- [ ] Honest about what was tested, and what was not
-- [ ] Limitations included where a reader would be misled without them
 - [ ] `draft: true` removed
 - [ ] `sample: false` if this is real work
-- [ ] Internal links that a reader would actually follow
 - [ ] `tools` lists the products discussed
 - [ ] No FAQ unless the questions are real and unanswered in the body
-- [ ] External links to primary sources for facts that need them
+- [ ] Will the URL appear in sitemap.xml after deploy? (yes, if published)
+- [ ] Title, description, canonical and social metadata come from frontmatter
+- [ ] Checked for repetitive AI-style writing and em-dash habits
+- [ ] Spelling, grammar and formatting
+- [ ] Would a developer genuinely bookmark, share or recommend it?
+
+This checklist does not block `next build`. Invalid frontmatter still fails the
+build. `npm run review:due` lists pieces that may need a freshness pass.
 
 ## 6. How the sitemap updates
 

@@ -11,6 +11,8 @@ import {
 } from "@/components/content/disclosures";
 import {
   BuildTimeline,
+  HowThisWasTested,
+  BuildDetails,
   ExperimentSetup,
   FaqList,
   Finding,
@@ -18,6 +20,7 @@ import {
   ProjectStack,
   ProsCons,
   PullQuote,
+  QuickAnswer,
   QuickVerdict,
   Sources,
   TestMethodology,
@@ -84,6 +87,7 @@ const components: MDXComponents = {
   // Editorial blocks, available in every article without an import.
   AffiliateDisclosure,
   AffiliateLink,
+  BuildDetails,
   BuildTimeline,
   Callout,
   ContentBlock,
@@ -91,11 +95,13 @@ const components: MDXComponents = {
   FaqList,
   Figure: ImageWithCaption,
   Finding,
+  HowThisWasTested,
   ImageWithCaption,
   KeyTakeaways,
   ProjectStack,
   ProsCons,
   PullQuote,
+  QuickAnswer,
   QuickVerdict,
   SpecList,
   SpecRow,

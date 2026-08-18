@@ -25,6 +25,81 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "out");
 const ARTICLES = join(ROOT, "src", "content", "articles");
 const ORIGIN = "https://hamzify.site";
+const MIN_ARTICLES_FOR_TOOL_HUB = 2;
+
+/**
+ * Mirrors `src/lib/entities.ts`. Keep these in sync. A slug here does not
+ * create a page; a hub is written only when enough published articles mention
+ * the tool.
+ */
+const TOOL_ENTITIES = [
+  {
+    slug: "cursor",
+    name: "Cursor",
+    aliases: ["cursor ai", "cursor editor"],
+  },
+  {
+    slug: "claude-code",
+    name: "Claude Code",
+    aliases: ["claude", "claude code cli", "anthropic claude code"],
+  },
+  {
+    slug: "github-copilot",
+    name: "GitHub Copilot",
+    aliases: ["copilot", "github copilot"],
+  },
+];
+
+function normalizeEntityKey(value) {
+  return String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/[\s/_-]+/g, " ");
+}
+
+function resolveToolEntity(value) {
+  const key = normalizeEntityKey(value);
+  for (const entity of TOOL_ENTITIES) {
+    const names = [entity.slug, entity.name, ...entity.aliases].map(
+      normalizeEntityKey,
+    );
+    if (names.includes(key)) return entity;
+    if (names.some((name) => name.length > 2 && key.includes(name))) {
+      return entity;
+    }
+  }
+  return undefined;
+}
+
+function mentionedNames(article) {
+  return [
+    ...(article.tools ?? []),
+    ...(article.compared ?? []),
+    ...(article.project?.aiTools ?? []),
+  ];
+}
+
+function articleMentionsTool(article, slug) {
+  if (article.cluster === slug) return true;
+  return mentionedNames(article).some(
+    (name) => resolveToolEntity(name)?.slug === slug,
+  );
+}
+
+function articleStamp(article) {
+  return Date.parse(
+    article.lastReviewedAt ?? article.updatedAt ?? article.publishedAt ?? 0,
+  );
+}
+
+function publishedToolHubs(articles) {
+  return TOOL_ENTITIES.map((entity) => {
+    const covering = articles.filter((article) =>
+      articleMentionsTool(article, entity.slug),
+    );
+    return { entity, articles: covering };
+  }).filter((hub) => hub.articles.length >= MIN_ARTICLES_FOR_TOOL_HUB);
+}
 
 function isoDay(value) {
   const date = new Date(value);
@@ -63,11 +138,7 @@ function loadArticles() {
       };
     })
     .filter((article) => article.draft !== true)
-    .sort(
-      (a, b) =>
-        Date.parse(b.updatedAt ?? b.publishedAt ?? 0) -
-        Date.parse(a.updatedAt ?? a.publishedAt ?? 0),
-    );
+    .sort((a, b) => articleStamp(b) - articleStamp(a));
 }
 
 function urlEntry({ loc, lastmod, changefreq, priority, image }) {
@@ -100,12 +171,14 @@ function lastmodForCategory(slug, categoryLastmod, newest) {
 }
 
 function buildSitemap(articles) {
-  const newest = articles[0]?.updatedAt ?? articles[0]?.publishedAt ?? new Date();
+  const newest = articles[0]
+    ? new Date(articleStamp(articles[0]))
+    : new Date();
 
   const categoryLastmod = new Map();
   for (const article of articles) {
     const key = article.category;
-    const stamp = Date.parse(article.updatedAt ?? article.publishedAt ?? 0);
+    const stamp = articleStamp(article);
     const prev = categoryLastmod.get(key) ?? 0;
     if (stamp > prev) categoryLastmod.set(key, stamp);
   }
@@ -117,7 +190,9 @@ function buildSitemap(articles) {
     ["reviews", "AI coding tool reviews"],
     ["compare", "AI coding tool comparisons"],
     ["resources", "AI coding resources"],
-  ];
+  ].filter(([slug]) => articles.some((article) => article.category === slug));
+
+  const toolHubs = publishedToolHubs(articles);
 
   const staticPages = [
     {
@@ -187,12 +262,23 @@ function buildSitemap(articles) {
         image: page.image,
       }),
     ),
+    ...toolHubs.map((hub) =>
+      urlEntry({
+        loc: `${ORIGIN}/ai-coding-tools/${hub.entity.slug}/`,
+        lastmod: hub.articles.reduce(
+          (latest, article) => Math.max(latest, articleStamp(article)),
+          0,
+        ),
+        changefreq: "weekly",
+        priority: 0.75,
+      }),
+    ),
     ...articles.map((article) =>
       urlEntry({
         loc: `${ORIGIN}/${article.category}/${article.slug}/`,
-        lastmod: article.updatedAt ?? article.publishedAt,
+        lastmod: new Date(articleStamp(article)),
         changefreq: "monthly",
-        priority: article.featured ? 0.9 : 0.7,
+        priority: article.featured || article.evergreen ? 0.9 : 0.7,
         image: {
           loc: `${ORIGIN}/og/article-${article.slug}.png`,
           title: article.title,
@@ -274,12 +360,18 @@ function buildLlms(articles) {
     lines.push(`- [${article.title}](${url}): ${article.description}`);
   }
 
+  const toolHubs = publishedToolHubs(articles);
+
   lines.push(
     "",
     "## Sections",
     "",
     `- [Latest](${ORIGIN}/latest/): full archive, newest first`,
     `- [AI coding tools](${ORIGIN}/ai-coding-tools/): reviews and comparisons`,
+    ...toolHubs.map(
+      (hub) =>
+        `- [${hub.entity.name} coverage](${ORIGIN}/ai-coding-tools/${hub.entity.slug}/): ${hub.articles.length} published Hamzify articles`,
+    ),
     `- [Vibe coding](${ORIGIN}/vibe-coding/): AI-assisted building experiments`,
     `- [Build logs](${ORIGIN}/build-logs/): records of real projects`,
     `- [Workflows](${ORIGIN}/workflows/): repeatable AI development sequences`,
@@ -299,10 +391,11 @@ if (!existsSync(OUT)) {
 }
 
 const articles = loadArticles();
+const hubs = publishedToolHubs(articles);
 writeFile(join(OUT, "sitemap.xml"), buildSitemap(articles));
 writeFile(join(OUT, "robots.txt"), buildRobots());
 writeFile(join(OUT, "llms.txt"), buildLlms(articles));
 
 console.log(
-  `write-seo-files: sitemap.xml (${articles.length} articles), robots.txt, llms.txt`,
+  `write-seo-files: sitemap.xml (${articles.length} articles, ${hubs.length} tool hubs), robots.txt, llms.txt`,
 );

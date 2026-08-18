@@ -50,6 +50,7 @@ type BylineProps = {
   author: Author;
   publishedAt: string;
   updatedAt?: string;
+  lastReviewedAt?: string;
   readingTime: string;
   size?: "sm" | "md";
   className?: string;
@@ -59,6 +60,7 @@ export function Byline({
   author,
   publishedAt,
   updatedAt,
+  lastReviewedAt,
   readingTime,
   size = "md",
   className,
@@ -88,7 +90,11 @@ export function Byline({
         /
       </span>
 
-      <PublicationDates publishedAt={publishedAt} updatedAt={updatedAt} />
+      <PublicationDates
+        publishedAt={publishedAt}
+        updatedAt={updatedAt}
+        lastReviewedAt={lastReviewedAt}
+      />
 
       <span aria-hidden="true" className="text-line-2">
         /
@@ -109,11 +115,17 @@ export function Byline({
 export function PublicationDates({
   publishedAt,
   updatedAt,
+  lastReviewedAt,
 }: {
   publishedAt: string;
   updatedAt?: string;
+  lastReviewedAt?: string;
 }) {
   const showUpdated = Boolean(updatedAt) && updatedAt !== publishedAt;
+  const reviewed =
+    lastReviewedAt && lastReviewedAt !== publishedAt && lastReviewedAt !== updatedAt
+      ? lastReviewedAt
+      : undefined;
 
   return (
     <span className="text-ink-3">
@@ -122,6 +134,12 @@ export function PublicationDates({
         <>
           {" · Updated "}
           <time dateTime={updatedAt}>{formatShort(updatedAt!)}</time>
+        </>
+      ) : null}
+      {reviewed ? (
+        <>
+          {" · Last reviewed "}
+          <time dateTime={reviewed}>{formatShort(reviewed)}</time>
         </>
       ) : null}
     </span>

@@ -93,6 +93,20 @@ The site also recommends three related articles automatically, scored by:
 The current article is never recommended. Do not insert random links. Use
 descriptive anchors: "the Cursor and Copilot comparison", not "click here".
 
+Tool hubs live at `/ai-coding-tools/<tool>/` and appear only when two or more
+published articles mention that tool. `/tools` remains The Lab. Canonical
+display names are in [`NAMING.md`](./NAMING.md). Planning lives in
+[`content-map.md`](./content-map.md).
+
+Optional flags, all manual:
+
+- `editorialPick` / `startHere` / `evergreen`
+- `cluster`
+- `quickAnswer` (reviews, comparisons, decision guides)
+- `lastReviewedAt` / `reviewIntervalDays` (never auto-changed)
+- `basis` (`firsthand` `research` `analysis` `mixed`). Do not set `firsthand`
+  on sample placeholders.
+
 ## FAQ
 
 Only add `faq` when the questions are real, likely to help, and not already

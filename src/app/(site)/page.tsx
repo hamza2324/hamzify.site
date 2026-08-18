@@ -4,6 +4,7 @@ import { BuildSpotlight } from "@/components/home/build-spotlight";
 import { EditorialSignal } from "@/components/home/editorial-signal";
 import { FeaturedWorkflow } from "@/components/home/featured-workflow";
 import { Hero } from "@/components/home/hero";
+import { HomePicks } from "@/components/home/home-picks";
 import { LabPreview } from "@/components/home/lab-preview";
 import { LatestExperiments } from "@/components/home/latest-experiments";
 import { NewsletterSection } from "@/components/home/newsletter-section";
@@ -14,6 +15,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import {
   getArticlesByCategory,
   getArticlesByType,
+  getEditorialPicks,
   getFeaturedArticle,
   getLatestArticles,
 } from "@/lib/content";
@@ -60,6 +62,9 @@ export default function HomePage() {
 
   const buildLogs = getArticlesByCategory("build-logs").slice(0, 2);
   const workflow = getArticlesByCategory("workflows")[0];
+  const picks = getEditorialPicks(3).filter(
+    (article) => article.slug !== featured?.slug,
+  );
   const resources = getArticlesByCategory("resources")
     .filter(
       (article) =>
@@ -90,6 +95,7 @@ export default function HomePage() {
       {featured ? <Hero article={featured} /> : null}
       <EditorialSignal />
       <StartHere />
+      <HomePicks articles={picks} />
       <LatestExperiments articles={experiments} />
       <ToolCoverage articles={toolCoverage} />
       <BuildSpotlight articles={buildLogs} />
